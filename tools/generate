@@ -1,0 +1,109 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd -- "$script_dir/.." && pwd)"
+workflow_file="$repo_root/.speakeasy/workflow.yaml"
+snapshot_path="$repo_root/openapi/openapi.yaml"
+
+usage() {
+    echo "usage: $0 /path/to/openapi.yaml <sdk-version>" >&2
+}
+
+sha256_file() {
+    shasum -a 256 "$1" | awk '{ print $1 }'
+}
+
+if [[ $# -ne 2 ]]; then
+    usage
+    exit 2
+fi
+
+source_argument="$1"
+sdk_version="$2"
+
+for command in node npm shasum speakeasy; do
+    if ! command -v "$command" >/dev/null 2>&1; then
+        echo "error: required command not found: $command" >&2
+        exit 1
+    fi
+done
+
+if [[ ! -f "$source_argument" || ! -r "$source_argument" ]]; then
+    echo "error: OpenAPI source is not a readable file: $source_argument" >&2
+    exit 1
+fi
+
+source_dir="$(cd -- "$(dirname -- "$source_argument")" && pwd -P)"
+source_path="$source_dir/$(basename -- "$source_argument")"
+
+required_cli_version="$(
+    awk '$1 == "speakeasyVersion:" { print $2; exit }' "$workflow_file"
+)"
+installed_cli_output="$(speakeasy --version)"
+installed_cli_version="$(
+    awk 'NR == 1 && $1 == "speakeasy" && $2 == "version" { print $3 }' \
+        <<<"$installed_cli_output"
+)"
+
+if [[ -z "$required_cli_version" ]]; then
+    echo "error: no Speakeasy version is pinned in $workflow_file" >&2
+    exit 1
+fi
+
+if [[ "$installed_cli_version" != "$required_cli_version" ]]; then
+    echo "error: Speakeasy CLI $required_cli_version is required;" \
+        "found ${installed_cli_version:-unknown}" >&2
+    exit 1
+fi
+
+if ! speakeasy auth status >/dev/null 2>&1; then
+    echo "error: Speakeasy authentication is required" >&2
+    exit 1
+fi
+
+if ! node "$script_dir/release-metadata.mjs" validate "$sdk_version"; then
+    exit 1
+fi
+
+cd "$repo_root"
+
+if [[ "$source_path" != "$snapshot_path" ]]; then
+    cp "$source_path" "$snapshot_path"
+fi
+
+speakeasy openapi lint \
+    --schema "$snapshot_path" \
+    --non-interactive
+
+speakeasy bump \
+    --target typescript \
+    --version "$sdk_version"
+
+speakeasy run \
+    --target albus \
+    --minimal \
+    --skip-upload-spec \
+    --skip-versioning \
+    --auto-yes \
+    --output console
+
+node tools/normalize-generated.mjs
+./tools/check
+
+node tools/release-metadata.mjs versions "$sdk_version"
+
+generator_version="$(
+    sed -n \
+        's/^  genVersion: "\([^"]*\)",$/\1/p' \
+        src/lib/config.ts
+)"
+openapi_checksum="$(sha256_file "$snapshot_path")"
+
+echo
+echo "Generation complete."
+echo "OpenAPI SHA-256: $openapi_checksum"
+echo "Speakeasy CLI: $installed_cli_version"
+echo "Speakeasy generator: ${generator_version:-unknown}"
+echo "SDK version: $sdk_version"

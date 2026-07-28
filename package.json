@@ -70,7 +70,9 @@
   "scripts": {
     "lint": "oxlint --max-warnings=0 --deny-warnings src/**/*.ts src/**/*.tsx",
     "build": "tsc",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "check": "./tools/check",
+    "test": "node --test tests/*.test.mjs"
   },
   "peerDependencies": {
 

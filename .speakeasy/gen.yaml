@@ -58,7 +58,9 @@ typescript:
     license: MIT
     publishConfig:
       access: public
-  additionalScripts: {}
+  additionalScripts:
+    check: ./tools/check
+    test: node --test tests/*.test.mjs
   alwaysIncludeInboundAndOutbound: false
   apiPromiseHelpers: false
   author: Albus
