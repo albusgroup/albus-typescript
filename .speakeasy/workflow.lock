@@ -1,0 +1,27 @@
+speakeasyVersion: 1.791.0
+sources:
+    Albus API:
+        sourceNamespace: albus-api
+        sourceRevisionDigest: sha256:2dd79d69b902cb4a569e8e27c12fb029b4afd415b361946ce3ebc6b43c249a23
+        sourceBlobDigest: sha256:9410d64d6c85e12516037a7d2cc7b49e44c5ca2adfbb2e0d7ec642f8f0465e3b
+        tags:
+            - latest
+            - 1.0.0
+targets:
+    albus:
+        source: Albus API
+        sourceNamespace: albus-api
+        sourceRevisionDigest: sha256:2dd79d69b902cb4a569e8e27c12fb029b4afd415b361946ce3ebc6b43c249a23
+        sourceBlobDigest: sha256:9410d64d6c85e12516037a7d2cc7b49e44c5ca2adfbb2e0d7ec642f8f0465e3b
+workflow:
+    workflowVersion: 1.0.0
+    speakeasyVersion: 1.791.0
+    sources:
+        Albus API:
+            inputs:
+                - location: openapi/openapi.yaml
+            output: .speakeasy/out.openapi.yaml
+    targets:
+        albus:
+            target: typescript
+            source: Albus API
