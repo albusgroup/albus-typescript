@@ -113,10 +113,21 @@ function normalizeGitignore() {
   normalizeText(path);
 }
 
+function normalizePackageJson() {
+  const path = join(repositoryRoot, "package.json");
+  const packageJson = JSON.parse(readFileSync(path, "utf8"));
+  packageJson.repository = {
+    type: "git",
+    url: "git+https://github.com/albusgroup/albus-typescript.git",
+  };
+  writeFileSync(path, `${JSON.stringify(packageJson, null, 2)}\n`);
+}
+
 function main() {
   normalizeReadme();
   normalizeContributing();
   normalizeGitignore();
+  normalizePackageJson();
 
   for (const generatedDirectory of ["examples", ".devcontainer"]) {
     rmSync(join(repositoryRoot, generatedDirectory), {
