@@ -8,8 +8,8 @@ management:
   repoURL: https://github.com/albusgroup/albus-typescript
   installationURL: https://github.com/albusgroup/albus-typescript
 persistentEdits:
-  generation_id: 0d8d990c-d73d-46e7-aa60-02157765ab6a
-  pristine_commit_hash: eaa4ecf4548b8d8641953767bd7d03ec38aae5fb
+  generation_id: 7a975cdd-c9e1-40e2-bd88-ec32ee5c83bc
+  pristine_commit_hash: 45653b6dfca9843d4f93574f02382f824bf209b7
   pristine_tree_hash: 138d2e6b7062f06da1b3a706b2b538393ac9eb8b
 features:
   typescript:

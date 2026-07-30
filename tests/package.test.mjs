@@ -2,9 +2,11 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-const packageJson = JSON.parse(
-  await readFile(new URL("../package.json", import.meta.url), "utf8"),
+const packageText = await readFile(
+  new URL("../package.json", import.meta.url),
+  "utf8",
 );
+const packageJson = JSON.parse(packageText);
 
 test("publishes the intended public package metadata", () => {
   assert.equal(packageJson.name, "@albus/sdk");
@@ -17,7 +19,11 @@ test("publishes the intended public package metadata", () => {
   assert.equal(packageJson.publishConfig.access, "public");
   assert.equal(
     packageJson.repository.url,
-    "https://github.com/albusgroup/albus-typescript",
+    "git+https://github.com/albusgroup/albus-typescript.git",
+  );
+  assert.equal(
+    packageText.match(/^\s*"repository":/gmu)?.length,
+    1,
   );
   assert.deepEqual(packageJson.files, ["esm", "src", "RUNTIMES.md"]);
 });
