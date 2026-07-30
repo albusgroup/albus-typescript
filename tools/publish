@@ -144,7 +144,6 @@ cleanup() {
 }
 trap cleanup EXIT
 
-auth_args=()
 if [[ -n "${NPM_TOKEN:-}" ]]; then
     old_umask="$(umask)"
     umask 077
@@ -152,14 +151,22 @@ if [[ -n "${NPM_TOKEN:-}" ]]; then
     umask "$old_umask"
     printf '//registry.npmjs.org/:_authToken=%s\n' \
         "$NPM_TOKEN" >"$auth_file"
-    auth_args=(--userconfig "$auth_file")
 fi
 
-if ! npm whoami \
-    "${auth_args[@]}" \
-    --registry="$registry_url" \
-    >/dev/null
-then
+if [[ -n "$auth_file" ]]; then
+    npm_auth_status=0
+    npm whoami \
+        --userconfig "$auth_file" \
+        --registry="$registry_url" \
+        >/dev/null || npm_auth_status=$?
+else
+    npm_auth_status=0
+    npm whoami \
+        --registry="$registry_url" \
+        >/dev/null || npm_auth_status=$?
+fi
+
+if [[ "$npm_auth_status" -ne 0 ]]; then
     echo "error: authenticate with 'npm login' or set NPM_TOKEN" >&2
     exit 1
 fi
@@ -176,5 +183,9 @@ if [[ "$confirmation" != "$confirmation_prompt" ]]; then
     exit 1
 fi
 
-npm publish "${auth_args[@]}" "${publish_args[@]}"
+if [[ -n "$auth_file" ]]; then
+    npm publish --userconfig "$auth_file" "${publish_args[@]}"
+else
+    npm publish "${publish_args[@]}"
+fi
 echo "Published $package_name@$sdk_version with npm tag $dist_tag."
