@@ -14,7 +14,7 @@ for command in node npm speakeasy; do
     fi
 done
 
-bash -n tools/check tools/generate
+bash -n tools/check tools/generate tools/publish
 for file in tools/*.mjs tests/*.mjs; do
     node --check "$file"
 done

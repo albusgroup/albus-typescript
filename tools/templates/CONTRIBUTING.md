@@ -40,3 +40,6 @@ Maintainers regenerate with:
 
 The specification snapshot, generated output, documentation, package metadata,
 and lock files must be reviewed and committed together.
+
+Maintainers should follow `RELEASING.md` after a release pull request is
+merged.
