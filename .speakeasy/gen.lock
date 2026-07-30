@@ -8,9 +8,9 @@ management:
   repoURL: https://github.com/albusgroup/albus-typescript
   installationURL: https://github.com/albusgroup/albus-typescript
 persistentEdits:
-  generation_id: 47b6ca7c-ecff-4137-8e26-2b26e0bfbb42
-  pristine_commit_hash: fde5772dc9e8d56efc282528f7e914d1ad4f7283
-  pristine_tree_hash: 35b00c33cf48b9510addf323396643ca90b76610
+  generation_id: 0d8d990c-d73d-46e7-aa60-02157765ab6a
+  pristine_commit_hash: eaa4ecf4548b8d8641953767bd7d03ec38aae5fb
+  pristine_tree_hash: 138d2e6b7062f06da1b3a706b2b538393ac9eb8b
 features:
   typescript:
     additionalDependencies: 0.1.0
@@ -265,8 +265,8 @@ trackedFiles:
     pristine_git_object: 9cf2183b0cdcf0f1816c561b99aebddff1970e66
   package.json:
     id: 7030d0b2f71b
-    last_write_checksum: sha1:e2346caf018d758cadbdd5c3c9e1638161a1491b
-    pristine_git_object: d99fc4c33898991a37c2d07b0ac70175092c58b6
+    last_write_checksum: sha1:70683fb333a7393e84078b392b45ae53573481bb
+    pristine_git_object: c8da92de8516b8813b71392d44b1015d6da84836
   src/core.ts:
     id: f431fdbcd144
     last_write_checksum: sha1:5550b787a3b13b658cec1f8b17f6f633ba218412

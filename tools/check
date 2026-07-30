@@ -1,0 +1,70 @@
+#!/usr/bin/env bash
+
+set -Eeuo pipefail
+
+script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
+repo_root="$(cd -- "$script_dir/.." && pwd)"
+
+cd "$repo_root"
+
+for command in node npm speakeasy; do
+    if ! command -v "$command" >/dev/null 2>&1; then
+        echo "error: required command not found: $command" >&2
+        exit 1
+    fi
+done
+
+bash -n tools/check tools/generate
+for file in tools/*.mjs tests/*.mjs; do
+    node --check "$file"
+done
+
+speakeasy openapi lint \
+    --schema openapi/openapi.yaml \
+    --non-interactive
+
+npm ci
+npm run lint
+npm run build
+npm test
+npm audit --omit=dev --audit-level=high
+
+sdk_version="$(node -p 'require("./package.json").version')"
+node tools/release-metadata.mjs versions "$sdk_version"
+
+pack_json="$(npm pack --dry-run --json)"
+printf '%s\n' "$pack_json" \
+    | node tools/release-metadata.mjs package "$sdk_version"
+
+pack_dir="$(mktemp -d)"
+verify_dir="$(mktemp -d)"
+trap 'rm -rf -- "$pack_dir" "$verify_dir"' EXIT
+
+package_file="$(
+    npm pack --pack-destination "$pack_dir" --json \
+        | node -e '
+            let input = "";
+            process.stdin.setEncoding("utf8");
+            process.stdin.on("data", chunk => input += chunk);
+            process.stdin.on("end", () => {
+                process.stdout.write(JSON.parse(input)[0].filename);
+            });
+        '
+)"
+
+npm install \
+    --ignore-scripts \
+    --prefix "$verify_dir" \
+    "$pack_dir/$package_file"
+
+(
+    cd "$verify_dir"
+    node --input-type=module -e '
+        import { Albus } from "@albus/sdk";
+        if (typeof Albus !== "function") {
+            throw new Error("installed package does not export Albus");
+        }
+    '
+)
+
+echo "All checks passed."

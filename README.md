@@ -54,6 +54,8 @@ Albus API: Albus service REST API
   * [Custom HTTP Client](#custom-http-client)
   * [Debugging](#debugging)
 * [Development](#development)
+  * [Regeneration](#regeneration)
+  * [Checks](#checks)
   * [Maturity](#maturity)
   * [Contributions](#contributions)
 
@@ -514,6 +516,29 @@ You can also enable a default debug logger by setting an environment variable `A
 <!-- Placeholder for Future Speakeasy SDK Sections -->
 
 # Development
+
+## Regeneration
+
+Regenerate from the authoritative Albus OpenAPI specification:
+
+```bash
+./tools/generate /path/to/albus/api/openapi.yaml 0.1.0
+```
+
+Review and commit the OpenAPI snapshot, generated source, documentation,
+package metadata, and Speakeasy lock files together.
+
+## Checks
+
+Run the complete local validation:
+
+```bash
+./tools/check
+```
+
+The check lints the OpenAPI document and TypeScript source, builds and tests the
+SDK, audits production dependencies, validates the npm tarball contents, and
+installs the packed SDK in an isolated project.
 
 ## Maturity
 
