@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { UpdateSecretRequest } from "@albusgroup/sdk/models/operations";
+import { UpdateSecretRequest } from "@albus-ts/sdk/models/operations";
 
 let value: UpdateSecretRequest = {
   name: "<value>",

@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { ErrBadRequest } from "@albusgroup/sdk/models/errors";
+import { ErrBadRequest } from "@albus-ts/sdk/models/errors";
 
 // No examples available for this model
 ```

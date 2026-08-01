@@ -20,7 +20,7 @@ List all sessions
 
 <!-- UsageSnippet language="typescript" operationID="listSessions" method="get" path="/sessions" -->
 ```typescript
-import { Albus } from "@albusgroup/sdk";
+import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
@@ -42,8 +42,8 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { AlbusCore } from "@albusgroup/sdk/core.js";
-import { sessionsListSessions } from "@albusgroup/sdk/funcs/sessions-list-sessions.js";
+import { AlbusCore } from "@albus-ts/sdk/core.js";
+import { sessionsListSessions } from "@albus-ts/sdk/funcs/sessions-list-sessions.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -94,7 +94,7 @@ Returns the session's metadata and a page of its messages ordered by cursor asce
 
 <!-- UsageSnippet language="typescript" operationID="getSession" method="get" path="/sessions/{id}" -->
 ```typescript
-import { Albus } from "@albusgroup/sdk";
+import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
@@ -118,8 +118,8 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { AlbusCore } from "@albusgroup/sdk/core.js";
-import { sessionsGetSession } from "@albusgroup/sdk/funcs/sessions-get-session.js";
+import { AlbusCore } from "@albus-ts/sdk/core.js";
+import { sessionsGetSession } from "@albus-ts/sdk/funcs/sessions-get-session.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -177,7 +177,7 @@ With `wait=true` the request long-polls: it blocks until the invocation's assist
 
 <!-- UsageSnippet language="typescript" operationID="runSession" method="post" path="/sessions/{id}" -->
 ```typescript
-import { Albus } from "@albusgroup/sdk";
+import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
@@ -207,8 +207,8 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { AlbusCore } from "@albusgroup/sdk/core.js";
-import { sessionsRunSession } from "@albusgroup/sdk/funcs/sessions-run-session.js";
+import { AlbusCore } from "@albus-ts/sdk/core.js";
+import { sessionsRunSession } from "@albus-ts/sdk/funcs/sessions-run-session.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -272,7 +272,7 @@ Delete a session
 
 <!-- UsageSnippet language="typescript" operationID="deleteSession" method="delete" path="/sessions/{id}" -->
 ```typescript
-import { Albus } from "@albusgroup/sdk";
+import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
@@ -296,8 +296,8 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { AlbusCore } from "@albusgroup/sdk/core.js";
-import { sessionsDeleteSession } from "@albusgroup/sdk/funcs/sessions-delete-session.js";
+import { AlbusCore } from "@albus-ts/sdk/core.js";
+import { sessionsDeleteSession } from "@albus-ts/sdk/funcs/sessions-delete-session.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -352,7 +352,7 @@ Returns the session's audit log — an immutable, time-ordered record of what ha
 
 <!-- UsageSnippet language="typescript" operationID="getSessionAudit" method="get" path="/sessions/{id}/audit" -->
 ```typescript
-import { Albus } from "@albusgroup/sdk";
+import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
@@ -376,8 +376,8 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { AlbusCore } from "@albusgroup/sdk/core.js";
-import { sessionsGetSessionAudit } from "@albusgroup/sdk/funcs/sessions-get-session-audit.js";
+import { AlbusCore } from "@albus-ts/sdk/core.js";
+import { sessionsGetSessionAudit } from "@albus-ts/sdk/funcs/sessions-get-session-audit.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.

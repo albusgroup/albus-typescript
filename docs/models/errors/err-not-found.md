@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { ErrNotFound } from "@albusgroup/sdk/models/errors";
+import { ErrNotFound } from "@albus-ts/sdk/models/errors";
 
 // No examples available for this model
 ```

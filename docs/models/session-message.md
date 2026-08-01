@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { SessionMessage } from "@albusgroup/sdk/models";
+import { SessionMessage } from "@albus-ts/sdk/models";
 
 let value: SessionMessage = {
   cursor: 329636,

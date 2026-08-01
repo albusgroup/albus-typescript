@@ -6,7 +6,7 @@ Thanks for helping improve the Albus TypeScript SDK.
 
 Open a GitHub issue with:
 
-- The installed `@albusgroup/sdk`, JavaScript runtime, and TypeScript versions.
+- The installed `@albus-ts/sdk`, JavaScript runtime, and TypeScript versions.
 - A minimal example that reproduces the problem.
 - The expected and actual behavior.
 - The exception type, response status, and sanitized logs when relevant.

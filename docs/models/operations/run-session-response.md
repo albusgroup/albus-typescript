@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { RunSessionResponse } from "@albusgroup/sdk/models/operations";
+import { RunSessionResponse } from "@albus-ts/sdk/models/operations";
 
 let value: RunSessionResponse = {
   headers: {

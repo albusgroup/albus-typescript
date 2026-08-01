@@ -16,7 +16,7 @@ Returns 200 OK if the service is healthy
 
 <!-- UsageSnippet language="typescript" operationID="health" method="get" path="/health" -->
 ```typescript
-import { Albus } from "@albusgroup/sdk";
+import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus();
 
@@ -34,8 +34,8 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { AlbusCore } from "@albusgroup/sdk/core.js";
-import { healthHealth } from "@albusgroup/sdk/funcs/health-health.js";
+import { AlbusCore } from "@albus-ts/sdk/core.js";
+import { healthHealth } from "@albus-ts/sdk/funcs/health-health.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.

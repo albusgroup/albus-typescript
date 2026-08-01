@@ -1,6 +1,6 @@
 <!-- Start SDK Example Usage [usage] -->
 ```typescript
-import { Albus } from "@albusgroup/sdk";
+import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {

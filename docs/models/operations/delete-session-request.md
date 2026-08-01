@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { DeleteSessionRequest } from "@albusgroup/sdk/models/operations";
+import { DeleteSessionRequest } from "@albus-ts/sdk/models/operations";
 
 let value: DeleteSessionRequest = {
   id: "<id>",
