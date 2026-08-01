@@ -16,7 +16,7 @@ Decodes the JWT bearer token and returns user information
 
 <!-- UsageSnippet language="typescript" operationID="whoami" method="get" path="/whoami" -->
 ```typescript
-import { Albus } from "@albusgroup/sdk";
+import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
@@ -38,8 +38,8 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { AlbusCore } from "@albusgroup/sdk/core.js";
-import { authWhoami } from "@albusgroup/sdk/funcs/auth-whoami.js";
+import { AlbusCore } from "@albus-ts/sdk/core.js";
+import { authWhoami } from "@albus-ts/sdk/funcs/auth-whoami.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.

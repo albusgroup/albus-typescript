@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { ErrRunFailed } from "@albusgroup/sdk/models/errors";
+import { ErrRunFailed } from "@albus-ts/sdk/models/errors";
 
 // No examples available for this model
 ```

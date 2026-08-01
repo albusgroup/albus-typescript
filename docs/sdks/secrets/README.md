@@ -20,7 +20,7 @@ List all secrets
 
 <!-- UsageSnippet language="typescript" operationID="listSecrets" method="get" path="/secrets" -->
 ```typescript
-import { Albus } from "@albusgroup/sdk";
+import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
@@ -42,8 +42,8 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { AlbusCore } from "@albusgroup/sdk/core.js";
-import { secretsListSecrets } from "@albusgroup/sdk/funcs/secrets-list-secrets.js";
+import { AlbusCore } from "@albus-ts/sdk/core.js";
+import { secretsListSecrets } from "@albus-ts/sdk/funcs/secrets-list-secrets.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -93,7 +93,7 @@ Create a secret
 
 <!-- UsageSnippet language="typescript" operationID="createSecret" method="post" path="/secrets" -->
 ```typescript
-import { Albus } from "@albusgroup/sdk";
+import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
@@ -118,8 +118,8 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { AlbusCore } from "@albusgroup/sdk/core.js";
-import { secretsCreateSecret } from "@albusgroup/sdk/funcs/secrets-create-secret.js";
+import { AlbusCore } from "@albus-ts/sdk/core.js";
+import { secretsCreateSecret } from "@albus-ts/sdk/funcs/secrets-create-secret.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -174,7 +174,7 @@ Get a secret by name
 
 <!-- UsageSnippet language="typescript" operationID="getSecret" method="get" path="/secrets/{name}" -->
 ```typescript
-import { Albus } from "@albusgroup/sdk";
+import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
@@ -198,8 +198,8 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { AlbusCore } from "@albusgroup/sdk/core.js";
-import { secretsGetSecret } from "@albusgroup/sdk/funcs/secrets-get-secret.js";
+import { AlbusCore } from "@albus-ts/sdk/core.js";
+import { secretsGetSecret } from "@albus-ts/sdk/funcs/secrets-get-secret.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -253,7 +253,7 @@ Update a secret by name
 
 <!-- UsageSnippet language="typescript" operationID="updateSecret" method="put" path="/secrets/{name}" -->
 ```typescript
-import { Albus } from "@albusgroup/sdk";
+import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
@@ -280,8 +280,8 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { AlbusCore } from "@albusgroup/sdk/core.js";
-import { secretsUpdateSecret } from "@albusgroup/sdk/funcs/secrets-update-secret.js";
+import { AlbusCore } from "@albus-ts/sdk/core.js";
+import { secretsUpdateSecret } from "@albus-ts/sdk/funcs/secrets-update-secret.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -339,7 +339,7 @@ Delete a secret by name
 
 <!-- UsageSnippet language="typescript" operationID="deleteSecret" method="delete" path="/secrets/{name}" -->
 ```typescript
-import { Albus } from "@albusgroup/sdk";
+import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
@@ -363,8 +363,8 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { AlbusCore } from "@albusgroup/sdk/core.js";
-import { secretsDeleteSecret } from "@albusgroup/sdk/funcs/secrets-delete-secret.js";
+import { AlbusCore } from "@albus-ts/sdk/core.js";
+import { secretsDeleteSecret } from "@albus-ts/sdk/funcs/secrets-delete-secret.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.

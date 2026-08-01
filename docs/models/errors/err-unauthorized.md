@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { ErrUnauthorized } from "@albusgroup/sdk/models/errors";
+import { ErrUnauthorized } from "@albus-ts/sdk/models/errors";
 
 // No examples available for this model
 ```

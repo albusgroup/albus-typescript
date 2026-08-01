@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { ListAuditEventsResponse } from "@albusgroup/sdk/models";
+import { ListAuditEventsResponse } from "@albus-ts/sdk/models";
 
 let value: ListAuditEventsResponse = {
   events: [
