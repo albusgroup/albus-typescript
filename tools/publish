@@ -5,7 +5,7 @@ set -Eeuo pipefail
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd -- "$script_dir/.." && pwd)"
 registry_url="https://registry.npmjs.org/"
-package_name="@albus/sdk"
+package_name="@albusgroup/sdk"
 
 usage() {
     cat >&2 <<EOF

@@ -93,9 +93,9 @@ Finally, verify that the exact release installs from npm in a clean directory:
 mkdir -p .tmp/albus-sdk-verify
 cd .tmp/albus-sdk-verify
 npm init --yes
-npm install @albus/sdk@0.1.0
+npm install @albusgroup/sdk@0.1.0
 node --input-type=module -e \
-  'import { Albus } from "@albus/sdk"; console.log(typeof Albus)'
+  'import { Albus } from "@albusgroup/sdk"; console.log(typeof Albus)'
 ```
 
 This local MVP workflow cannot create npm provenance attestations. Add trusted

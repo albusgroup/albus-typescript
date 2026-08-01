@@ -19,7 +19,7 @@ List all API tokens. Never returns token values, only metadata.
 
 <!-- UsageSnippet language="typescript" operationID="listTokens" method="get" path="/tokens" -->
 ```typescript
-import { Albus } from "@albus/sdk";
+import { Albus } from "@albusgroup/sdk";
 
 const albus = new Albus({
   security: {
@@ -41,8 +41,8 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { AlbusCore } from "@albus/sdk/core.js";
-import { tokensListTokens } from "@albus/sdk/funcs/tokens-list-tokens.js";
+import { AlbusCore } from "@albusgroup/sdk/core.js";
+import { tokensListTokens } from "@albusgroup/sdk/funcs/tokens-list-tokens.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -92,7 +92,7 @@ Create an API token. The token value is returned only in this response.
 
 <!-- UsageSnippet language="typescript" operationID="createToken" method="post" path="/tokens" -->
 ```typescript
-import { Albus } from "@albus/sdk";
+import { Albus } from "@albusgroup/sdk";
 
 const albus = new Albus({
   security: {
@@ -116,8 +116,8 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { AlbusCore } from "@albus/sdk/core.js";
-import { tokensCreateToken } from "@albus/sdk/funcs/tokens-create-token.js";
+import { AlbusCore } from "@albusgroup/sdk/core.js";
+import { tokensCreateToken } from "@albusgroup/sdk/funcs/tokens-create-token.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -170,7 +170,7 @@ Get token metadata by ID. Never returns the token value.
 
 <!-- UsageSnippet language="typescript" operationID="getToken" method="get" path="/tokens/{id}" -->
 ```typescript
-import { Albus } from "@albus/sdk";
+import { Albus } from "@albusgroup/sdk";
 
 const albus = new Albus({
   security: {
@@ -194,8 +194,8 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { AlbusCore } from "@albus/sdk/core.js";
-import { tokensGetToken } from "@albus/sdk/funcs/tokens-get-token.js";
+import { AlbusCore } from "@albusgroup/sdk/core.js";
+import { tokensGetToken } from "@albusgroup/sdk/funcs/tokens-get-token.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
@@ -249,7 +249,7 @@ Revoke an API token by ID
 
 <!-- UsageSnippet language="typescript" operationID="deleteToken" method="delete" path="/tokens/{id}" -->
 ```typescript
-import { Albus } from "@albus/sdk";
+import { Albus } from "@albusgroup/sdk";
 
 const albus = new Albus({
   security: {
@@ -273,8 +273,8 @@ run();
 The standalone function version of this method:
 
 ```typescript
-import { AlbusCore } from "@albus/sdk/core.js";
-import { tokensDeleteToken } from "@albus/sdk/funcs/tokens-delete-token.js";
+import { AlbusCore } from "@albusgroup/sdk/core.js";
+import { tokensDeleteToken } from "@albusgroup/sdk/funcs/tokens-delete-token.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.

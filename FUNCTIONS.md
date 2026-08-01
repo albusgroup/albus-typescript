@@ -19,8 +19,8 @@ specific category of applications.
 ## Example
 
 ```typescript
-import { AlbusCore } from "@albus/sdk/core.js";
-import { secretsListSecrets } from "@albus/sdk/funcs/secrets-list-secrets.js";
+import { AlbusCore } from "@albusgroup/sdk/core.js";
+import { secretsListSecrets } from "@albusgroup/sdk/funcs/secrets-list-secrets.js";
 
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.

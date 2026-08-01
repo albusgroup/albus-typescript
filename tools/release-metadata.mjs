@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 
 const toolsDirectory = dirname(fileURLToPath(import.meta.url));
 const repositoryRoot = dirname(toolsDirectory);
-const packageName = "@albus/sdk";
+const packageName = "@albusgroup/sdk";
 const semverPattern =
   /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/u;
 

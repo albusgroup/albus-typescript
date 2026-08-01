@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { GetTokenRequest } from "@albus/sdk/models/operations";
+import { GetTokenRequest } from "@albusgroup/sdk/models/operations";
 
 let value: GetTokenRequest = {
   id: "<id>",

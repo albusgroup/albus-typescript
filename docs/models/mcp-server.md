@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { MCPServer } from "@albus/sdk/models";
+import { MCPServer } from "@albusgroup/sdk/models";
 
 let value: MCPServer = {
   name: "<value>",

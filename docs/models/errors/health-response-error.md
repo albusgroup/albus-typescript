@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { HealthResponseError } from "@albus/sdk/models/errors";
+import { HealthResponseError } from "@albusgroup/sdk/models/errors";
 
 // No examples available for this model
 ```

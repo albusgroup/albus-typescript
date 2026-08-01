@@ -6,7 +6,7 @@ The kind of event (e.g. "llm_call" for a model call and the tool calls it reques
 ## Example Usage
 
 ```typescript
-import { Type } from "@albus/sdk/models";
+import { Type } from "@albusgroup/sdk/models";
 
 let value: Type = "llm_call";
 

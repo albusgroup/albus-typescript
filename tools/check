@@ -60,7 +60,7 @@ npm install \
 (
     cd "$verify_dir"
     node --input-type=module -e '
-        import { Albus } from "@albus/sdk";
+        import { Albus } from "@albusgroup/sdk";
         if (typeof Albus !== "function") {
             throw new Error("installed package does not export Albus");
         }
