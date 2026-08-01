@@ -69,7 +69,7 @@ function normalizeReadme() {
   for (const manager of ["npm", "pnpm", "bun", "yarn"]) {
     content = content.replace(
       `${manager} add https://github.com/albusgroup/albus-typescript`,
-      `${manager} add @albus/sdk`,
+      `${manager} add @albusgroup/sdk`,
     );
   }
 

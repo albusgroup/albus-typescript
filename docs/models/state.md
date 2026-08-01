@@ -5,7 +5,7 @@ Lifecycle state of the session.
 ## Example Usage
 
 ```typescript
-import { State } from "@albus/sdk/models";
+import { State } from "@albusgroup/sdk/models";
 
 let value: State = "RUNNING";
 

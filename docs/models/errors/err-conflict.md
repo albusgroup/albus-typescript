@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { ErrConflict } from "@albus/sdk/models/errors";
+import { ErrConflict } from "@albusgroup/sdk/models/errors";
 
 // No examples available for this model
 ```

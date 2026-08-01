@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { RunSessionRequest } from "@albus/sdk/models";
+import { RunSessionRequest } from "@albusgroup/sdk/models";
 
 let value: RunSessionRequest = {
   userPrompt: "<value>",

@@ -9,7 +9,7 @@ const packageText = await readFile(
 const packageJson = JSON.parse(packageText);
 
 test("publishes the intended public package metadata", () => {
-  assert.equal(packageJson.name, "@albus/sdk");
+  assert.equal(packageJson.name, "@albusgroup/sdk");
   assert.match(
     packageJson.version,
     /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/u,

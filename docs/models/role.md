@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { Role } from "@albus/sdk/models";
+import { Role } from "@albusgroup/sdk/models";
 
 let value: Role = "user";
 

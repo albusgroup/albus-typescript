@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { ErrTimeout } from "@albus/sdk/models/errors";
+import { ErrTimeout } from "@albusgroup/sdk/models/errors";
 
 // No examples available for this model
 ```

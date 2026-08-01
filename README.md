@@ -1,8 +1,8 @@
-# @albus/sdk
+# @albusgroup/sdk
 
 Official, type-safe TypeScript SDK for the Albus API.
 
-[![Built by Speakeasy](https://img.shields.io/badge/Built_by-SPEAKEASY-374151?style=for-the-badge&labelColor=f3f4f6)](https://www.speakeasy.com/?utm_source=@albus/sdk&utm_campaign=typescript)
+[![Built by Speakeasy](https://img.shields.io/badge/Built_by-SPEAKEASY-374151?style=for-the-badge&labelColor=f3f4f6)](https://www.speakeasy.com/?utm_source=@albusgroup/sdk&utm_campaign=typescript)
 [![License: MIT](https://img.shields.io/badge/LICENSE_//_MIT-3b5bdb?style=for-the-badge&labelColor=eff6ff)](https://opensource.org/licenses/MIT)
 
 ## Quickstart
@@ -10,13 +10,13 @@ Official, type-safe TypeScript SDK for the Albus API.
 Install the SDK from npm:
 
 ```bash
-npm install @albus/sdk
+npm install @albusgroup/sdk
 ```
 
 Session operations use an organization API key:
 
 ```typescript
-import { Albus } from "@albus/sdk";
+import { Albus } from "@albusgroup/sdk";
 
 const albus = new Albus({
   security: {
@@ -40,7 +40,7 @@ Albus API: Albus service REST API
 <!-- Start Table of Contents [toc] -->
 ## Table of Contents
 <!-- $toc-max-depth=2 -->
-* [@albus/sdk](#albussdk)
+* [@albusgroup/sdk](#albusgroupsdk)
   * [Quickstart](#quickstart)
   * [SDK Installation](#sdk-installation)
   * [Requirements](#requirements)
@@ -69,25 +69,25 @@ The SDK can be installed with either [npm](https://www.npmjs.com/), [pnpm](https
 ### NPM
 
 ```bash
-npm add @albus/sdk
+npm add @albusgroup/sdk
 ```
 
 ### PNPM
 
 ```bash
-pnpm add @albus/sdk
+pnpm add @albusgroup/sdk
 ```
 
 ### Bun
 
 ```bash
-bun add @albus/sdk
+bun add @albusgroup/sdk
 ```
 
 ### Yarn
 
 ```bash
-yarn add @albus/sdk
+yarn add @albusgroup/sdk
 ```
 
 > [!NOTE]
@@ -107,7 +107,7 @@ For supported JavaScript runtimes, please consult [RUNTIMES.md](RUNTIMES.md).
 ### Example
 
 ```typescript
-import { Albus } from "@albus/sdk";
+import { Albus } from "@albusgroup/sdk";
 
 const albus = new Albus({
   security: {
@@ -140,7 +140,7 @@ This SDK supports the following security schemes globally:
 
 You can set the security parameters through the `security` optional parameter when initializing the SDK client instance. The selected scheme will be used by default to authenticate with the API for all operations that support it. For example:
 ```typescript
-import { Albus } from "@albus/sdk";
+import { Albus } from "@albusgroup/sdk";
 
 const albus = new Albus({
   security: {
@@ -241,7 +241,7 @@ Some of the endpoints in this SDK support retries.  If you use the SDK without a
 
 To change the default retry strategy for a single API call, simply provide a retryConfig object to the call:
 ```typescript
-import { Albus } from "@albus/sdk";
+import { Albus } from "@albusgroup/sdk";
 
 const albus = new Albus({
   security: {
@@ -272,7 +272,7 @@ run();
 
 If you'd like to override the default retry strategy for all operations that support retries, you can provide a retryConfig at SDK initialization:
 ```typescript
-import { Albus } from "@albus/sdk";
+import { Albus } from "@albusgroup/sdk";
 
 const albus = new Albus({
   retryConfig: {
@@ -317,8 +317,8 @@ run();
 
 ### Example
 ```typescript
-import { Albus } from "@albus/sdk";
-import * as errors from "@albus/sdk/models/errors";
+import { Albus } from "@albusgroup/sdk";
+import * as errors from "@albusgroup/sdk/models/errors";
 
 const albus = new Albus({
   security: {
@@ -398,7 +398,7 @@ You can override the default server globally by passing a server index to the `s
 #### Example
 
 ```typescript
-import { Albus } from "@albus/sdk";
+import { Albus } from "@albusgroup/sdk";
 
 const albus = new Albus({
   serverIdx: 0,
@@ -421,7 +421,7 @@ run();
 
 The default server can also be overridden globally by passing a URL to the `serverURL: string` optional parameter when initializing the SDK client instance. For example:
 ```typescript
-import { Albus } from "@albus/sdk";
+import { Albus } from "@albusgroup/sdk";
 
 const albus = new Albus({
   serverURL: "http://localhost:8080",
@@ -460,9 +460,9 @@ The following example shows how to:
 - use the `"requestError"` hook to log errors
 
 ```typescript
-import { Albus } from "@albus/sdk";
+import { Albus } from "@albusgroup/sdk";
 import { ProxyAgent } from "undici";
-import { HTTPClient } from "@albus/sdk/lib/http";
+import { HTTPClient } from "@albusgroup/sdk/lib/http";
 
 const dispatcher = new ProxyAgent("http://proxy.example.com:8080");
 
@@ -505,7 +505,7 @@ You can pass a logger that matches `console`'s interface as an SDK option.
 > Beware that debug logging will reveal secrets, like API tokens in headers, in log messages printed to a console or files. It's recommended to use this feature only during local development and not in production.
 
 ```typescript
-import { Albus } from "@albus/sdk";
+import { Albus } from "@albusgroup/sdk";
 
 const sdk = new Albus({ debugLogger: console });
 ```
@@ -551,4 +551,4 @@ looking for the latest version.
 While we value open-source contributions to this SDK, this library is generated programmatically. Any manual changes added to internal files will be overwritten on the next generation.
 We look forward to hearing your feedback. Feel free to open a PR or an issue with a proof of concept and we'll do our best to include it in a future release.
 
-### SDK Created by [Speakeasy](https://www.speakeasy.com/?utm_source=@albus/sdk&utm_campaign=typescript)
+### SDK Created by [Speakeasy](https://www.speakeasy.com/?utm_source=@albusgroup/sdk&utm_campaign=typescript)

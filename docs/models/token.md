@@ -5,7 +5,7 @@ API token metadata. Never includes the token value.
 ## Example Usage
 
 ```typescript
-import { Token } from "@albus/sdk/models";
+import { Token } from "@albusgroup/sdk/models";
 
 let value: Token = {
   id: "<id>",

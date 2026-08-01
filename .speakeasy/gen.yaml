@@ -102,7 +102,7 @@ typescript:
   moduleFormat: esm
   multipartArrayFormat: standard
   outputModelSuffix: output
-  packageName: '@albus/sdk'
+  packageName: '@albusgroup/sdk'
   preApplyUnionDiscriminators: true
   preserveModelFieldNames: false
   privateIdentifierPrefix: '#'

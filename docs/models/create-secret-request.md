@@ -3,7 +3,7 @@
 ## Example Usage
 
 ```typescript
-import { CreateSecretRequest } from "@albus/sdk/models";
+import { CreateSecretRequest } from "@albusgroup/sdk/models";
 
 let value: CreateSecretRequest = {
   name: "<value>",
