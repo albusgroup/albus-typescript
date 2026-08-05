@@ -24,7 +24,7 @@ import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
-    apiKeyAuth: process.env["ALBUS_API_KEY_AUTH"] ?? "",
+    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
 });
 
@@ -49,7 +49,7 @@ import { sessionsListSessions } from "@albus-ts/sdk/funcs/sessions-list-sessions
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
   security: {
-    apiKeyAuth: process.env["ALBUS_API_KEY_AUTH"] ?? "",
+    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
 });
 
@@ -98,7 +98,7 @@ import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
-    apiKeyAuth: process.env["ALBUS_API_KEY_AUTH"] ?? "",
+    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
 });
 
@@ -125,7 +125,7 @@ import { sessionsGetSession } from "@albus-ts/sdk/funcs/sessions-get-session.js"
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
   security: {
-    apiKeyAuth: process.env["ALBUS_API_KEY_AUTH"] ?? "",
+    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
 });
 
@@ -181,7 +181,7 @@ import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
-    apiKeyAuth: process.env["ALBUS_API_KEY_AUTH"] ?? "",
+    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
 });
 
@@ -214,7 +214,7 @@ import { sessionsRunSession } from "@albus-ts/sdk/funcs/sessions-run-session.js"
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
   security: {
-    apiKeyAuth: process.env["ALBUS_API_KEY_AUTH"] ?? "",
+    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
 });
 
@@ -260,6 +260,7 @@ run();
 | errors.ErrUnauthorized   | 401                      | application/json         |
 | errors.ErrConflict       | 409                      | application/json         |
 | errors.ErrLocked         | 423                      | application/json         |
+| errors.ErrQuotaExceeded  | 429                      | application/json         |
 | errors.ErrRunFailed      | 502                      | application/json         |
 | errors.ErrTimeout        | 504                      | application/json         |
 | errors.AlbusDefaultError | 4XX, 5XX                 | \*/\*                    |
@@ -276,7 +277,7 @@ import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
-    apiKeyAuth: process.env["ALBUS_API_KEY_AUTH"] ?? "",
+    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
 });
 
@@ -303,7 +304,7 @@ import { sessionsDeleteSession } from "@albus-ts/sdk/funcs/sessions-delete-sessi
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
   security: {
-    apiKeyAuth: process.env["ALBUS_API_KEY_AUTH"] ?? "",
+    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
 });
 
@@ -356,7 +357,7 @@ import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
-    apiKeyAuth: process.env["ALBUS_API_KEY_AUTH"] ?? "",
+    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
 });
 
@@ -383,7 +384,7 @@ import { sessionsGetSessionAudit } from "@albus-ts/sdk/funcs/sessions-get-sessio
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
   security: {
-    apiKeyAuth: process.env["ALBUS_API_KEY_AUTH"] ?? "",
+    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
 });
 

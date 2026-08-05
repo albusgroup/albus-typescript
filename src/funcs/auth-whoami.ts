@@ -28,7 +28,7 @@ import { Result } from "../types/fp.js";
  * Get current user information
  *
  * @remarks
- * Decodes the JWT bearer token and returns user information
+ * Returns the authenticated user along with every organization they belong to and their roles in each.
  *
  * If set, this operation will use {@link Security.bearerAuth} from the global security.
  */

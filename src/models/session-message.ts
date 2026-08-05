@@ -11,11 +11,11 @@ import { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
 import { SDKValidationError } from "./errors/sdk-validation-error.js";
 
-export const Role = {
+export const SessionMessageRole = {
   User: "user",
   Assistant: "assistant",
 } as const;
-export type Role = OpenEnum<typeof Role>;
+export type SessionMessageRole = OpenEnum<typeof SessionMessageRole>;
 
 export type SessionMessage = {
   /**
@@ -26,14 +26,16 @@ export type SessionMessage = {
    * The invocation that produced this message.
    */
   invocationId: string;
-  role: Role;
+  role: SessionMessageRole;
   content: string;
   createdAt: Date;
 };
 
 /** @internal */
-export const Role$inboundSchema: z.ZodMiniType<Role, unknown> = openEnums
-  .inboundSchema(Role);
+export const SessionMessageRole$inboundSchema: z.ZodMiniType<
+  SessionMessageRole,
+  unknown
+> = openEnums.inboundSchema(SessionMessageRole);
 
 /** @internal */
 export const SessionMessage$inboundSchema: z.ZodMiniType<
@@ -43,7 +45,7 @@ export const SessionMessage$inboundSchema: z.ZodMiniType<
   z.object({
     cursor: types.number(),
     invocation_id: types.string(),
-    role: Role$inboundSchema,
+    role: SessionMessageRole$inboundSchema,
     content: types.string(),
     created_at: types.date(),
   }),
