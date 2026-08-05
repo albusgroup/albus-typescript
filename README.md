@@ -40,7 +40,7 @@ Albus API: Albus service REST API
 <!-- Start Table of Contents [toc] -->
 ## Table of Contents
 <!-- $toc-max-depth=2 -->
-* [@albus-ts/sdk](#albustssdk)
+* [@albus-ts/sdk](#albus-tssdk)
   * [Quickstart](#quickstart)
   * [SDK Installation](#sdk-installation)
   * [Requirements](#requirements)
@@ -173,6 +173,10 @@ run();
 
 * [health](docs/sdks/health/README.md#health) - Health check endpoint
 
+### [Invites](docs/sdks/invites/README.md)
+
+* [createInvite](docs/sdks/invites/README.md#createinvite) - Invite a user by email
+
 ### [Secrets](docs/sdks/secrets/README.md)
 
 * [listSecrets](docs/sdks/secrets/README.md#listsecrets) - List all secrets
@@ -216,6 +220,7 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 
 - [`authWhoami`](docs/sdks/auth/README.md#whoami) - Get current user information
 - [`healthHealth`](docs/sdks/health/README.md#health) - Health check endpoint
+- [`invitesCreateInvite`](docs/sdks/invites/README.md#createinvite) - Invite a user by email
 - [`secretsCreateSecret`](docs/sdks/secrets/README.md#createsecret) - Create a secret
 - [`secretsDeleteSecret`](docs/sdks/secrets/README.md#deletesecret) - Delete a secret by name
 - [`secretsGetSecret`](docs/sdks/secrets/README.md#getsecret) - Get a secret by name
@@ -356,7 +361,7 @@ run();
 * [`AlbusError`](./src/models/errors/albus-error.ts): The base class for HTTP error responses.
   * [`ErrUnauthorized`](./src/models/errors/err-unauthorized.ts): Status code `401`. *
 
-<details><summary>Less common errors (13)</summary>
+<details><summary>Less common errors (14)</summary>
 
 <br />
 
@@ -369,13 +374,14 @@ run();
 
 
 **Inherit from [`AlbusError`](./src/models/errors/albus-error.ts)**:
-* [`ErrNotFound`](./src/models/errors/err-not-found.ts): Not found. Status code `404`. Applicable to 8 of 16 methods.*
-* [`ErrBadRequest`](./src/models/errors/err-bad-request.ts): Status code `400`. Applicable to 5 of 16 methods.*
-* [`ErrConflict`](./src/models/errors/err-conflict.ts): Idempotency key reused with a different request body. Status code `409`. Applicable to 1 of 16 methods.*
-* [`ErrLocked`](./src/models/errors/err-locked.ts): Another invocation is currently running for this session. Status code `423`. Applicable to 1 of 16 methods.*
-* [`ErrRunFailed`](./src/models/errors/err-run-failed.ts): The harness run failed instead of producing a response (only possible with wait=true, or when replaying a failed invocation). The body carries the failure kind and detail. Status code `502`. Applicable to 1 of 16 methods.*
-* [`HealthResponseError`](./src/models/errors/health-response-error.ts): Service is healthy. Status code `503`. Applicable to 1 of 16 methods.*
-* [`ErrTimeout`](./src/models/errors/err-timeout.ts): Timed out waiting for the assistant response. Status code `504`. Applicable to 1 of 16 methods.*
+* [`ErrNotFound`](./src/models/errors/err-not-found.ts): Not found. Status code `404`. Applicable to 8 of 17 methods.*
+* [`ErrBadRequest`](./src/models/errors/err-bad-request.ts): Status code `400`. Applicable to 6 of 17 methods.*
+* [`ErrConflict`](./src/models/errors/err-conflict.ts): Status code `409`. Applicable to 2 of 17 methods.*
+* [`ErrLocked`](./src/models/errors/err-locked.ts): Another invocation is currently running for this session. Status code `423`. Applicable to 1 of 17 methods.*
+* [`ErrQuotaExceeded`](./src/models/errors/err-quota-exceeded.ts): The organization has reached its invocation quota. Status code `429`. Applicable to 1 of 17 methods.*
+* [`ErrRunFailed`](./src/models/errors/err-run-failed.ts): The harness run failed instead of producing a response (only possible with wait=true, or when replaying a failed invocation). The body carries the failure kind and detail. Status code `502`. Applicable to 1 of 17 methods.*
+* [`HealthResponseError`](./src/models/errors/health-response-error.ts): Service is healthy. Status code `503`. Applicable to 1 of 17 methods.*
+* [`ErrTimeout`](./src/models/errors/err-timeout.ts): Timed out waiting for the assistant response. Status code `504`. Applicable to 1 of 17 methods.*
 * [`ResponseValidationError`](./src/models/errors/response-validation-error.ts): Type mismatch between the data returned from the server and the structure expected by the SDK. See `error.rawValue` for the raw value and `error.pretty()` for a nicely formatted multi-line string.
 
 </details>

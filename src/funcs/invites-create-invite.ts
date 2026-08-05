@@ -4,7 +4,7 @@
 
 import * as z from "zod/v4-mini";
 import { AlbusCore } from "../core.js";
-import { encodeSimple } from "../lib/encodings.js";
+import { encodeJSON } from "../lib/encodings.js";
 import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
@@ -23,24 +23,28 @@ import {
 import * as errors from "../models/errors/index.js";
 import { ResponseValidationError } from "../models/errors/response-validation-error.js";
 import { SDKValidationError } from "../models/errors/sdk-validation-error.js";
-import * as operations from "../models/operations/index.js";
+import * as models from "../models/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Delete a session
+ * Invite a user by email
  *
- * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKeyAuth} from the global security.
+ * @remarks
+ * Creates a pending invitation for an email address. Omit organization_id to invite the user as the founder of a new organization that is created on their first sign-in; provide it to invite them into an existing organization. The invitation is redeemed automatically the first time the invitee signs in with that email.
+ *
+ * If set, this operation will use {@link Security.bearerAuth} from the global security.
  */
-export function sessionsDeleteSession(
+export function invitesCreateInvite(
   client: AlbusCore,
-  request: operations.DeleteSessionRequest,
+  request: models.CreateInviteRequest,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    void,
+    models.Invite,
+    | errors.ErrBadRequest
     | errors.ErrUnauthorized
-    | errors.ErrNotFound
+    | errors.ErrConflict
     | AlbusError
     | ResponseValidationError
     | ConnectionError
@@ -60,14 +64,15 @@ export function sessionsDeleteSession(
 
 async function $do(
   client: AlbusCore,
-  request: operations.DeleteSessionRequest,
+  request: models.CreateInviteRequest,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      void,
+      models.Invite,
+      | errors.ErrBadRequest
       | errors.ErrUnauthorized
-      | errors.ErrNotFound
+      | errors.ErrConflict
       | AlbusError
       | ResponseValidationError
       | ConnectionError
@@ -82,34 +87,29 @@ async function $do(
 > {
   const parsed = safeParse(
     request,
-    (value) => z.parse(operations.DeleteSessionRequest$outboundSchema, value),
+    (value) => z.parse(models.CreateInviteRequest$outboundSchema, value),
     "Input validation failed",
   );
   if (!parsed.ok) {
     return [parsed, { status: "invalid" }];
   }
   const payload = parsed.value;
-  const body = null;
+  const body = encodeJSON("body", payload, { explode: true });
 
-  const pathParams = {
-    id: encodeSimple("id", payload.id, {
-      explode: false,
-      charEncoding: "percent",
-    }),
-  };
-  const path = pathToFunc("/sessions/{id}")(pathParams);
+  const path = pathToFunc("/invites")();
 
   const headers = new Headers(compactMap({
+    "Content-Type": "application/json",
     Accept: "application/json",
   }));
 
   const securityInput = await extractSecurity(client._options.security);
-  const requestSecurity = resolveGlobalSecurity(securityInput, [0, 1]);
+  const requestSecurity = resolveGlobalSecurity(securityInput, [0]);
 
   const context = {
     options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "deleteSession",
+    operationID: "createInvite",
     oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
@@ -123,7 +123,7 @@ async function $do(
 
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
-    method: "DELETE",
+    method: "POST",
     baseURL: options?.serverURL,
     path: path,
     headers: headers,
@@ -153,9 +153,10 @@ async function $do(
   };
 
   const [result] = await M.match<
-    void,
+    models.Invite,
+    | errors.ErrBadRequest
     | errors.ErrUnauthorized
-    | errors.ErrNotFound
+    | errors.ErrConflict
     | AlbusError
     | ResponseValidationError
     | ConnectionError
@@ -165,9 +166,10 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.nil(204, z.void()),
+    M.json(200, models.Invite$inboundSchema),
+    M.jsonErr(400, errors.ErrBadRequest$inboundSchema),
     M.jsonErr(401, errors.ErrUnauthorized$inboundSchema),
-    M.jsonErr(404, errors.ErrNotFound$inboundSchema),
+    M.jsonErr(409, errors.ErrConflict$inboundSchema),
     M.fail("4XX"),
     M.fail("5XX"),
   )(response, req, { extraFields: responseFields });

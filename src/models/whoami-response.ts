@@ -8,6 +8,10 @@ import { safeParse } from "../lib/schemas.js";
 import { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
 import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import {
+  OrganizationMembership,
+  OrganizationMembership$inboundSchema,
+} from "./organization-membership.js";
 
 export type WhoamiResponse = {
   /**
@@ -23,9 +27,21 @@ export type WhoamiResponse = {
    */
   name?: string | undefined;
   /**
-   * User's roles
+   * Roles in the active organization (present only when a single organization is in scope).
+   *
+   * @remarks
    */
   roles?: Array<string> | undefined;
+  /**
+   * The organization this session is scoped to. Present when the user belongs to exactly one organization; absent when they belong to several and none is selected yet.
+   *
+   * @remarks
+   */
+  activeOrganization?: OrganizationMembership | undefined;
+  /**
+   * Every organization the user belongs to, with their roles.
+   */
+  organizations: Array<OrganizationMembership>;
   /**
    * Token issue timestamp (Unix epoch)
    */
@@ -46,12 +62,15 @@ export const WhoamiResponse$inboundSchema: z.ZodMiniType<
     email: types.string(),
     name: types.optional(types.string()),
     roles: types.optional(z.array(types.string())),
+    active_organization: types.optional(OrganizationMembership$inboundSchema),
+    organizations: z.array(OrganizationMembership$inboundSchema),
     issued_at: types.optional(types.number()),
     expires_at: types.optional(types.number()),
   }),
   z.transform((v) => {
     return remap$(v, {
       "user_id": "userId",
+      "active_organization": "activeOrganization",
       "issued_at": "issuedAt",
       "expires_at": "expiresAt",
     });

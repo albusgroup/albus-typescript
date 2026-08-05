@@ -5,6 +5,7 @@
 import { ClientSDK } from "../lib/sdks.js";
 import { Auth } from "./auth.js";
 import { Health } from "./health.js";
+import { Invites } from "./invites.js";
 import { Secrets } from "./secrets.js";
 import { Sessions } from "./sessions.js";
 import { Tokens } from "./tokens.js";
@@ -33,5 +34,10 @@ export class Albus extends ClientSDK {
   private _auth?: Auth;
   get auth(): Auth {
     return (this._auth ??= new Auth(this._options));
+  }
+
+  private _invites?: Invites;
+  get invites(): Invites {
+    return (this._invites ??= new Invites(this._options));
   }
 }

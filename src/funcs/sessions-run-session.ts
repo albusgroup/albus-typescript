@@ -35,7 +35,7 @@ import { Result } from "../types/fp.js";
  *
  * With `wait=true` the request long-polls: it blocks until the invocation's assistant response is available and returns it in `messages`. `wait_timeout` bounds the wait in seconds; when omitted the request waits indefinitely (until the response arrives or the client disconnects). If the timeout elapses first, the request fails with 504 and a JSON body, letting the client distinguish an expected server-side timeout from a transport error; the client may retry.
  *
- * If set, this operation will use {@link Security.apiKeyAuth} from the global security.
+ * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKeyAuth} from the global security.
  */
 export function sessionsRunSession(
   client: AlbusCore,
@@ -48,6 +48,7 @@ export function sessionsRunSession(
     | errors.ErrUnauthorized
     | errors.ErrConflict
     | errors.ErrLocked
+    | errors.ErrQuotaExceeded
     | errors.ErrRunFailed
     | errors.ErrTimeout
     | AlbusError
@@ -79,6 +80,7 @@ async function $do(
       | errors.ErrUnauthorized
       | errors.ErrConflict
       | errors.ErrLocked
+      | errors.ErrQuotaExceeded
       | errors.ErrRunFailed
       | errors.ErrTimeout
       | AlbusError
@@ -128,7 +130,7 @@ async function $do(
   }));
 
   const securityInput = await extractSecurity(client._options.security);
-  const requestSecurity = resolveGlobalSecurity(securityInput, [1]);
+  const requestSecurity = resolveGlobalSecurity(securityInput, [0, 1]);
 
   const context = {
     options: client._options,
@@ -183,6 +185,7 @@ async function $do(
     | errors.ErrUnauthorized
     | errors.ErrConflict
     | errors.ErrLocked
+    | errors.ErrQuotaExceeded
     | errors.ErrRunFailed
     | errors.ErrTimeout
     | AlbusError
@@ -202,6 +205,7 @@ async function $do(
     M.jsonErr(401, errors.ErrUnauthorized$inboundSchema),
     M.jsonErr(409, errors.ErrConflict$inboundSchema),
     M.jsonErr(423, errors.ErrLocked$inboundSchema),
+    M.jsonErr(429, errors.ErrQuotaExceeded$inboundSchema),
     M.jsonErr(502, errors.ErrRunFailed$inboundSchema),
     M.jsonErr(504, errors.ErrTimeout$inboundSchema),
     M.fail("4XX"),

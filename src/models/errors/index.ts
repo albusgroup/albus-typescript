@@ -8,6 +8,7 @@ export * from "./err-bad-request.js";
 export * from "./err-conflict.js";
 export * from "./err-locked.js";
 export * from "./err-not-found.js";
+export * from "./err-quota-exceeded.js";
 export * from "./err-run-failed.js";
 export * from "./err-timeout.js";
 export * from "./err-unauthorized.js";

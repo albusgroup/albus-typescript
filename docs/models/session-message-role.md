@@ -1,11 +1,11 @@
-# Role
+# SessionMessageRole
 
 ## Example Usage
 
 ```typescript
-import { Role } from "@albus-ts/sdk/models";
+import { SessionMessageRole } from "@albus-ts/sdk/models";
 
-let value: Role = "user";
+let value: SessionMessageRole = "assistant";
 
 // Open enum: unrecognized values are captured as Unrecognized<string>
 ```

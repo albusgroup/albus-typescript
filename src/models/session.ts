@@ -40,6 +40,10 @@ export type Session = {
    * @remarks
    */
   currentInvocationId?: string | undefined;
+  /**
+   * Number of times this session has been run.
+   */
+  invocationCount: number;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -54,12 +58,14 @@ export const Session$inboundSchema: z.ZodMiniType<Session, unknown> = z.pipe(
     id: types.string(),
     state: State$inboundSchema,
     current_invocation_id: types.optional(types.string()),
+    invocation_count: types.number(),
     created_at: types.date(),
     updated_at: types.date(),
   }),
   z.transform((v) => {
     return remap$(v, {
       "current_invocation_id": "currentInvocationId",
+      "invocation_count": "invocationCount",
       "created_at": "createdAt",
       "updated_at": "updatedAt",
     });

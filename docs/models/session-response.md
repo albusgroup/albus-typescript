@@ -9,10 +9,19 @@ let value: SessionResponse = {
   session: {
     id: "<id>",
     state: "DONE",
-    createdAt: new Date("2026-07-04T23:29:13.453Z"),
-    updatedAt: new Date("2026-08-13T18:36:23.796Z"),
+    invocationCount: 835747,
+    createdAt: new Date("2026-08-13T18:36:23.796Z"),
+    updatedAt: new Date("2024-12-20T02:07:11.573Z"),
   },
-  messages: [],
+  messages: [
+    {
+      cursor: 185684,
+      invocationId: "<id>",
+      role: "assistant",
+      content: "<value>",
+      createdAt: new Date("2026-09-26T05:02:23.738Z"),
+    },
+  ],
 };
 ```
 
