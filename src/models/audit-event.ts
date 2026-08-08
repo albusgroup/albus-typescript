@@ -19,8 +19,9 @@ import { SDKValidationError } from "./errors/sdk-validation-error.js";
 export const Type = {
   LlmCall: "llm_call",
   ToolResult: "tool_result",
-  RunFinished: "run_finished",
+  HarnessExit: "harness_exit",
   RunFailed: "run_failed",
+  RunSucceeded: "run_succeeded",
 } as const;
 /**
  * The kind of event (e.g. "llm_call" for a model call and the tool calls it requested, "tool_result" for a tool's output).

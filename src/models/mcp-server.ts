@@ -4,6 +4,10 @@
 
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
+import { safeParse } from "../lib/schemas.js";
+import { Result as SafeParseResult } from "../types/fp.js";
+import * as types from "../types/primitives.js";
+import { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export type MCPServer = {
   /**
@@ -30,6 +34,21 @@ export type MCPServer = {
   allowedTools?: Array<string> | undefined;
 };
 
+/** @internal */
+export const MCPServer$inboundSchema: z.ZodMiniType<MCPServer, unknown> = z
+  .pipe(
+    z.object({
+      name: types.string(),
+      url: types.string(),
+      headers: types.optional(z.record(z.string(), types.string())),
+      allowed_tools: types.optional(z.array(types.string())),
+    }),
+    z.transform((v) => {
+      return remap$(v, {
+        "allowed_tools": "allowedTools",
+      });
+    }),
+  );
 /** @internal */
 export type MCPServer$Outbound = {
   name: string;
@@ -58,4 +77,13 @@ export const MCPServer$outboundSchema: z.ZodMiniType<
 
 export function mcpServerToJSON(mcpServer: MCPServer): string {
   return JSON.stringify(MCPServer$outboundSchema.parse(mcpServer));
+}
+export function mcpServerFromJSON(
+  jsonString: string,
+): SafeParseResult<MCPServer, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => MCPServer$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'MCPServer' from JSON`,
+  );
 }

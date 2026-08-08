@@ -9,8 +9,11 @@ let value: RunSessionRequest = {
   id: "<id>",
   body: {
     userPrompt: "<value>",
-    model: {
-      name: "<value>",
+    agentName: "<value>",
+    agent: {
+      model: {
+        name: "<value>",
+      },
     },
   },
 };

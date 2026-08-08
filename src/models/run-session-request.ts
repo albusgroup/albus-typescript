@@ -5,44 +5,35 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import {
-  MCPServer,
-  MCPServer$Outbound,
-  MCPServer$outboundSchema,
-} from "./mcp-server.js";
-import { Model, Model$Outbound, Model$outboundSchema } from "./model.js";
+  AgentConfig,
+  AgentConfig$Outbound,
+  AgentConfig$outboundSchema,
+} from "./agent-config.js";
 
 export type RunSessionRequest = {
   /**
    * The user prompt driving this invocation.
    */
   userPrompt: string;
-  model: Model;
   /**
-   * Names of the tools the model may call (e.g. "WEB_SEARCH").
+   * Human-readable name identifying the agent (e.g. "support-triage"). Runs sharing a name are grouped as one agent; each distinct configuration under it becomes a revision.
+   *
+   * @remarks
    */
-  tools?: Array<string> | undefined;
+  agentName: string;
   /**
-   * System instructions for the model. Uses a default if omitted.
+   * The agent configuration for a run: the model, tools, instructions, and MCP servers that define its behavior. Runs with the same configuration share a revision.
+   *
+   * @remarks
    */
-  systemPrompt?: string | undefined;
-  /**
-   * Max model steps before the run stops. Uses a default if omitted.
-   */
-  maxSteps?: number | undefined;
-  /**
-   * MCP servers whose tools are offered to the model.
-   */
-  mcpServers?: Array<MCPServer> | undefined;
+  agent: AgentConfig;
 };
 
 /** @internal */
 export type RunSessionRequest$Outbound = {
   user_prompt: string;
-  model: Model$Outbound;
-  tools?: Array<string> | undefined;
-  system_prompt?: string | undefined;
-  max_steps?: number | undefined;
-  mcp_servers?: Array<MCPServer$Outbound> | undefined;
+  agent_name: string;
+  agent: AgentConfig$Outbound;
 };
 
 /** @internal */
@@ -52,18 +43,13 @@ export const RunSessionRequest$outboundSchema: z.ZodMiniType<
 > = z.pipe(
   z.object({
     userPrompt: z.string(),
-    model: Model$outboundSchema,
-    tools: z.optional(z.array(z.string())),
-    systemPrompt: z.optional(z.string()),
-    maxSteps: z.optional(z.int()),
-    mcpServers: z.optional(z.array(MCPServer$outboundSchema)),
+    agentName: z.string(),
+    agent: AgentConfig$outboundSchema,
   }),
   z.transform((v) => {
     return remap$(v, {
       userPrompt: "user_prompt",
-      systemPrompt: "system_prompt",
-      maxSteps: "max_steps",
-      mcpServers: "mcp_servers",
+      agentName: "agent_name",
     });
   }),
 );

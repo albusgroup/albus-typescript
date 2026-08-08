@@ -44,6 +44,16 @@ export type Session = {
    * Number of times this session has been run.
    */
   invocationCount: number;
+  /**
+   * Name of the agent that last ran this session.
+   */
+  agentName?: string | undefined;
+  /**
+   * Revision of the agent that last ran this session. Runs with the same configuration share this value.
+   *
+   * @remarks
+   */
+  agentRevision?: string | undefined;
   createdAt: Date;
   updatedAt: Date;
 };
@@ -59,6 +69,8 @@ export const Session$inboundSchema: z.ZodMiniType<Session, unknown> = z.pipe(
     state: State$inboundSchema,
     current_invocation_id: types.optional(types.string()),
     invocation_count: types.number(),
+    agent_name: types.optional(types.string()),
+    agent_revision: types.optional(types.string()),
     created_at: types.date(),
     updated_at: types.date(),
   }),
@@ -66,6 +78,8 @@ export const Session$inboundSchema: z.ZodMiniType<Session, unknown> = z.pipe(
     return remap$(v, {
       "current_invocation_id": "currentInvocationId",
       "invocation_count": "invocationCount",
+      "agent_name": "agentName",
+      "agent_revision": "agentRevision",
       "created_at": "createdAt",
       "updated_at": "updatedAt",
     });

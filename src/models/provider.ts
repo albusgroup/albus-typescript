@@ -3,6 +3,10 @@
  */
 
 import * as z from "zod/v4-mini";
+import { safeParse } from "../lib/schemas.js";
+import { Result as SafeParseResult } from "../types/fp.js";
+import * as types from "../types/primitives.js";
+import { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export type Provider = {
   /**
@@ -22,6 +26,13 @@ export type Provider = {
 };
 
 /** @internal */
+export const Provider$inboundSchema: z.ZodMiniType<Provider, unknown> = z
+  .object({
+    name: types.string(),
+    url: types.optional(types.string()),
+    credential: types.string(),
+  });
+/** @internal */
 export type Provider$Outbound = {
   name: string;
   url?: string | undefined;
@@ -40,4 +51,13 @@ export const Provider$outboundSchema: z.ZodMiniType<
 
 export function providerToJSON(provider: Provider): string {
   return JSON.stringify(Provider$outboundSchema.parse(provider));
+}
+export function providerFromJSON(
+  jsonString: string,
+): SafeParseResult<Provider, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Provider$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Provider' from JSON`,
+  );
 }
