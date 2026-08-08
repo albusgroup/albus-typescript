@@ -16,5 +16,5 @@ let value: Type = "llm_call";
 ## Values
 
 ```typescript
-"llm_call" | "tool_result" | "run_finished" | "run_failed" | Unrecognized<string>
+"llm_call" | "tool_result" | "harness_exit" | "run_failed" | "run_succeeded" | Unrecognized<string>
 ```

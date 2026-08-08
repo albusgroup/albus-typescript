@@ -165,6 +165,12 @@ run();
 <details open>
 <summary>Available methods</summary>
 
+### [Agents](docs/sdks/agents/README.md)
+
+* [listAgents](docs/sdks/agents/README.md#listagents) - List agents
+* [getAgent](docs/sdks/agents/README.md#getagent) - Get an agent by name
+* [getAgentRevision](docs/sdks/agents/README.md#getagentrevision) - Get a specific revision of an agent
+
 ### [Auth](docs/sdks/auth/README.md)
 
 * [whoami](docs/sdks/auth/README.md#whoami) - Get current user information
@@ -218,6 +224,9 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 
 <summary>Available standalone functions</summary>
 
+- [`agentsGetAgent`](docs/sdks/agents/README.md#getagent) - Get an agent by name
+- [`agentsGetAgentRevision`](docs/sdks/agents/README.md#getagentrevision) - Get a specific revision of an agent
+- [`agentsListAgents`](docs/sdks/agents/README.md#listagents) - List agents
 - [`authWhoami`](docs/sdks/auth/README.md#whoami) - Get current user information
 - [`healthHealth`](docs/sdks/health/README.md#health) - Health check endpoint
 - [`invitesCreateInvite`](docs/sdks/invites/README.md#createinvite) - Invite a user by email
@@ -374,14 +383,14 @@ run();
 
 
 **Inherit from [`AlbusError`](./src/models/errors/albus-error.ts)**:
-* [`ErrNotFound`](./src/models/errors/err-not-found.ts): Not found. Status code `404`. Applicable to 8 of 17 methods.*
-* [`ErrBadRequest`](./src/models/errors/err-bad-request.ts): Status code `400`. Applicable to 6 of 17 methods.*
-* [`ErrConflict`](./src/models/errors/err-conflict.ts): Status code `409`. Applicable to 2 of 17 methods.*
-* [`ErrLocked`](./src/models/errors/err-locked.ts): Another invocation is currently running for this session. Status code `423`. Applicable to 1 of 17 methods.*
-* [`ErrQuotaExceeded`](./src/models/errors/err-quota-exceeded.ts): The organization has reached its invocation quota. Status code `429`. Applicable to 1 of 17 methods.*
-* [`ErrRunFailed`](./src/models/errors/err-run-failed.ts): The harness run failed instead of producing a response (only possible with wait=true, or when replaying a failed invocation). The body carries the failure kind and detail. Status code `502`. Applicable to 1 of 17 methods.*
-* [`HealthResponseError`](./src/models/errors/health-response-error.ts): Service is healthy. Status code `503`. Applicable to 1 of 17 methods.*
-* [`ErrTimeout`](./src/models/errors/err-timeout.ts): Timed out waiting for the assistant response. Status code `504`. Applicable to 1 of 17 methods.*
+* [`ErrNotFound`](./src/models/errors/err-not-found.ts): Not found. Status code `404`. Applicable to 10 of 20 methods.*
+* [`ErrBadRequest`](./src/models/errors/err-bad-request.ts): Status code `400`. Applicable to 6 of 20 methods.*
+* [`ErrConflict`](./src/models/errors/err-conflict.ts): Status code `409`. Applicable to 2 of 20 methods.*
+* [`ErrLocked`](./src/models/errors/err-locked.ts): Another invocation is currently running for this session. Status code `423`. Applicable to 1 of 20 methods.*
+* [`ErrQuotaExceeded`](./src/models/errors/err-quota-exceeded.ts): The organization has reached its invocation quota. Status code `429`. Applicable to 1 of 20 methods.*
+* [`ErrRunFailed`](./src/models/errors/err-run-failed.ts): The harness run failed instead of producing a response (only possible with wait=true, or when replaying a failed invocation). The body carries the failure kind and detail. Status code `502`. Applicable to 1 of 20 methods.*
+* [`HealthResponseError`](./src/models/errors/health-response-error.ts): Service is healthy. Status code `503`. Applicable to 1 of 20 methods.*
+* [`ErrTimeout`](./src/models/errors/err-timeout.ts): Timed out waiting for the assistant response. Status code `504`. Applicable to 1 of 20 methods.*
 * [`ResponseValidationError`](./src/models/errors/response-validation-error.ts): Type mismatch between the data returned from the server and the structure expected by the SDK. See `error.rawValue` for the raw value and `error.pretty()` for a nicely formatted multi-line string.
 
 </details>

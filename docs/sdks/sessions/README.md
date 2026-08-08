@@ -190,8 +190,11 @@ async function run() {
     id: "<id>",
     body: {
       userPrompt: "<value>",
-      model: {
-        name: "<value>",
+      agentName: "<value>",
+      agent: {
+        model: {
+          name: "<value>",
+        },
       },
     },
   });
@@ -223,8 +226,11 @@ async function run() {
     id: "<id>",
     body: {
       userPrompt: "<value>",
-      model: {
-        name: "<value>",
+      agentName: "<value>",
+      agent: {
+        model: {
+          name: "<value>",
+        },
       },
     },
   });

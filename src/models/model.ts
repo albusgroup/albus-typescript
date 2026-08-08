@@ -3,20 +3,30 @@
  */
 
 import * as z from "zod/v4-mini";
+import { safeParse } from "../lib/schemas.js";
+import { Result as SafeParseResult } from "../types/fp.js";
+import * as types from "../types/primitives.js";
+import { SDKValidationError } from "./errors/sdk-validation-error.js";
 import {
   Provider,
+  Provider$inboundSchema,
   Provider$Outbound,
   Provider$outboundSchema,
 } from "./provider.js";
 
 export type Model = {
   /**
-   * Model identifier (e.g. "gemini-2.5-flash", "claude-opus-4").
+   * Model identifier (e.g. "gemini-3.6-flash", "claude-opus-4").
    */
   name: string;
   provider?: Provider | undefined;
 };
 
+/** @internal */
+export const Model$inboundSchema: z.ZodMiniType<Model, unknown> = z.object({
+  name: types.string(),
+  provider: types.optional(Provider$inboundSchema),
+});
 /** @internal */
 export type Model$Outbound = {
   name: string;
@@ -32,4 +42,13 @@ export const Model$outboundSchema: z.ZodMiniType<Model$Outbound, Model> = z
 
 export function modelToJSON(model: Model): string {
   return JSON.stringify(Model$outboundSchema.parse(model));
+}
+export function modelFromJSON(
+  jsonString: string,
+): SafeParseResult<Model, SDKValidationError> {
+  return safeParse(
+    jsonString,
+    (x) => Model$inboundSchema.parse(JSON.parse(x)),
+    `Failed to parse 'Model' from JSON`,
+  );
 }
