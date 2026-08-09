@@ -15,15 +15,13 @@ export class Agents extends ClientSDK {
    * List agents
    *
    * @remarks
-   * Lists the agents that have run in your organization, each with its latest revision. Use `name` to look up a single agent by name.
+   * Lists the agents that have run in your organization, each with its latest revision.
    */
   async listAgents(
-    request?: operations.ListAgentsRequest | undefined,
     options?: RequestOptions,
   ): Promise<models.ListAgentsResponse> {
     return unwrapAsync(agentsListAgents(
       this,
-      request,
       options,
     ));
   }

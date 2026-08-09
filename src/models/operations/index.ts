@@ -11,6 +11,5 @@ export * from "./get-secret.js";
 export * from "./get-session-audit.js";
 export * from "./get-session.js";
 export * from "./get-token.js";
-export * from "./list-agents.js";
 export * from "./run-session.js";
 export * from "./update-secret.js";
