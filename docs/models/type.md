@@ -1,6 +1,6 @@
 # Type
 
-The kind of event (e.g. "llm_call" for a model call and the tool calls it requested, "tool_result" for a tool's output).
+The kind of event (e.g. "agent_invocation" for the request that started the run, "model_call" for a model call and the tool calls it requested, "tool_call" for an executed tool call and its output). Events recorded earlier use "llm_call" and "tool_result" for those same two kinds.
 
 
 ## Example Usage
@@ -8,7 +8,7 @@ The kind of event (e.g. "llm_call" for a model call and the tool calls it reques
 ```typescript
 import { Type } from "@albus-ts/sdk/models";
 
-let value: Type = "llm_call";
+let value: Type = "agent_invocation";
 
 // Open enum: unrecognized values are captured as Unrecognized<string>
 ```
@@ -16,5 +16,5 @@ let value: Type = "llm_call";
 ## Values
 
 ```typescript
-"llm_call" | "tool_result" | "harness_exit" | "run_failed" | "run_succeeded" | Unrecognized<string>
+"agent_invocation" | "model_call" | "tool_call" | "harness_exit" | "run_failed" | "run_succeeded" | "llm_call" | "tool_result" | Unrecognized<string>
 ```

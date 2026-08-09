@@ -10,7 +10,7 @@ let value: ListAuditEventsResponse = {
     {
       id: "<id>",
       sessionId: "<id>",
-      invocationId: "<id>",
+      idempotencyKey: "<value>",
       type: "harness_exit",
       payload: {
         "key": "<value>",

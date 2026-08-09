@@ -12,19 +12,22 @@ import * as types from "../types/primitives.js";
 import { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 /**
- * The kind of event (e.g. "llm_call" for a model call and the tool calls it requested, "tool_result" for a tool's output).
+ * The kind of event (e.g. "agent_invocation" for the request that started the run, "model_call" for a model call and the tool calls it requested, "tool_call" for an executed tool call and its output). Events recorded earlier use "llm_call" and "tool_result" for those same two kinds.
  *
  * @remarks
  */
 export const Type = {
-  LlmCall: "llm_call",
-  ToolResult: "tool_result",
+  AgentInvocation: "agent_invocation",
+  ModelCall: "model_call",
+  ToolCall: "tool_call",
   HarnessExit: "harness_exit",
   RunFailed: "run_failed",
   RunSucceeded: "run_succeeded",
+  LlmCall: "llm_call",
+  ToolResult: "tool_result",
 } as const;
 /**
- * The kind of event (e.g. "llm_call" for a model call and the tool calls it requested, "tool_result" for a tool's output).
+ * The kind of event (e.g. "agent_invocation" for the request that started the run, "model_call" for a model call and the tool calls it requested, "tool_call" for an executed tool call and its output). Events recorded earlier use "llm_call" and "tool_result" for those same two kinds.
  *
  * @remarks
  */
@@ -40,17 +43,23 @@ export type AuditEvent = {
    */
   sessionId: string;
   /**
-   * The invocation (run) during which this event occurred.
+   * Idempotency key of the run during which this event occurred.
+   *
+   * @remarks
    */
-  invocationId: string;
+  idempotencyKey: string;
   /**
-   * The kind of event (e.g. "llm_call" for a model call and the tool calls it requested, "tool_result" for a tool's output).
+   * The agent revision the invocation ran (e.g. "a1b2c3d4").
+   */
+  agentRevision?: string | undefined;
+  /**
+   * The kind of event (e.g. "agent_invocation" for the request that started the run, "model_call" for a model call and the tool calls it requested, "tool_call" for an executed tool call and its output). Events recorded earlier use "llm_call" and "tool_result" for those same two kinds.
    *
    * @remarks
    */
   type: Type;
   /**
-   * The event's details, whose shape depends on `type` (e.g. the model content and requested tool calls for "llm_call").
+   * The event's details, whose shape depends on `type` (e.g. the model content and requested tool calls for "model_call"; the call's arguments, response, and MCP server URL for "tool_call"). Model and tool output and tool arguments are stored up to 32 KiB each, alongside the byte count, SHA-256 digest, and truncation flag of the complete value (e.g. `contentBytes`, `contentSha256`, `contentTruncated`).
    *
    * @remarks
    */
@@ -71,7 +80,8 @@ export const AuditEvent$inboundSchema: z.ZodMiniType<AuditEvent, unknown> = z
     z.object({
       id: types.string(),
       session_id: types.string(),
-      invocation_id: types.string(),
+      idempotency_key: types.string(),
+      agent_revision: types.optional(types.string()),
       type: Type$inboundSchema,
       payload: z.record(z.string(), z.any()),
       event_time: types.date(),
@@ -79,7 +89,8 @@ export const AuditEvent$inboundSchema: z.ZodMiniType<AuditEvent, unknown> = z
     z.transform((v) => {
       return remap$(v, {
         "session_id": "sessionId",
-        "invocation_id": "invocationId",
+        "idempotency_key": "idempotencyKey",
+        "agent_revision": "agentRevision",
         "event_time": "eventTime",
       });
     }),
