@@ -1,0 +1,63 @@
+name: Bug report
+description: Report incorrect or unexpected behavior in the @albus-ts/sdk package
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The SDK is generated and maintained upstream, and this repository is a
+        mirror of each release. Fixes land upstream and arrive in the next
+        published version, which closes the issue.
+
+        **Never paste access tokens, API keys, secret values, or customer data
+        into this issue.** Redact them from code, logs, and stack traces.
+        Report suspected vulnerabilities privately through
+        [SECURITY.md](https://github.com/albusgroup/albus-typescript/blob/master/SECURITY.md)
+        instead of opening an issue.
+
+  - type: input
+    id: sdk-version
+    attributes:
+      label: "@albus-ts/sdk version"
+      description: Output of `npm list @albus-ts/sdk`.
+      placeholder: "0.4.0"
+    validations:
+      required: true
+
+  - type: input
+    id: runtime-version
+    attributes:
+      label: Runtime and TypeScript versions
+      description: >
+        The JavaScript runtime and its version (for example `node --version`),
+        and the TypeScript version when the problem is a type error.
+      placeholder: "Node 22.11.0, TypeScript 5.8.3"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: >
+        The smallest code sample that shows the problem, with credentials and
+        customer data removed.
+      render: typescript
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+      description: >
+        What happened instead, including the error type, the HTTP status, and
+        redacted logs when relevant.
+    validations:
+      required: true

@@ -4,42 +4,38 @@ Thanks for helping improve the Albus TypeScript SDK.
 
 ## Report a problem
 
-Open a GitHub issue with:
+Open a [GitHub issue](https://github.com/albusgroup/albus-typescript/issues)
+with:
 
 - The installed `@albus-ts/sdk`, JavaScript runtime, and TypeScript versions.
 - A minimal example that reproduces the problem.
 - The expected and actual behavior.
-- The exception type, response status, and sanitized logs when relevant.
+- The error type, response status, and sanitized logs when relevant.
 
 Do not include access tokens, organization keys, secret values, or other
 sensitive data.
 
-Report suspected vulnerabilities privately to the maintainers, not by opening
-a public issue.
+Report suspected vulnerabilities privately by following
+[SECURITY.md](SECURITY.md), not by opening a public issue.
+
+## This repository is a mirror
+
+The SDK is developed in the private Albus repository, alongside the
+`api/openapi.yaml` contract it is generated from, and each release is copied
+here. This repository does not accept pull requests: a change merged here is
+removed by the next release, so one opened here is commented on and closed
+automatically.
+
+Issues are the right channel, and they are read. Maintainers fix the problem
+upstream, and the fix arrives in the next published version, which closes the
+issue.
 
 ## Generated-code ownership
 
-The API contract is maintained in the private Albus repository at
-`api/openapi.yaml`. Speakeasy generates the SDK implementation, model and
-endpoint documentation, package metadata, and generation lock files from that
-contract.
+Speakeasy generates the SDK implementation, model and endpoint documentation,
+package metadata, and the generation lock files from the OpenAPI contract.
+Everything under `src/` and `docs/` is generated output, so a fix belongs in
+the specification or in the generator configuration, never in the generated
+file.
 
-Changes made directly to generated files under `src/` or `docs/` will be
-overwritten. Pull requests should normally change one of these instead:
-
-- The authoritative OpenAPI specification, for API behavior or documentation.
-- `.speakeasy/gen.yaml`, for generator behavior.
-- `tools/`, `tests/`, or handwritten README sections, for this repository's
-  generation workflow, checks, and usage guidance.
-
-Maintainers regenerate with:
-
-```bash
-./tools/generate /path/to/albus/api/openapi.yaml 0.1.0
-```
-
-The specification snapshot, generated output, documentation, package metadata,
-and lock files must be reviewed and committed together.
-
-Maintainers should follow `RELEASING.md` after a release pull request is
-merged.
+See [RELEASING.md](RELEASING.md) for how a version is produced and published.

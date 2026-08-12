@@ -5,23 +5,65 @@ set -Eeuo pipefail
 script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 repo_root="$(cd -- "$script_dir/.." && pwd)"
 
+usage() {
+    cat >&2 <<EOF
+usage: $0 [--without-speakeasy]
+
+Lint, build, test, and install the packed SDK.
+
+  --without-speakeasy   Skip the steps that need the Speakeasy CLI and a
+                        Speakeasy account. Nothing here runs in CI, so this is
+                        for a machine that lacks the pinned CLI; the flag is
+                        explicit so a missing CLI cannot quietly become a green
+                        run that checked less.
+EOF
+}
+
+with_speakeasy=true
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        --without-speakeasy)
+            with_speakeasy=false
+            shift
+            ;;
+        -h|--help)
+            usage
+            exit 0
+            ;;
+        *)
+            echo "error: unknown argument: $1" >&2
+            usage
+            exit 2
+            ;;
+    esac
+done
+
 cd "$repo_root"
 
-for command in node npm speakeasy; do
+required_commands=(node npm)
+if [[ "$with_speakeasy" == true ]]; then
+    required_commands+=(speakeasy)
+fi
+
+for command in "${required_commands[@]}"; do
     if ! command -v "$command" >/dev/null 2>&1; then
         echo "error: required command not found: $command" >&2
         exit 1
     fi
 done
 
-bash -n tools/check tools/generate tools/publish
+bash -n tools/check tools/generate tools/mirror-release tools/publish \
+    tools/release-state.sh
 for file in tools/*.mjs tests/*.mjs; do
     node --check "$file"
 done
 
-speakeasy openapi lint \
-    --schema openapi/openapi.yaml \
-    --non-interactive
+if [[ "$with_speakeasy" == true ]]; then
+    speakeasy openapi lint \
+        --schema openapi/openapi.yaml \
+        --non-interactive
+fi
 
 npm ci
 npm run lint

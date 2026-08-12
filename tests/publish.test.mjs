@@ -14,6 +14,9 @@ import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 const publisher = fileURLToPath(new URL("../tools/publish", import.meta.url));
+const releaseState = fileURLToPath(
+  new URL("../tools/release-state.sh", import.meta.url),
+);
 
 function runPublisher(arguments_) {
   return spawnSync(publisher, arguments_, {
@@ -50,6 +53,7 @@ test("supports interactive npm authentication without a token", async () => {
     await mkdir(bin);
     await copyFile(publisher, join(tools, "publish"));
     await chmod(join(tools, "publish"), 0o755);
+    await copyFile(releaseState, join(tools, "release-state.sh"));
     await writeExecutable(
       join(tools, "check"),
       "#!/usr/bin/env bash\nexit 0\n",

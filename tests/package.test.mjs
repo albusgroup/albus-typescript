@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { readFile } from "node:fs/promises";
+import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
 const packageText = await readFile(
@@ -7,6 +7,9 @@ const packageText = await readFile(
   "utf8",
 );
 const packageJson = JSON.parse(packageText);
+const jsrJson = JSON.parse(
+  await readFile(new URL("../jsr.json", import.meta.url), "utf8"),
+);
 
 test("publishes the intended public package metadata", () => {
   assert.equal(packageJson.name, "@albus-ts/sdk");
@@ -26,4 +29,21 @@ test("publishes the intended public package metadata", () => {
     1,
   );
   assert.deepEqual(packageJson.files, ["esm", "src", "RUNTIMES.md"]);
+});
+
+test("keeps jsr.json coherent with the npm package", async () => {
+  assert.equal(jsrJson.name, packageJson.name);
+  assert.equal(jsrJson.version, packageJson.version);
+
+  for (const target of Object.values(jsrJson.exports)) {
+    await access(new URL(`../${target}`, import.meta.url));
+  }
+
+  for (const included of jsrJson.publish.include) {
+    if (included.includes("*")) {
+      continue;
+    }
+
+    await access(new URL(`../${included}`, import.meta.url));
+  }
 });

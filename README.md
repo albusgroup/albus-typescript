@@ -56,6 +56,7 @@ Albus API: Albus service REST API
 * [Development](#development)
   * [Regeneration](#regeneration)
   * [Checks](#checks)
+  * [Releases](#releases)
   * [Maturity](#maturity)
   * [Contributions](#contributions)
 
@@ -388,7 +389,7 @@ run();
 * [`ErrConflict`](./src/models/errors/err-conflict.ts): Status code `409`. Applicable to 2 of 20 methods.*
 * [`ErrLocked`](./src/models/errors/err-locked.ts): Another invocation is currently running for this session. Status code `423`. Applicable to 1 of 20 methods.*
 * [`ErrQuotaExceeded`](./src/models/errors/err-quota-exceeded.ts): The organization has reached its invocation quota. Status code `429`. Applicable to 1 of 20 methods.*
-* [`ErrRunFailed`](./src/models/errors/err-run-failed.ts): The harness run failed instead of producing a response (only possible with wait=true, or when replaying a failed invocation). The body carries the failure kind and detail. Status code `502`. Applicable to 1 of 20 methods.*
+* [`ErrRunFailed`](./src/models/errors/err-run-failed.ts): The harness run failed instead of producing a response (only possible while waiting for a response, or when replaying a failed invocation). The body carries the failure kind and detail. Status code `502`. Applicable to 1 of 20 methods.*
 * [`HealthResponseError`](./src/models/errors/health-response-error.ts): Service is healthy. Status code `503`. Applicable to 1 of 20 methods.*
 * [`ErrTimeout`](./src/models/errors/err-timeout.ts): Timed out waiting for the assistant response. Status code `504`. Applicable to 1 of 20 methods.*
 * [`ResponseValidationError`](./src/models/errors/response-validation-error.ts): Type mismatch between the data returned from the server and the structure expected by the SDK. See `error.rawValue` for the raw value and `error.pretty()` for a nicely formatted multi-line string.
@@ -534,11 +535,18 @@ You can also enable a default debug logger by setting an environment variable `A
 
 ## Regeneration
 
-Regenerate from the authoritative Albus OpenAPI specification:
+Regeneration requires Node, Speakeasy authentication, and the Speakeasy CLI
+version pinned in `.speakeasy/workflow.yaml`.
+
+Run the generator with the SDK version to produce:
 
 ```bash
-./tools/generate /path/to/albus/api/openapi.yaml 0.1.0
+./tools/generate 0.1.0
 ```
+
+The source is the authoritative `api/openapi.yaml` in the Albus repository,
+where this SDK is developed; pass a path as a second argument only to preview
+against a different specification.
 
 Review and commit the OpenAPI snapshot, generated source, documentation,
 package metadata, and Speakeasy lock files together.
@@ -553,7 +561,14 @@ Run the complete local validation:
 
 The check lints the OpenAPI document and TypeScript source, builds and tests the
 SDK, audits production dependencies, validates the npm tarball contents, and
-installs the packed SDK in an isolated project.
+installs the packed SDK in an isolated project. A machine without the pinned
+Speakeasy CLI runs `./tools/check --without-speakeasy`, which skips the
+specification lint.
+
+## Releases
+
+Publishing is manual. Follow [RELEASING.md](RELEASING.md) to validate and
+publish a generated version with the guarded local scripts.
 
 ## Maturity
 

@@ -24,11 +24,18 @@ const developmentBlock = `# Development
 
 ## Regeneration
 
-Regenerate from the authoritative Albus OpenAPI specification:
+Regeneration requires Node, Speakeasy authentication, and the Speakeasy CLI
+version pinned in \`.speakeasy/workflow.yaml\`.
+
+Run the generator with the SDK version to produce:
 
 \`\`\`bash
-./tools/generate /path/to/albus/api/openapi.yaml 0.1.0
+./tools/generate 0.1.0
 \`\`\`
+
+The source is the authoritative \`api/openapi.yaml\` in the Albus repository,
+where this SDK is developed; pass a path as a second argument only to preview
+against a different specification.
 
 Review and commit the OpenAPI snapshot, generated source, documentation,
 package metadata, and Speakeasy lock files together.
@@ -43,7 +50,14 @@ Run the complete local validation:
 
 The check lints the OpenAPI document and TypeScript source, builds and tests the
 SDK, audits production dependencies, validates the npm tarball contents, and
-installs the packed SDK in an isolated project.
+installs the packed SDK in an isolated project. A machine without the pinned
+Speakeasy CLI runs \`./tools/check --without-speakeasy\`, which skips the
+specification lint.
+
+## Releases
+
+Publishing is manual. Follow [RELEASING.md](RELEASING.md) to validate and
+publish a generated version with the guarded local scripts.
 
 `;
 

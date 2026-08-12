@@ -21,17 +21,11 @@ export type RunSessionRequest = {
    */
   idempotencyKey?: string | undefined;
   /**
-   * When true, long-poll: block until the invocation's assistant response is available before returning.
+   * Wait up to this many seconds for the assistant response. Omit to return after the invocation is accepted; use 0 to wait until a response is available.
    *
    * @remarks
    */
-  wait?: boolean | undefined;
-  /**
-   * Maximum time in seconds to block when wait=true. Omit to wait indefinitely. Ignored when wait is false.
-   *
-   * @remarks
-   */
-  waitTimeout?: number | undefined;
+  waitTimeoutSeconds?: number | undefined;
   body: models.RunSessionRequest;
 };
 
@@ -44,8 +38,7 @@ export type RunSessionResponse = {
 export type RunSessionRequest$Outbound = {
   id: string;
   "Idempotency-Key"?: string | undefined;
-  wait: boolean;
-  wait_timeout?: number | undefined;
+  wait_timeout_seconds?: number | undefined;
   body: models.RunSessionRequest$Outbound;
 };
 
@@ -57,14 +50,13 @@ export const RunSessionRequest$outboundSchema: z.ZodMiniType<
   z.object({
     id: z.string(),
     idempotencyKey: z.optional(z.string()),
-    wait: z._default(z.boolean(), false),
-    waitTimeout: z.optional(z.int()),
+    waitTimeoutSeconds: z.optional(z.int()),
     body: models.RunSessionRequest$outboundSchema,
   }),
   z.transform((v) => {
     return remap$(v, {
       idempotencyKey: "Idempotency-Key",
-      waitTimeout: "wait_timeout",
+      waitTimeoutSeconds: "wait_timeout_seconds",
     });
   }),
 );

@@ -57,6 +57,7 @@ function repositoryVersions() {
   const packageLock = readJson("package-lock.json");
   return {
     ".speakeasy/gen.yaml": configuredVersion(),
+    "jsr.json": readJson("jsr.json").version,
     "package.json": packageJson.version,
     "package-lock.json": packageLock.packages[""].version,
     "src/lib/config.ts": generatedVersion(),
