@@ -21,7 +21,7 @@ export type RunSessionRequest = {
    */
   idempotencyKey?: string | undefined;
   /**
-   * Wait up to this many seconds for the assistant response. Omit to return after the invocation is accepted; use 0 to wait until a response is available.
+   * Wait up to this many seconds for the assistant response. Omit to wait up to 30 minutes; use 0 to return after the invocation is accepted.
    *
    * @remarks
    */
@@ -38,7 +38,7 @@ export type RunSessionResponse = {
 export type RunSessionRequest$Outbound = {
   id: string;
   "Idempotency-Key"?: string | undefined;
-  wait_timeout_seconds?: number | undefined;
+  wait_timeout_seconds: number;
   body: models.RunSessionRequest$Outbound;
 };
 
@@ -50,7 +50,7 @@ export const RunSessionRequest$outboundSchema: z.ZodMiniType<
   z.object({
     id: z.string(),
     idempotencyKey: z.optional(z.string()),
-    waitTimeoutSeconds: z.optional(z.int()),
+    waitTimeoutSeconds: z._default(z.int(), 1800),
     body: models.RunSessionRequest$outboundSchema,
   }),
   z.transform((v) => {

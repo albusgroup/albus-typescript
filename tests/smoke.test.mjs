@@ -103,10 +103,13 @@ test("long-polls a run with wait_timeout_seconds", async () => {
   assert.equal(response.result.messages[0].content, "hi");
 });
 
-test("omits the long-poll parameter for a fire-and-forget run", async () => {
+test("defaults a run to a 30-minute wait", async () => {
   const httpClient = new HTTPClient({
     fetcher: async (request) => {
-      assert.equal(request.url, "https://albus.sh/api/sessions/demo");
+      assert.equal(
+        request.url,
+        "https://albus.sh/api/sessions/demo?wait_timeout_seconds=1800",
+      );
       return jsonResponse({
         session: sessionBody("RUNNING"),
         messages: [],
@@ -120,6 +123,37 @@ test("omits the long-poll parameter for a fire-and-forget run", async () => {
 
   const response = await albus.sessions.runSession({
     id: "demo",
+    body: {
+      userPrompt: "hello",
+      agentName: "support-triage",
+      agent: { model: { name: "gemini-2.5-pro" } },
+    },
+  });
+
+  assert.equal(response.result.session.state, "RUNNING");
+});
+
+test("uses zero for a fire-and-forget run", async () => {
+  const httpClient = new HTTPClient({
+    fetcher: async (request) => {
+      assert.equal(
+        request.url,
+        "https://albus.sh/api/sessions/demo?wait_timeout_seconds=0",
+      );
+      return jsonResponse({
+        session: sessionBody("RUNNING"),
+        messages: [],
+      });
+    },
+  });
+  const albus = new Albus({
+    httpClient,
+    security: { apiKeyAuth: "organization-key" },
+  });
+
+  const response = await albus.sessions.runSession({
+    id: "demo",
+    waitTimeoutSeconds: 0,
     body: {
       userPrompt: "hello",
       agentName: "support-triage",
