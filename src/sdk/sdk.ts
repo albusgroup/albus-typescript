@@ -7,6 +7,7 @@ import { Agents } from "./agents.js";
 import { Auth } from "./auth.js";
 import { Health } from "./health.js";
 import { Invites } from "./invites.js";
+import { Models } from "./models.js";
 import { Secrets } from "./secrets.js";
 import { Sessions } from "./sessions.js";
 import { Tokens } from "./tokens.js";
@@ -30,6 +31,11 @@ export class Albus extends ClientSDK {
   private _agents?: Agents;
   get agents(): Agents {
     return (this._agents ??= new Agents(this._options));
+  }
+
+  private _models?: Models;
+  get models(): Models {
+    return (this._models ??= new Models(this._options));
   }
 
   private _health?: Health;
