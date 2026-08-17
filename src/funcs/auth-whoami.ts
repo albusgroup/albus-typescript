@@ -25,12 +25,12 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Get current user information
+ * Get the authenticated caller
  *
  * @remarks
- * Returns the authenticated user along with every organization they belong to and their roles in each.
+ * Returns the caller a credential authenticates: a signed-in user with every organization they belong to and their roles in each, or the API key that signed the request, along with the organization it acts in.
  *
- * If set, this operation will use {@link Security.bearerAuth} from the global security.
+ * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKey} from the global security.
  */
 export function authWhoami(
   client: AlbusCore,
@@ -82,7 +82,7 @@ async function $do(
   }));
 
   const securityInput = await extractSecurity(client._options.security);
-  const requestSecurity = resolveGlobalSecurity(securityInput, [0]);
+  const requestSecurity = resolveGlobalSecurity(securityInput, [0, 1]);
 
   const context = {
     options: client._options,

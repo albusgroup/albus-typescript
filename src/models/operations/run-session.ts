@@ -31,7 +31,7 @@ export type RunSessionRequest = {
 
 export type RunSessionResponse = {
   headers: { [k: string]: Array<string> };
-  result: models.SessionResponse;
+  result: models.RunSessionResponse;
 };
 
 /** @internal */
@@ -76,7 +76,7 @@ export const RunSessionResponse$inboundSchema: z.ZodMiniType<
 > = z.pipe(
   z.object({
     Headers: z._default(z.record(z.string(), z.array(z.string())), {}),
-    Result: models.SessionResponse$inboundSchema,
+    Result: models.RunSessionResponse$inboundSchema,
   }),
   z.transform((v) => {
     return remap$(v, {

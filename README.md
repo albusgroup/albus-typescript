@@ -20,7 +20,7 @@ import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   security: {
-    apiKeyAuth: process.env.ALBUS_API_KEY_AUTH ?? "",
+    apiKey: process.env.ALBUS_API_KEY ?? "",
   },
 });
 
@@ -137,7 +137,7 @@ This SDK supports the following security schemes globally:
 | Name         | Type | Scheme      | Environment Variable |
 | ------------ | ---- | ----------- | -------------------- |
 | `bearerAuth` | http | HTTP Bearer | `ALBUS_BEARER_AUTH`  |
-| `apiKeyAuth` | http | HTTP Bearer | `ALBUS_API_KEY_AUTH` |
+| `apiKey`     | http | HTTP Bearer | `ALBUS_API_KEY`      |
 
 You can set the security parameters through the `security` optional parameter when initializing the SDK client instance. The selected scheme will be used by default to authenticate with the API for all operations that support it. For example:
 ```typescript
@@ -174,7 +174,7 @@ run();
 
 ### [Auth](docs/sdks/auth/README.md)
 
-* [whoami](docs/sdks/auth/README.md#whoami) - Get current user information
+* [whoami](docs/sdks/auth/README.md#whoami) - Get the authenticated caller
 
 ### [Health](docs/sdks/health/README.md)
 
@@ -232,7 +232,7 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 - [`agentsGetAgent`](docs/sdks/agents/README.md#getagent) - Get an agent by name
 - [`agentsGetAgentRevision`](docs/sdks/agents/README.md#getagentrevision) - Get a specific revision of an agent
 - [`agentsListAgents`](docs/sdks/agents/README.md#listagents) - List agents
-- [`authWhoami`](docs/sdks/auth/README.md#whoami) - Get current user information
+- [`authWhoami`](docs/sdks/auth/README.md#whoami) - Get the authenticated caller
 - [`healthHealth`](docs/sdks/health/README.md#health) - Health check endpoint
 - [`invitesCreateInvite`](docs/sdks/invites/README.md#createinvite) - Invite a user by email
 - [`modelsListModels`](docs/sdks/models/README.md#listmodels) - List models

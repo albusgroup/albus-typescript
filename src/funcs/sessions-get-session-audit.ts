@@ -34,7 +34,7 @@ import { Result } from "../types/fp.js";
  * @remarks
  * Returns the session's audit log — an immutable, time-ordered record of what happened during its agent runs (LLM calls, tool results, and run outcomes). Events are ordered by the time they occurred. Use `after` and `limit` to page through them; pass the response's `next_cursor` as the next request's `after` to fetch the following page.
  *
- * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKeyAuth} from the global security.
+ * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKey} from the global security.
  */
 export function sessionsGetSessionAudit(
   client: AlbusCore,

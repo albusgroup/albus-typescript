@@ -48,7 +48,7 @@ test("sends an organization key as a bearer credential", async () => {
   });
   const albus = new Albus({
     httpClient,
-    security: { apiKeyAuth: "organization-key" },
+    security: { apiKey: "organization-key" },
   });
 
   const response = await albus.sessions.listSessions();
@@ -71,21 +71,19 @@ test("long-polls a run with wait_timeout_seconds", async () => {
       });
       return jsonResponse({
         session: sessionBody("DONE"),
-        messages: [
-          {
-            cursor: 1,
-            invocation_id: "invocation-1",
-            role: "assistant",
-            content: "hi",
-            created_at: "2026-01-01T00:00:00Z",
-          },
-        ],
+        message: {
+          cursor: 1,
+          invocation_id: "invocation-1",
+          role: "assistant",
+          content: "hi",
+          created_at: "2026-01-01T00:00:00Z",
+        },
       });
     },
   });
   const albus = new Albus({
     httpClient,
-    security: { apiKeyAuth: "organization-key" },
+    security: { apiKey: "organization-key" },
   });
 
   const response = await albus.sessions.runSession({
@@ -100,7 +98,7 @@ test("long-polls a run with wait_timeout_seconds", async () => {
   });
 
   assert.equal(response.result.session.state, "DONE");
-  assert.equal(response.result.messages[0].content, "hi");
+  assert.equal(response.result.message.content, "hi");
 });
 
 test("defaults a run to a 30-minute wait", async () => {
@@ -110,15 +108,12 @@ test("defaults a run to a 30-minute wait", async () => {
         request.url,
         "https://albus.sh/api/sessions/demo?wait_timeout_seconds=1800",
       );
-      return jsonResponse({
-        session: sessionBody("RUNNING"),
-        messages: [],
-      });
+      return jsonResponse({ session: sessionBody("RUNNING") });
     },
   });
   const albus = new Albus({
     httpClient,
-    security: { apiKeyAuth: "organization-key" },
+    security: { apiKey: "organization-key" },
   });
 
   const response = await albus.sessions.runSession({
@@ -140,15 +135,12 @@ test("uses zero for a fire-and-forget run", async () => {
         request.url,
         "https://albus.sh/api/sessions/demo?wait_timeout_seconds=0",
       );
-      return jsonResponse({
-        session: sessionBody("RUNNING"),
-        messages: [],
-      });
+      return jsonResponse({ session: sessionBody("RUNNING") });
     },
   });
   const albus = new Albus({
     httpClient,
-    security: { apiKeyAuth: "organization-key" },
+    security: { apiKey: "organization-key" },
   });
 
   const response = await albus.sessions.runSession({
@@ -162,6 +154,7 @@ test("uses zero for a fire-and-forget run", async () => {
   });
 
   assert.equal(response.result.session.state, "RUNNING");
+  assert.equal(response.result.message, undefined);
 });
 
 test("sends a user token and returns typed errors", async () => {

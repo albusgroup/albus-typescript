@@ -259,7 +259,7 @@ export function resolveGlobalSecurity(
       {
         fieldName: "Authorization",
         type: "http:bearer",
-        value: security?.apiKeyAuth ?? env().ALBUS_API_KEY_AUTH,
+        value: security?.apiKey ?? env().ALBUS_API_KEY,
       },
     ],
   ];

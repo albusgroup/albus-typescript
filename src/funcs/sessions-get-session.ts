@@ -34,7 +34,7 @@ import { Result } from "../types/fp.js";
  * @remarks
  * Returns the session's metadata and a page of its messages ordered by cursor ascending. Use `after` and `limit` to page through messages.
  *
- * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKeyAuth} from the global security.
+ * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKey} from the global security.
  */
 export function sessionsGetSession(
   client: AlbusCore,

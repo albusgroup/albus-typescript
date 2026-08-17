@@ -6,13 +6,13 @@ import * as z from "zod/v4-mini";
 
 export type Security = {
   bearerAuth?: string | undefined;
-  apiKeyAuth?: string | undefined;
+  apiKey?: string | undefined;
 };
 
 /** @internal */
 export type Security$Outbound = {
   bearerAuth?: string | undefined;
-  apiKeyAuth?: string | undefined;
+  apiKey?: string | undefined;
 };
 
 /** @internal */
@@ -21,7 +21,7 @@ export const Security$outboundSchema: z.ZodMiniType<
   Security
 > = z.object({
   bearerAuth: z.optional(z.string()),
-  apiKeyAuth: z.optional(z.string()),
+  apiKey: z.optional(z.string()),
 });
 
 export function securityToJSON(security: Security): string {

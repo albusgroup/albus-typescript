@@ -19,7 +19,9 @@ export type ModelMeta = {
    */
   name: string;
   /**
-   * Name of the provider serving this model (e.g. "gemini").
+   * Provider serving this model (e.g. "gemini", or "open_weight" for open-weight models).
+   *
+   * @remarks
    */
   provider: string;
 };

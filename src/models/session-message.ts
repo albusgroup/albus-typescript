@@ -19,7 +19,9 @@ export type SessionMessageRole = OpenEnum<typeof SessionMessageRole>;
 
 export type SessionMessage = {
   /**
-   * Monotonic per-session position of this message.
+   * Position of this message in the session's history, ascending — not an index into the list it arrives in.
+   *
+   * @remarks
    */
   cursor: number;
   /**

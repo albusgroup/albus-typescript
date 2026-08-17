@@ -11,7 +11,10 @@ let value: RunSessionResponse = {
       "<value 1>",
       "<value 2>",
     ],
-    "key1": [],
+    "key1": [
+      "<value 1>",
+      "<value 2>",
+    ],
   },
   result: {
     session: {
@@ -21,22 +24,13 @@ let value: RunSessionResponse = {
       createdAt: new Date("2026-08-13T18:36:23.796Z"),
       updatedAt: new Date("2024-12-20T02:07:11.573Z"),
     },
-    messages: [
-      {
-        cursor: 185684,
-        invocationId: "<id>",
-        role: "assistant",
-        content: "<value>",
-        createdAt: new Date("2026-09-26T05:02:23.738Z"),
-      },
-    ],
   },
 };
 ```
 
 ## Fields
 
-| Field                                                      | Type                                                       | Required                                                   | Description                                                |
-| ---------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------- |
-| `headers`                                                  | Record<string, *string*[]>                                 | :heavy_check_mark:                                         | N/A                                                        |
-| `result`                                                   | [models.SessionResponse](../../models/session-response.md) | :heavy_check_mark:                                         | N/A                                                        |
+| Field                                                             | Type                                                              | Required                                                          | Description                                                       |
+| ----------------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------- | ----------------------------------------------------------------- |
+| `headers`                                                         | Record<string, *string*[]>                                        | :heavy_check_mark:                                                | N/A                                                               |
+| `result`                                                          | [models.RunSessionResponse](../../models/run-session-response.md) | :heavy_check_mark:                                                | N/A                                                               |

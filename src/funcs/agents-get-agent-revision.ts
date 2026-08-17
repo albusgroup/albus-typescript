@@ -34,7 +34,7 @@ import { Result } from "../types/fp.js";
  * @remarks
  * Returns the full configuration of one revision of an agent — its model, tools, instructions, and MCP servers.
  *
- * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKeyAuth} from the global security.
+ * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKey} from the global security.
  */
 export function agentsGetAgentRevision(
   client: AlbusCore,

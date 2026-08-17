@@ -6,14 +6,14 @@ import * as z from "zod/v4-mini";
 
 export interface Env {
   ALBUS_BEARER_AUTH?: string | undefined;
-  ALBUS_API_KEY_AUTH?: string | undefined;
+  ALBUS_API_KEY?: string | undefined;
 
   ALBUS_DEBUG?: boolean | undefined;
 }
 
 export const envSchema: z.ZodMiniType<Env, unknown> = z.object({
   ALBUS_BEARER_AUTH: z.optional(z.string()),
-  ALBUS_API_KEY_AUTH: z.optional(z.string()),
+  ALBUS_API_KEY: z.optional(z.string()),
 
   ALBUS_DEBUG: z.optional(z.coerce.boolean()),
 });

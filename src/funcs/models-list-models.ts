@@ -30,7 +30,7 @@ import { Result } from "../types/fp.js";
  * @remarks
  * Lists the models available to run agents on, each with the provider that serves it.
  *
- * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKeyAuth} from the global security.
+ * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKey} from the global security.
  */
 export function modelsListModels(
   client: AlbusCore,

@@ -1,45 +1,48 @@
 # WhoamiResponse
 
+The caller a credential authenticates. Exactly one of user or api_key is present.
+
+
 ## Example Usage
 
 ```typescript
 import { WhoamiResponse } from "@albus-ts/sdk/models";
 
 let value: WhoamiResponse = {
-  userId: "user_123",
-  email: "user@example.com",
-  name: "John Doe",
-  roles: [
-    "admin",
-  ],
-  activeOrganization: {
-    id: "42",
-    name: "Acme Corp",
+  user: {
+    userId: "user_123",
+    email: "user@example.com",
+    name: "John Doe",
     roles: [
       "admin",
     ],
-  },
-  organizations: [
-    {
+    activeOrganization: {
       id: "42",
       name: "Acme Corp",
       roles: [
         "admin",
       ],
     },
-  ],
+    organizations: [
+      {
+        id: "42",
+        name: "Acme Corp",
+        roles: [
+          "admin",
+        ],
+      },
+    ],
+  },
+  apiKey: {
+    name: "<value>",
+    organizationId: "42",
+  },
 };
 ```
 
 ## Fields
 
-| Field                                                                                                                                                                | Type                                                                                                                                                                 | Required                                                                                                                                                             | Description                                                                                                                                                          | Example                                                                                                                                                              |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `userId`                                                                                                                                                             | *string*                                                                                                                                                             | :heavy_check_mark:                                                                                                                                                   | Unique user identifier                                                                                                                                               | user_123                                                                                                                                                             |
-| `email`                                                                                                                                                              | *string*                                                                                                                                                             | :heavy_check_mark:                                                                                                                                                   | User's email address                                                                                                                                                 | user@example.com                                                                                                                                                     |
-| `name`                                                                                                                                                               | *string*                                                                                                                                                             | :heavy_minus_sign:                                                                                                                                                   | User's display name                                                                                                                                                  | John Doe                                                                                                                                                             |
-| `roles`                                                                                                                                                              | *string*[]                                                                                                                                                           | :heavy_minus_sign:                                                                                                                                                   | Roles in the active organization (present only when a single organization is in scope).<br/>                                                                         | [<br/>"admin"<br/>]                                                                                                                                                  |
-| `activeOrganization`                                                                                                                                                 | [models.OrganizationMembership](../models/organization-membership.md)                                                                                                | :heavy_minus_sign:                                                                                                                                                   | The organization this session is scoped to. Present when the user belongs to exactly one organization; absent when they belong to several and none is selected yet.<br/> |                                                                                                                                                                      |
-| `organizations`                                                                                                                                                      | [models.OrganizationMembership](../models/organization-membership.md)[]                                                                                              | :heavy_check_mark:                                                                                                                                                   | Every organization the user belongs to, with their roles.                                                                                                            |                                                                                                                                                                      |
-| `issuedAt`                                                                                                                                                           | *number*                                                                                                                                                             | :heavy_minus_sign:                                                                                                                                                   | Token issue timestamp (Unix epoch)                                                                                                                                   |                                                                                                                                                                      |
-| `expiresAt`                                                                                                                                                          | *number*                                                                                                                                                             | :heavy_minus_sign:                                                                                                                                                   | Token expiration timestamp (Unix epoch)                                                                                                                              |                                                                                                                                                                      |
+| Field                                                            | Type                                                             | Required                                                         | Description                                                      |
+| ---------------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- | ---------------------------------------------------------------- |
+| `user`                                                           | [models.AuthenticatedUser](../models/authenticated-user.md)      | :heavy_minus_sign:                                               | The signed-in user, when calling with a user session.            |
+| `apiKey`                                                         | [models.AuthenticatedApiKey](../models/authenticated-api-key.md) | :heavy_minus_sign:                                               | The API key, when calling with an API key.                       |

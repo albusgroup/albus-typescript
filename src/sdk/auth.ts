@@ -9,10 +9,10 @@ import { unwrapAsync } from "../types/fp.js";
 
 export class Auth extends ClientSDK {
   /**
-   * Get current user information
+   * Get the authenticated caller
    *
    * @remarks
-   * Returns the authenticated user along with every organization they belong to and their roles in each.
+   * Returns the caller a credential authenticates: a signed-in user with every organization they belong to and their roles in each, or the API key that signed the request, along with the organization it acts in.
    */
   async whoami(
     options?: RequestOptions,

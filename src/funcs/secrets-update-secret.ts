@@ -31,7 +31,7 @@ import { Result } from "../types/fp.js";
 /**
  * Update a secret by name
  *
- * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKeyAuth} from the global security.
+ * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKey} from the global security.
  */
 export function secretsUpdateSecret(
   client: AlbusCore,

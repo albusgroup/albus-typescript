@@ -7,49 +7,30 @@ import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
 import { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
 import {
-  OrganizationMembership,
-  OrganizationMembership$inboundSchema,
-} from "./organization-membership.js";
+  AuthenticatedApiKey,
+  AuthenticatedApiKey$inboundSchema,
+} from "./authenticated-api-key.js";
+import {
+  AuthenticatedUser,
+  AuthenticatedUser$inboundSchema,
+} from "./authenticated-user.js";
+import { SDKValidationError } from "./errors/sdk-validation-error.js";
 
+/**
+ * The caller a credential authenticates. Exactly one of user or api_key is present.
+ *
+ * @remarks
+ */
 export type WhoamiResponse = {
   /**
-   * Unique user identifier
+   * The signed-in user, when calling with a user session.
    */
-  userId: string;
+  user?: AuthenticatedUser | undefined;
   /**
-   * User's email address
+   * The API key, when calling with an API key.
    */
-  email: string;
-  /**
-   * User's display name
-   */
-  name?: string | undefined;
-  /**
-   * Roles in the active organization (present only when a single organization is in scope).
-   *
-   * @remarks
-   */
-  roles?: Array<string> | undefined;
-  /**
-   * The organization this session is scoped to. Present when the user belongs to exactly one organization; absent when they belong to several and none is selected yet.
-   *
-   * @remarks
-   */
-  activeOrganization?: OrganizationMembership | undefined;
-  /**
-   * Every organization the user belongs to, with their roles.
-   */
-  organizations: Array<OrganizationMembership>;
-  /**
-   * Token issue timestamp (Unix epoch)
-   */
-  issuedAt?: number | undefined;
-  /**
-   * Token expiration timestamp (Unix epoch)
-   */
-  expiresAt?: number | undefined;
+  apiKey?: AuthenticatedApiKey | undefined;
 };
 
 /** @internal */
@@ -58,21 +39,12 @@ export const WhoamiResponse$inboundSchema: z.ZodMiniType<
   unknown
 > = z.pipe(
   z.object({
-    user_id: types.string(),
-    email: types.string(),
-    name: types.optional(types.string()),
-    roles: types.optional(z.array(types.string())),
-    active_organization: types.optional(OrganizationMembership$inboundSchema),
-    organizations: z.array(OrganizationMembership$inboundSchema),
-    issued_at: types.optional(types.number()),
-    expires_at: types.optional(types.number()),
+    user: types.optional(AuthenticatedUser$inboundSchema),
+    api_key: types.optional(AuthenticatedApiKey$inboundSchema),
   }),
   z.transform((v) => {
     return remap$(v, {
-      "user_id": "userId",
-      "active_organization": "activeOrganization",
-      "issued_at": "issuedAt",
-      "expires_at": "expiresAt",
+      "api_key": "apiKey",
     });
   }),
 );
