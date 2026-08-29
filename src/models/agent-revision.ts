@@ -23,7 +23,7 @@ export type AgentRevision = {
    */
   createdAt: Date;
   /**
-   * The agent configuration for a run: the model, tools, instructions, and MCP servers that define its behavior. Runs with the same configuration share a revision.
+   * The agent configuration for an invocation: the model, tools, instructions, and MCP servers that define its behavior. Invocations with the same configuration share a revision.
    *
    * @remarks
    */

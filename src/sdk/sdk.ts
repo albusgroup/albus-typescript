@@ -7,10 +7,12 @@ import { Agents } from "./agents.js";
 import { Auth } from "./auth.js";
 import { Health } from "./health.js";
 import { Invites } from "./invites.js";
+import { Memories } from "./memories.js";
 import { Models } from "./models.js";
 import { Secrets } from "./secrets.js";
 import { Sessions } from "./sessions.js";
 import { Tokens } from "./tokens.js";
+import { Traces } from "./traces.js";
 
 export class Albus extends ClientSDK {
   private _secrets?: Secrets;
@@ -23,6 +25,11 @@ export class Albus extends ClientSDK {
     return (this._sessions ??= new Sessions(this._options));
   }
 
+  private _traces?: Traces;
+  get traces(): Traces {
+    return (this._traces ??= new Traces(this._options));
+  }
+
   private _tokens?: Tokens;
   get tokens(): Tokens {
     return (this._tokens ??= new Tokens(this._options));
@@ -31,6 +38,11 @@ export class Albus extends ClientSDK {
   private _agents?: Agents;
   get agents(): Agents {
     return (this._agents ??= new Agents(this._options));
+  }
+
+  private _memories?: Memories;
+  get memories(): Memories {
+    return (this._memories ??= new Memories(this._options));
   }
 
   private _models?: Models;

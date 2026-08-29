@@ -168,7 +168,7 @@ run();
 
 ## runSession
 
-Runs the session with the given ID, creating it if it does not exist and resuming it otherwise. Each call is a single invocation, optionally identified by the Idempotency-Key header. Supplying a key makes the call safe to retry: retrying with the same key and an identical body re-attaches to the in-flight invocation and returns its current state; a differing body for the same key returns 409; a new key while another invocation is still running returns 423. Omitting the header starts a fresh, non-idempotent invocation each time; the server generates a key and returns it in the Idempotency-Key response header.
+Runs the session with the given ID, creating it if it does not exist and resuming it otherwise. Each call is a single invocation, optionally named by the Idempotency-Key header, whose value is the invocation's key. Supplying a key makes the call safe to retry: retrying with the same key and an identical body re-attaches to the in-flight invocation and returns its current state; a differing body for the same key returns 409; a new key while another invocation is still running returns 423. Omitting the header starts a fresh, non-idempotent invocation each time; the server generates a key and returns it in the Idempotency-Key response header.
 
 With `wait_timeout_seconds` the request long-polls: it blocks until the invocation's assistant response is available and returns it in `message`. Omit it to wait up to 30 minutes, or pass 0 to return as soon as the invocation is accepted. A positive value bounds the wait in seconds; if it elapses first the request fails with 504 and a JSON body, letting the client distinguish an expected server-side timeout from a transport error; the client may retry.
 
@@ -260,16 +260,16 @@ run();
 
 ### Errors
 
-| Error Type               | Status Code              | Content Type             |
-| ------------------------ | ------------------------ | ------------------------ |
-| errors.ErrBadRequest     | 400                      | application/json         |
-| errors.ErrUnauthorized   | 401                      | application/json         |
-| errors.ErrConflict       | 409                      | application/json         |
-| errors.ErrLocked         | 423                      | application/json         |
-| errors.ErrQuotaExceeded  | 429                      | application/json         |
-| errors.ErrRunFailed      | 502                      | application/json         |
-| errors.ErrTimeout        | 504                      | application/json         |
-| errors.AlbusDefaultError | 4XX, 5XX                 | \*/\*                    |
+| Error Type                 | Status Code                | Content Type               |
+| -------------------------- | -------------------------- | -------------------------- |
+| errors.ErrBadRequest       | 400                        | application/json           |
+| errors.ErrUnauthorized     | 401                        | application/json           |
+| errors.ErrConflict         | 409                        | application/json           |
+| errors.ErrLocked           | 423                        | application/json           |
+| errors.ErrQuotaExceeded    | 429                        | application/json           |
+| errors.ErrInvocationFailed | 502                        | application/json           |
+| errors.ErrTimeout          | 504                        | application/json           |
+| errors.AlbusDefaultError   | 4XX, 5XX                   | \*/\*                      |
 
 ## deleteSession
 
@@ -352,7 +352,7 @@ run();
 
 ## getSessionAudit
 
-Returns the session's audit log — an immutable, time-ordered record of what happened during its agent runs (LLM calls, tool results, and run outcomes). Events are ordered by the time they occurred. Use `after` and `limit` to page through them; pass the response's `next_cursor` as the next request's `after` to fetch the following page.
+Returns the session's audit log — an immutable, time-ordered record of what happened during its invocations (LLM calls, tool results, and invocation outcomes). Events are ordered by the time they occurred. Use `after` and `limit` to page through them; pass the response's `next_cursor` as the next request's `after` to fetch the following page.
 
 
 ### Example Usage

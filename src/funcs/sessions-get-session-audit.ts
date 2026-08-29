@@ -32,7 +32,7 @@ import { Result } from "../types/fp.js";
  * List a session's audit log
  *
  * @remarks
- * Returns the session's audit log — an immutable, time-ordered record of what happened during its agent runs (LLM calls, tool results, and run outcomes). Events are ordered by the time they occurred. Use `after` and `limit` to page through them; pass the response's `next_cursor` as the next request's `after` to fetch the following page.
+ * Returns the session's audit log — an immutable, time-ordered record of what happened during its invocations (LLM calls, tool results, and invocation outcomes). Events are ordered by the time they occurred. Use `after` and `limit` to page through them; pass the response's `next_cursor` as the next request's `after` to fetch the following page.
  *
  * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKey} from the global security.
  */

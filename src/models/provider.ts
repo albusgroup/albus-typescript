@@ -10,7 +10,7 @@ import { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export type Provider = {
   /**
-   * Provider name (e.g. "openai", "gemini", "vertex").
+   * Provider name (e.g. "openai", "gemini").
    */
   name: string;
   /**

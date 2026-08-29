@@ -12,26 +12,29 @@ import * as types from "../types/primitives.js";
 import { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 /**
- * The kind of event (e.g. "agent_invocation" for the request that started the run, "model_call" for a model call and the tool calls it requested, "tool_call" for an executed tool call and its output). Events recorded earlier use "llm_call" and "tool_result" for those same two kinds.
+ * The kind of event (e.g. "agent_invocation" for the request that started the invocation, "agent_step" for one turn, how it ended, and how long it took, "model_call" for a model call and the tool calls it requested, "tool_call" for an executed tool call and its output). Events recorded earlier use "llm_call", "tool_result", "run_failed" and "run_succeeded" for four of those kinds.
  *
  * @remarks
  */
-export const Type = {
+export const AuditEventType = {
   AgentInvocation: "agent_invocation",
+  AgentStep: "agent_step",
   ModelCall: "model_call",
   ToolCall: "tool_call",
   HarnessExit: "harness_exit",
-  RunFailed: "run_failed",
-  RunSucceeded: "run_succeeded",
+  InvocationFailed: "invocation_failed",
+  InvocationSucceeded: "invocation_succeeded",
   LlmCall: "llm_call",
   ToolResult: "tool_result",
+  RunFailed: "run_failed",
+  RunSucceeded: "run_succeeded",
 } as const;
 /**
- * The kind of event (e.g. "agent_invocation" for the request that started the run, "model_call" for a model call and the tool calls it requested, "tool_call" for an executed tool call and its output). Events recorded earlier use "llm_call" and "tool_result" for those same two kinds.
+ * The kind of event (e.g. "agent_invocation" for the request that started the invocation, "agent_step" for one turn, how it ended, and how long it took, "model_call" for a model call and the tool calls it requested, "tool_call" for an executed tool call and its output). Events recorded earlier use "llm_call", "tool_result", "run_failed" and "run_succeeded" for four of those kinds.
  *
  * @remarks
  */
-export type Type = OpenEnum<typeof Type>;
+export type AuditEventType = OpenEnum<typeof AuditEventType>;
 
 export type AuditEvent = {
   /**
@@ -43,23 +46,23 @@ export type AuditEvent = {
    */
   sessionId: string;
   /**
-   * Idempotency key of the run during which this event occurred.
+   * Key of the invocation during which this event occurred.
    *
    * @remarks
    */
-  idempotencyKey: string;
+  invocationKey: string;
   /**
    * The agent revision the invocation ran (e.g. "a1b2c3d4").
    */
   agentRevision?: string | undefined;
   /**
-   * The kind of event (e.g. "agent_invocation" for the request that started the run, "model_call" for a model call and the tool calls it requested, "tool_call" for an executed tool call and its output). Events recorded earlier use "llm_call" and "tool_result" for those same two kinds.
+   * The kind of event (e.g. "agent_invocation" for the request that started the invocation, "agent_step" for one turn, how it ended, and how long it took, "model_call" for a model call and the tool calls it requested, "tool_call" for an executed tool call and its output). Events recorded earlier use "llm_call", "tool_result", "run_failed" and "run_succeeded" for four of those kinds.
    *
    * @remarks
    */
-  type: Type;
+  type: AuditEventType;
   /**
-   * The event's details, whose shape depends on `type` (e.g. the model content and requested tool calls for "model_call"; the call's arguments, response, and MCP server URL for "tool_call"). Model and tool output and tool arguments are stored up to 32 KiB each, alongside the byte count, SHA-256 digest, and truncation flag of the complete value (e.g. `contentBytes`, `contentSha256`, `contentTruncated`).
+   * The event's details, whose shape depends on `type` (e.g. the model, its response, usage, and requested tool calls for "model_call"; the call's arguments, response, status, timing, and MCP server URL for "tool_call"). A large value may be stored truncated, marked by a flag such as `requestTruncated`; a truncated `request`, `response` or `content` also carries the byte count and SHA-256 digest of the complete value, in fields such as `requestBytes` and `requestSha256`. A "model_call"'s `request` is the input the model was given, so an invocation's final call using `output_format` includes turns Albus adds to obtain the JSON answer.
    *
    * @remarks
    */
@@ -71,8 +74,10 @@ export type AuditEvent = {
 };
 
 /** @internal */
-export const Type$inboundSchema: z.ZodMiniType<Type, unknown> = openEnums
-  .inboundSchema(Type);
+export const AuditEventType$inboundSchema: z.ZodMiniType<
+  AuditEventType,
+  unknown
+> = openEnums.inboundSchema(AuditEventType);
 
 /** @internal */
 export const AuditEvent$inboundSchema: z.ZodMiniType<AuditEvent, unknown> = z
@@ -80,16 +85,16 @@ export const AuditEvent$inboundSchema: z.ZodMiniType<AuditEvent, unknown> = z
     z.object({
       id: types.string(),
       session_id: types.string(),
-      idempotency_key: types.string(),
+      invocation_key: types.string(),
       agent_revision: types.optional(types.string()),
-      type: Type$inboundSchema,
+      type: AuditEventType$inboundSchema,
       payload: z.record(z.string(), z.any()),
       event_time: types.date(),
     }),
     z.transform((v) => {
       return remap$(v, {
         "session_id": "sessionId",
-        "idempotency_key": "idempotencyKey",
+        "invocation_key": "invocationKey",
         "agent_revision": "agentRevision",
         "event_time": "eventTime",
       });

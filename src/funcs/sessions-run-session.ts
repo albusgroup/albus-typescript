@@ -31,7 +31,7 @@ import { Result } from "../types/fp.js";
  * Run or resume a session
  *
  * @remarks
- * Runs the session with the given ID, creating it if it does not exist and resuming it otherwise. Each call is a single invocation, optionally identified by the Idempotency-Key header. Supplying a key makes the call safe to retry: retrying with the same key and an identical body re-attaches to the in-flight invocation and returns its current state; a differing body for the same key returns 409; a new key while another invocation is still running returns 423. Omitting the header starts a fresh, non-idempotent invocation each time; the server generates a key and returns it in the Idempotency-Key response header.
+ * Runs the session with the given ID, creating it if it does not exist and resuming it otherwise. Each call is a single invocation, optionally named by the Idempotency-Key header, whose value is the invocation's key. Supplying a key makes the call safe to retry: retrying with the same key and an identical body re-attaches to the in-flight invocation and returns its current state; a differing body for the same key returns 409; a new key while another invocation is still running returns 423. Omitting the header starts a fresh, non-idempotent invocation each time; the server generates a key and returns it in the Idempotency-Key response header.
  *
  * With `wait_timeout_seconds` the request long-polls: it blocks until the invocation's assistant response is available and returns it in `message`. Omit it to wait up to 30 minutes, or pass 0 to return as soon as the invocation is accepted. A positive value bounds the wait in seconds; if it elapses first the request fails with 504 and a JSON body, letting the client distinguish an expected server-side timeout from a transport error; the client may retry.
  *
@@ -49,7 +49,7 @@ export function sessionsRunSession(
     | errors.ErrConflict
     | errors.ErrLocked
     | errors.ErrQuotaExceeded
-    | errors.ErrRunFailed
+    | errors.ErrInvocationFailed
     | errors.ErrTimeout
     | AlbusError
     | ResponseValidationError
@@ -81,7 +81,7 @@ async function $do(
       | errors.ErrConflict
       | errors.ErrLocked
       | errors.ErrQuotaExceeded
-      | errors.ErrRunFailed
+      | errors.ErrInvocationFailed
       | errors.ErrTimeout
       | AlbusError
       | ResponseValidationError
@@ -121,11 +121,10 @@ async function $do(
   const headers = new Headers(compactMap({
     "Content-Type": "application/json",
     Accept: "application/json",
-    "Idempotency-Key": encodeSimple(
-      "Idempotency-Key",
-      payload["Idempotency-Key"],
-      { explode: false, charEncoding: "none" },
-    ),
+    "Idempotency-Key": encodeSimple("Idempotency-Key", payload.invocation_key, {
+      explode: false,
+      charEncoding: "none",
+    }),
   }));
 
   const securityInput = await extractSecurity(client._options.security);
@@ -185,7 +184,7 @@ async function $do(
     | errors.ErrConflict
     | errors.ErrLocked
     | errors.ErrQuotaExceeded
-    | errors.ErrRunFailed
+    | errors.ErrInvocationFailed
     | errors.ErrTimeout
     | AlbusError
     | ResponseValidationError
@@ -205,7 +204,7 @@ async function $do(
     M.jsonErr(409, errors.ErrConflict$inboundSchema),
     M.jsonErr(423, errors.ErrLocked$inboundSchema),
     M.jsonErr(429, errors.ErrQuotaExceeded$inboundSchema),
-    M.jsonErr(502, errors.ErrRunFailed$inboundSchema),
+    M.jsonErr(502, errors.ErrInvocationFailed$inboundSchema),
     M.jsonErr(504, errors.ErrTimeout$inboundSchema),
     M.fail("4XX"),
     M.fail("5XX"),

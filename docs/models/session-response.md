@@ -16,7 +16,7 @@ let value: SessionResponse = {
   messages: [
     {
       cursor: 185684,
-      invocationId: "<id>",
+      invocationKey: "<value>",
       role: "assistant",
       content: "<value>",
       createdAt: new Date("2026-09-26T05:02:23.738Z"),

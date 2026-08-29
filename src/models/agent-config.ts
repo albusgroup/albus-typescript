@@ -15,35 +15,63 @@ import {
   MCPServer$outboundSchema,
 } from "./mcp-server.js";
 import {
+  MemoryConfig,
+  MemoryConfig$inboundSchema,
+  MemoryConfig$Outbound,
+  MemoryConfig$outboundSchema,
+} from "./memory-config.js";
+import {
   Model,
   Model$inboundSchema,
   Model$Outbound,
   Model$outboundSchema,
 } from "./model.js";
+import {
+  Tools,
+  Tools$inboundSchema,
+  Tools$Outbound,
+  Tools$outboundSchema,
+} from "./tools.js";
 
 /**
- * The agent configuration for a run: the model, tools, instructions, and MCP servers that define its behavior. Runs with the same configuration share a revision.
+ * The agent configuration for an invocation: the model, tools, instructions, and MCP servers that define its behavior. Invocations with the same configuration share a revision.
  *
  * @remarks
  */
 export type AgentConfig = {
   model: Model;
   /**
-   * Names of the tools the model may call (e.g. "WEB_SEARCH").
+   * The built-in tools the model may call. Include a tool's block to offer it (e.g. {"web_search": {}}); omit it to withhold it.
+   *
+   * @remarks
    */
-  tools?: Array<string> | undefined;
+  tools?: Tools | undefined;
+  /**
+   * Configures durable memory shared by invocations in the same group.
+   *
+   * @remarks
+   */
+  memory?: MemoryConfig | undefined;
   /**
    * System instructions for the model. Uses a default if omitted.
    */
   systemPrompt?: string | undefined;
   /**
-   * Max model steps before the run stops. Uses a default if omitted.
+   * Max model steps before the invocation stops. Uses a default if omitted.
+   *
+   * @remarks
    */
   maxSteps?: number | undefined;
   /**
    * MCP servers whose tools are offered to the model.
    */
   mcpServers?: Array<MCPServer> | undefined;
+  /**
+   * JSON Schema the answer must conform to; the answer is returned as a JSON document. Every object in the schema must set "additionalProperties" to false and list every property in "required". Choose a model that supports structured output.
+   *
+   * @remarks
+   */
+  outputFormat?: { [k: string]: any } | undefined;
 };
 
 /** @internal */
@@ -51,26 +79,31 @@ export const AgentConfig$inboundSchema: z.ZodMiniType<AgentConfig, unknown> = z
   .pipe(
     z.object({
       model: Model$inboundSchema,
-      tools: types.optional(z.array(types.string())),
+      tools: types.optional(Tools$inboundSchema),
+      memory: types.optional(MemoryConfig$inboundSchema),
       system_prompt: types.optional(types.string()),
       max_steps: types.optional(types.number()),
       mcp_servers: types.optional(z.array(MCPServer$inboundSchema)),
+      output_format: types.optional(z.record(z.string(), z.any())),
     }),
     z.transform((v) => {
       return remap$(v, {
         "system_prompt": "systemPrompt",
         "max_steps": "maxSteps",
         "mcp_servers": "mcpServers",
+        "output_format": "outputFormat",
       });
     }),
   );
 /** @internal */
 export type AgentConfig$Outbound = {
   model: Model$Outbound;
-  tools?: Array<string> | undefined;
+  tools?: Tools$Outbound | undefined;
+  memory?: MemoryConfig$Outbound | undefined;
   system_prompt?: string | undefined;
   max_steps?: number | undefined;
   mcp_servers?: Array<MCPServer$Outbound> | undefined;
+  output_format?: { [k: string]: any } | undefined;
 };
 
 /** @internal */
@@ -80,16 +113,19 @@ export const AgentConfig$outboundSchema: z.ZodMiniType<
 > = z.pipe(
   z.object({
     model: Model$outboundSchema,
-    tools: z.optional(z.array(z.string())),
+    tools: z.optional(Tools$outboundSchema),
+    memory: z.optional(MemoryConfig$outboundSchema),
     systemPrompt: z.optional(z.string()),
     maxSteps: z.optional(z.int()),
     mcpServers: z.optional(z.array(MCPServer$outboundSchema)),
+    outputFormat: z.optional(z.record(z.string(), z.any())),
   }),
   z.transform((v) => {
     return remap$(v, {
       systemPrompt: "system_prompt",
       maxSteps: "max_steps",
       mcpServers: "mcp_servers",
+      outputFormat: "output_format",
     });
   }),
 );

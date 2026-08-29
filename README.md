@@ -184,6 +184,12 @@ run();
 
 * [createInvite](docs/sdks/invites/README.md#createinvite) - Invite a user by email
 
+### [Memories](docs/sdks/memories/README.md)
+
+* [listMemories](docs/sdks/memories/README.md#listmemories) - List a group's memories
+* [deleteMemoryGroup](docs/sdks/memories/README.md#deletememorygroup) - Delete a group's memories
+* [deleteMemory](docs/sdks/memories/README.md#deletememory) - Delete one memory
+
 ### [Models](docs/sdks/models/README.md)
 
 * [listModels](docs/sdks/models/README.md#listmodels) - List models
@@ -211,6 +217,11 @@ run();
 * [getToken](docs/sdks/tokens/README.md#gettoken) - Get token metadata by ID. Never returns the token value.
 * [deleteToken](docs/sdks/tokens/README.md#deletetoken) - Revoke an API token by ID
 
+### [Traces](docs/sdks/traces/README.md)
+
+* [listTraces](docs/sdks/traces/README.md#listtraces) - Search traces
+* [getTrace](docs/sdks/traces/README.md#gettrace) - Get one invocation's trace
+
 </details>
 <!-- End Available Resources and Operations [operations] -->
 
@@ -235,6 +246,9 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 - [`authWhoami`](docs/sdks/auth/README.md#whoami) - Get the authenticated caller
 - [`healthHealth`](docs/sdks/health/README.md#health) - Health check endpoint
 - [`invitesCreateInvite`](docs/sdks/invites/README.md#createinvite) - Invite a user by email
+- [`memoriesDeleteMemory`](docs/sdks/memories/README.md#deletememory) - Delete one memory
+- [`memoriesDeleteMemoryGroup`](docs/sdks/memories/README.md#deletememorygroup) - Delete a group's memories
+- [`memoriesListMemories`](docs/sdks/memories/README.md#listmemories) - List a group's memories
 - [`modelsListModels`](docs/sdks/models/README.md#listmodels) - List models
 - [`secretsCreateSecret`](docs/sdks/secrets/README.md#createsecret) - Create a secret
 - [`secretsDeleteSecret`](docs/sdks/secrets/README.md#deletesecret) - Delete a secret by name
@@ -250,6 +264,8 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 - [`tokensDeleteToken`](docs/sdks/tokens/README.md#deletetoken) - Revoke an API token by ID
 - [`tokensGetToken`](docs/sdks/tokens/README.md#gettoken) - Get token metadata by ID. Never returns the token value.
 - [`tokensListTokens`](docs/sdks/tokens/README.md#listtokens) - List all API tokens. Never returns token values, only metadata.
+- [`tracesGetTrace`](docs/sdks/traces/README.md#gettrace) - Get one invocation's trace
+- [`tracesListTraces`](docs/sdks/traces/README.md#listtraces) - Search traces
 
 </details>
 <!-- End Standalone functions [standalone-funcs] -->
@@ -376,7 +392,7 @@ run();
 * [`AlbusError`](./src/models/errors/albus-error.ts): The base class for HTTP error responses.
   * [`ErrUnauthorized`](./src/models/errors/err-unauthorized.ts): Status code `401`. *
 
-<details><summary>Less common errors (14)</summary>
+<details><summary>Less common errors (15)</summary>
 
 <br />
 
@@ -389,14 +405,15 @@ run();
 
 
 **Inherit from [`AlbusError`](./src/models/errors/albus-error.ts)**:
-* [`ErrNotFound`](./src/models/errors/err-not-found.ts): Not found. Status code `404`. Applicable to 10 of 21 methods.*
-* [`ErrBadRequest`](./src/models/errors/err-bad-request.ts): Status code `400`. Applicable to 6 of 21 methods.*
-* [`ErrConflict`](./src/models/errors/err-conflict.ts): Status code `409`. Applicable to 2 of 21 methods.*
-* [`ErrLocked`](./src/models/errors/err-locked.ts): Another invocation is currently running for this session. Status code `423`. Applicable to 1 of 21 methods.*
-* [`ErrQuotaExceeded`](./src/models/errors/err-quota-exceeded.ts): The organization has reached its invocation quota. Status code `429`. Applicable to 1 of 21 methods.*
-* [`ErrRunFailed`](./src/models/errors/err-run-failed.ts): The harness run failed instead of producing a response (only possible while waiting for a response, or when replaying a failed invocation). The body carries the failure kind and detail. Status code `502`. Applicable to 1 of 21 methods.*
-* [`HealthResponseError`](./src/models/errors/health-response-error.ts): Service is healthy. Status code `503`. Applicable to 1 of 21 methods.*
-* [`ErrTimeout`](./src/models/errors/err-timeout.ts): Timed out waiting for the assistant response. Status code `504`. Applicable to 1 of 21 methods.*
+* [`ErrNotFound`](./src/models/errors/err-not-found.ts): Status code `404`. Applicable to 13 of 26 methods.*
+* [`ErrBadRequest`](./src/models/errors/err-bad-request.ts): Status code `400`. Applicable to 11 of 26 methods.*
+* [`ErrConflict`](./src/models/errors/err-conflict.ts): Status code `409`. Applicable to 2 of 26 methods.*
+* [`ErrLocked`](./src/models/errors/err-locked.ts): Another invocation is currently running for this session. Status code `423`. Applicable to 1 of 26 methods.*
+* [`ErrQuotaExceeded`](./src/models/errors/err-quota-exceeded.ts): The organization has reached its invocation quota. Status code `429`. Applicable to 1 of 26 methods.*
+* [`ErrInvocationFailed`](./src/models/errors/err-invocation-failed.ts): The invocation failed instead of producing a response (only possible while waiting for a response, or when replaying a failed invocation). The body carries the failure kind and detail. Status code `502`. Applicable to 1 of 26 methods.*
+* [`ErrUnavailable`](./src/models/errors/err-unavailable.ts): The invocation's spans could not be read. Retry the request; the invocation and its spans are unaffected. Status code `503`. Applicable to 1 of 26 methods.*
+* [`HealthResponseError`](./src/models/errors/health-response-error.ts): Service is healthy. Status code `503`. Applicable to 1 of 26 methods.*
+* [`ErrTimeout`](./src/models/errors/err-timeout.ts): Timed out waiting for the assistant response. Status code `504`. Applicable to 1 of 26 methods.*
 * [`ResponseValidationError`](./src/models/errors/response-validation-error.ts): Type mismatch between the data returned from the server and the structure expected by the SDK. See `error.rawValue` for the raw value and `error.pretty()` for a nicely formatted multi-line string.
 
 </details>

@@ -25,9 +25,9 @@ export type SessionMessage = {
    */
   cursor: number;
   /**
-   * The invocation that produced this message.
+   * The key of the invocation that produced this message.
    */
-  invocationId: string;
+  invocationKey: string;
   role: SessionMessageRole;
   content: string;
   createdAt: Date;
@@ -46,14 +46,14 @@ export const SessionMessage$inboundSchema: z.ZodMiniType<
 > = z.pipe(
   z.object({
     cursor: types.number(),
-    invocation_id: types.string(),
+    invocation_key: types.string(),
     role: SessionMessageRole$inboundSchema,
     content: types.string(),
     created_at: types.date(),
   }),
   z.transform((v) => {
     return remap$(v, {
-      "invocation_id": "invocationId",
+      "invocation_key": "invocationKey",
       "created_at": "createdAt",
     });
   }),

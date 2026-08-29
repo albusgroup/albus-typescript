@@ -15,11 +15,11 @@ export type RunSessionRequest = {
    */
   id: string;
   /**
-   * Optional but strongly encouraged. Uniquely identifies this invocation of the session; reuse the same value to safely retry a request, and a new value starts a new invocation. When omitted, the server generates a key for the invocation and returns it in the Idempotency-Key response header, but the request is not retry-safe.
+   * Optional but strongly encouraged. The key naming this invocation of the session, unique within your organization: reuse the same value to safely retry a request, read the invocation back with `GET /traces/{invocation_key}`, and use a new value to start a new invocation. When omitted, the server generates a key for the invocation and returns it in the Idempotency-Key response header, but the request is not retry-safe.
    *
    * @remarks
    */
-  idempotencyKey?: string | undefined;
+  invocationKey?: string | undefined;
   /**
    * Wait up to this many seconds for the assistant response. Omit to wait up to 30 minutes; use 0 to return after the invocation is accepted.
    *
@@ -37,7 +37,7 @@ export type RunSessionResponse = {
 /** @internal */
 export type RunSessionRequest$Outbound = {
   id: string;
-  "Idempotency-Key"?: string | undefined;
+  invocation_key?: string | undefined;
   wait_timeout_seconds: number;
   body: models.RunSessionRequest$Outbound;
 };
@@ -49,13 +49,13 @@ export const RunSessionRequest$outboundSchema: z.ZodMiniType<
 > = z.pipe(
   z.object({
     id: z.string(),
-    idempotencyKey: z.optional(z.string()),
+    invocationKey: z.optional(z.string()),
     waitTimeoutSeconds: z._default(z.int(), 1800),
     body: models.RunSessionRequest$outboundSchema,
   }),
   z.transform((v) => {
     return remap$(v, {
-      idempotencyKey: "Idempotency-Key",
+      invocationKey: "invocation_key",
       waitTimeoutSeconds: "wait_timeout_seconds",
     });
   }),

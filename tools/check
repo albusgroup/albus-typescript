@@ -12,10 +12,9 @@ usage: $0 [--without-speakeasy]
 Lint, build, test, and install the packed SDK.
 
   --without-speakeasy   Skip the steps that need the Speakeasy CLI and a
-                        Speakeasy account. Nothing here runs in CI, so this is
-                        for a machine that lacks the pinned CLI; the flag is
-                        explicit so a missing CLI cannot quietly become a green
-                        run that checked less.
+                        Speakeasy account. This is for a machine that lacks
+                        the pinned CLI; the flag is explicit so a missing CLI
+                        cannot quietly become a green run that checked less.
 EOF
 }
 

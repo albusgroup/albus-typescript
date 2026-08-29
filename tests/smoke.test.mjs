@@ -73,7 +73,7 @@ test("long-polls a run with wait_timeout_seconds", async () => {
         session: sessionBody("DONE"),
         message: {
           cursor: 1,
-          invocation_id: "invocation-1",
+          invocation_key: "invocation-1",
           role: "assistant",
           content: "hi",
           created_at: "2026-01-01T00:00:00Z",
@@ -88,7 +88,7 @@ test("long-polls a run with wait_timeout_seconds", async () => {
 
   const response = await albus.sessions.runSession({
     id: "demo",
-    idempotencyKey: "invocation-1",
+    invocationKey: "invocation-1",
     waitTimeoutSeconds: 30,
     body: {
       userPrompt: "hello",
