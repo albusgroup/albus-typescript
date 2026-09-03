@@ -37,7 +37,7 @@ export type TraceSummary = {
    */
   agentRevision?: string | undefined;
   /**
-   * How an invocation or one of its attempts ended, or `RUNNING` while it is still in flight.
+   * How an invocation or one of its attempts ended, or `RUNNING` while it is still in flight. `CANCELED` means it was stopped on request before it answered.
    *
    * @remarks
    */

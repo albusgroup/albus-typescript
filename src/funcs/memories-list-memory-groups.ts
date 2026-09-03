@@ -4,7 +4,7 @@
 
 import * as z from "zod/v4-mini";
 import { AlbusCore } from "../core.js";
-import { encodeFormQuery, encodeSimple } from "../lib/encodings.js";
+import { encodeFormQuery } from "../lib/encodings.js";
 import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
@@ -29,22 +29,22 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * List a group's memories
+ * List memory groups
  *
  * @remarks
- * Lists the memories of one memory group, newest first: both the memories agents currently read and those a later memory has replaced. A group nothing has been remembered in yet is an empty list, not an error.
+ * Lists the memory groups of your organization, ordered by key: every `memory.group` value an agent has run with, along with how many memories agents in the group currently read. Read a group's memories with `GET /memorygroups/{group}`.
  *
  * Page with `after` and `limit`: pass the response's `next_cursor` as the next request's `after`, and keep requesting while `next_cursor` is present — you have reached the end when it is absent.
  *
  * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKey} from the global security.
  */
-export function memoriesListMemories(
+export function memoriesListMemoryGroups(
   client: AlbusCore,
-  request: operations.ListMemoriesRequest,
+  request?: operations.ListMemoryGroupsRequest | undefined,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    models.ListMemoriesResponse,
+    models.ListMemoryGroupsResponse,
     | errors.ErrBadRequest
     | errors.ErrUnauthorized
     | AlbusError
@@ -66,12 +66,12 @@ export function memoriesListMemories(
 
 async function $do(
   client: AlbusCore,
-  request: operations.ListMemoriesRequest,
+  request?: operations.ListMemoryGroupsRequest | undefined,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      models.ListMemoriesResponse,
+      models.ListMemoryGroupsResponse,
       | errors.ErrBadRequest
       | errors.ErrUnauthorized
       | AlbusError
@@ -88,7 +88,11 @@ async function $do(
 > {
   const parsed = safeParse(
     request,
-    (value) => z.parse(operations.ListMemoriesRequest$outboundSchema, value),
+    (value) =>
+      z.parse(
+        z.optional(operations.ListMemoryGroupsRequest$outboundSchema),
+        value,
+      ),
     "Input validation failed",
   );
   if (!parsed.ok) {
@@ -97,17 +101,11 @@ async function $do(
   const payload = parsed.value;
   const body = null;
 
-  const pathParams = {
-    group: encodeSimple("group", payload.group, {
-      explode: false,
-      charEncoding: "percent",
-    }),
-  };
-  const path = pathToFunc("/memorygroups/{group}")(pathParams);
+  const path = pathToFunc("/memorygroups")();
 
   const query = encodeFormQuery({
-    "after": payload.after,
-    "limit": payload.limit,
+    "after": payload?.after,
+    "limit": payload?.limit,
   });
 
   const headers = new Headers(compactMap({
@@ -120,7 +118,7 @@ async function $do(
   const context = {
     options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "listMemories",
+    operationID: "listMemoryGroups",
     oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
@@ -165,7 +163,7 @@ async function $do(
   };
 
   const [result] = await M.match<
-    models.ListMemoriesResponse,
+    models.ListMemoryGroupsResponse,
     | errors.ErrBadRequest
     | errors.ErrUnauthorized
     | AlbusError
@@ -177,7 +175,7 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.json(200, models.ListMemoriesResponse$inboundSchema),
+    M.json(200, models.ListMemoryGroupsResponse$inboundSchema),
     M.jsonErr(400, errors.ErrBadRequest$inboundSchema),
     M.jsonErr(401, errors.ErrUnauthorized$inboundSchema),
     M.fail("4XX"),

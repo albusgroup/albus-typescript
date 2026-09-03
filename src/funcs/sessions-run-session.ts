@@ -46,7 +46,9 @@ export function sessionsRunSession(
     operations.RunSessionResponse,
     | errors.ErrBadRequest
     | errors.ErrUnauthorized
+    | errors.ErrInsufficientCredit
     | errors.ErrConflict
+    | errors.ErrInvocationCanceled
     | errors.ErrLocked
     | errors.ErrQuotaExceeded
     | errors.ErrInvocationFailed
@@ -78,7 +80,9 @@ async function $do(
       operations.RunSessionResponse,
       | errors.ErrBadRequest
       | errors.ErrUnauthorized
+      | errors.ErrInsufficientCredit
       | errors.ErrConflict
+      | errors.ErrInvocationCanceled
       | errors.ErrLocked
       | errors.ErrQuotaExceeded
       | errors.ErrInvocationFailed
@@ -181,7 +185,9 @@ async function $do(
     operations.RunSessionResponse,
     | errors.ErrBadRequest
     | errors.ErrUnauthorized
+    | errors.ErrInsufficientCredit
     | errors.ErrConflict
+    | errors.ErrInvocationCanceled
     | errors.ErrLocked
     | errors.ErrQuotaExceeded
     | errors.ErrInvocationFailed
@@ -201,7 +207,9 @@ async function $do(
     }),
     M.jsonErr(400, errors.ErrBadRequest$inboundSchema),
     M.jsonErr(401, errors.ErrUnauthorized$inboundSchema),
+    M.jsonErr(402, errors.ErrInsufficientCredit$inboundSchema),
     M.jsonErr(409, errors.ErrConflict$inboundSchema),
+    M.jsonErr(410, errors.ErrInvocationCanceled$inboundSchema),
     M.jsonErr(423, errors.ErrLocked$inboundSchema),
     M.jsonErr(429, errors.ErrQuotaExceeded$inboundSchema),
     M.jsonErr(502, errors.ErrInvocationFailed$inboundSchema),

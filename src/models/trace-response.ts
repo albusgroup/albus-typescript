@@ -40,7 +40,7 @@ export type TraceResponse = {
    */
   agentRevision?: string | undefined;
   /**
-   * How an invocation or one of its attempts ended, or `RUNNING` while it is still in flight.
+   * How an invocation or one of its attempts ended, or `RUNNING` while it is still in flight. `CANCELED` means it was stopped on request before it answered.
    *
    * @remarks
    */
@@ -62,7 +62,7 @@ export type TraceResponse = {
    */
   endedAt?: Date | undefined;
   /**
-   * Why the invocation failed. Present only when `status` is `FAILED`, and readable past the retention window, since it comes from the invocation rather than its spans. Read it here rather than from `GET /traces`, which reports only that an invocation failed — listing a page of reasons costs a lookup per invocation on it.
+   * Why the invocation ended without answering. Present only when `status` is `FAILED` or `CANCELED`, and readable past the retention window, since it comes from the invocation rather than its spans. Read it here rather than from `GET /traces`, which reports only that an invocation failed — listing a page of reasons costs a lookup per invocation on it.
    *
    * @remarks
    */

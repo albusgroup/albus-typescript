@@ -4,7 +4,7 @@
 
 import * as z from "zod/v4-mini";
 import { AlbusCore } from "../core.js";
-import { encodeFormQuery, encodeSimple } from "../lib/encodings.js";
+import { encodeSimple } from "../lib/encodings.js";
 import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
@@ -29,24 +29,23 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * List a group's memories
+ * Cancel a session's running invocation
  *
  * @remarks
- * Lists the memories of one memory group, newest first: both the memories agents currently read and those a later memory has replaced. A group nothing has been remembered in yet is an empty list, not an error.
- *
- * Page with `after` and `limit`: pass the response's `next_cursor` as the next request's `after`, and keep requesting while `next_cursor` is present — you have reached the end when it is absent.
+ * Requests cancellation of the invocation currently running for the session. Cancellation is asynchronous: the call returns once the request is accepted, and the invocation resolves as canceled shortly after, unlocking the session for new invocations. A request waiting on the invocation receives its terminal outcome. Returns 409 when the session has no invocation running.
  *
  * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKey} from the global security.
  */
-export function memoriesListMemories(
+export function sessionsCancelSession(
   client: AlbusCore,
-  request: operations.ListMemoriesRequest,
+  request: operations.CancelSessionRequest,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    models.ListMemoriesResponse,
-    | errors.ErrBadRequest
+    models.CancelSessionResponse,
     | errors.ErrUnauthorized
+    | errors.ErrNotFound
+    | errors.ErrConflict
     | AlbusError
     | ResponseValidationError
     | ConnectionError
@@ -66,14 +65,15 @@ export function memoriesListMemories(
 
 async function $do(
   client: AlbusCore,
-  request: operations.ListMemoriesRequest,
+  request: operations.CancelSessionRequest,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      models.ListMemoriesResponse,
-      | errors.ErrBadRequest
+      models.CancelSessionResponse,
       | errors.ErrUnauthorized
+      | errors.ErrNotFound
+      | errors.ErrConflict
       | AlbusError
       | ResponseValidationError
       | ConnectionError
@@ -88,7 +88,7 @@ async function $do(
 > {
   const parsed = safeParse(
     request,
-    (value) => z.parse(operations.ListMemoriesRequest$outboundSchema, value),
+    (value) => z.parse(operations.CancelSessionRequest$outboundSchema, value),
     "Input validation failed",
   );
   if (!parsed.ok) {
@@ -98,17 +98,12 @@ async function $do(
   const body = null;
 
   const pathParams = {
-    group: encodeSimple("group", payload.group, {
+    id: encodeSimple("id", payload.id, {
       explode: false,
       charEncoding: "percent",
     }),
   };
-  const path = pathToFunc("/memorygroups/{group}")(pathParams);
-
-  const query = encodeFormQuery({
-    "after": payload.after,
-    "limit": payload.limit,
-  });
+  const path = pathToFunc("/sessions/{id}/cancel")(pathParams);
 
   const headers = new Headers(compactMap({
     Accept: "application/json",
@@ -120,7 +115,7 @@ async function $do(
   const context = {
     options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "listMemories",
+    operationID: "cancelSession",
     oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
@@ -134,11 +129,10 @@ async function $do(
 
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
-    method: "GET",
+    method: "POST",
     baseURL: options?.serverURL,
     path: path,
     headers: headers,
-    query: query,
     body: body,
     userAgent: client._options.userAgent,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
@@ -165,9 +159,10 @@ async function $do(
   };
 
   const [result] = await M.match<
-    models.ListMemoriesResponse,
-    | errors.ErrBadRequest
+    models.CancelSessionResponse,
     | errors.ErrUnauthorized
+    | errors.ErrNotFound
+    | errors.ErrConflict
     | AlbusError
     | ResponseValidationError
     | ConnectionError
@@ -177,9 +172,10 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.json(200, models.ListMemoriesResponse$inboundSchema),
-    M.jsonErr(400, errors.ErrBadRequest$inboundSchema),
+    M.json(202, models.CancelSessionResponse$inboundSchema),
     M.jsonErr(401, errors.ErrUnauthorized$inboundSchema),
+    M.jsonErr(404, errors.ErrNotFound$inboundSchema),
+    M.jsonErr(409, errors.ErrConflict$inboundSchema),
     M.fail("4XX"),
     M.fail("5XX"),
   )(response, req, { extraFields: responseFields });

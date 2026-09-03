@@ -10,6 +10,7 @@ Run and inspect agent sessions.
 * [getSession](#getsession) - Get a session with its messages
 * [runSession](#runsession) - Run or resume a session
 * [deleteSession](#deletesession) - Delete a session
+* [cancelSession](#cancelsession) - Cancel a session's running invocation
 * [getSessionAudit](#getsessionaudit) - List a session's audit log
 
 ## listSessions
@@ -260,16 +261,18 @@ run();
 
 ### Errors
 
-| Error Type                 | Status Code                | Content Type               |
-| -------------------------- | -------------------------- | -------------------------- |
-| errors.ErrBadRequest       | 400                        | application/json           |
-| errors.ErrUnauthorized     | 401                        | application/json           |
-| errors.ErrConflict         | 409                        | application/json           |
-| errors.ErrLocked           | 423                        | application/json           |
-| errors.ErrQuotaExceeded    | 429                        | application/json           |
-| errors.ErrInvocationFailed | 502                        | application/json           |
-| errors.ErrTimeout          | 504                        | application/json           |
-| errors.AlbusDefaultError   | 4XX, 5XX                   | \*/\*                      |
+| Error Type                   | Status Code                  | Content Type                 |
+| ---------------------------- | ---------------------------- | ---------------------------- |
+| errors.ErrBadRequest         | 400                          | application/json             |
+| errors.ErrUnauthorized       | 401                          | application/json             |
+| errors.ErrInsufficientCredit | 402                          | application/json             |
+| errors.ErrConflict           | 409                          | application/json             |
+| errors.ErrInvocationCanceled | 410                          | application/json             |
+| errors.ErrLocked             | 423                          | application/json             |
+| errors.ErrQuotaExceeded      | 429                          | application/json             |
+| errors.ErrInvocationFailed   | 502                          | application/json             |
+| errors.ErrTimeout            | 504                          | application/json             |
+| errors.AlbusDefaultError     | 4XX, 5XX                     | \*/\*                        |
 
 ## deleteSession
 
@@ -348,6 +351,87 @@ run();
 | ------------------------ | ------------------------ | ------------------------ |
 | errors.ErrUnauthorized   | 401                      | application/json         |
 | errors.ErrNotFound       | 404                      | application/json         |
+| errors.AlbusDefaultError | 4XX, 5XX                 | \*/\*                    |
+
+## cancelSession
+
+Requests cancellation of the invocation currently running for the session. Cancellation is asynchronous: the call returns once the request is accepted, and the invocation resolves as canceled shortly after, unlocking the session for new invocations. A request waiting on the invocation receives its terminal outcome. Returns 409 when the session has no invocation running.
+
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="cancelSession" method="post" path="/sessions/{id}/cancel" -->
+```typescript
+import { Albus } from "@albus-ts/sdk";
+
+const albus = new Albus({
+  security: {
+    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
+  },
+});
+
+async function run() {
+  const result = await albus.sessions.cancelSession({
+    id: "<id>",
+  });
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { AlbusCore } from "@albus-ts/sdk/core.js";
+import { sessionsCancelSession } from "@albus-ts/sdk/funcs/sessions-cancel-session.js";
+
+// Use `AlbusCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const albus = new AlbusCore({
+  security: {
+    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
+  },
+});
+
+async function run() {
+  const res = await sessionsCancelSession(albus, {
+    id: "<id>",
+  });
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("sessionsCancelSession failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [operations.CancelSessionRequest](../../models/operations/cancel-session-request.md)                                                                                           | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.CancelSessionResponse](../../models/cancel-session-response.md)\>**
+
+### Errors
+
+| Error Type               | Status Code              | Content Type             |
+| ------------------------ | ------------------------ | ------------------------ |
+| errors.ErrUnauthorized   | 401                      | application/json         |
+| errors.ErrNotFound       | 404                      | application/json         |
+| errors.ErrConflict       | 409                      | application/json         |
 | errors.AlbusDefaultError | 4XX, 5XX                 | \*/\*                    |
 
 ## getSessionAudit

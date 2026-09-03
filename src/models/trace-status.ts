@@ -7,7 +7,7 @@ import * as openEnums from "../types/enums.js";
 import { OpenEnum } from "../types/enums.js";
 
 /**
- * How an invocation or one of its attempts ended, or `RUNNING` while it is still in flight.
+ * How an invocation or one of its attempts ended, or `RUNNING` while it is still in flight. `CANCELED` means it was stopped on request before it answered.
  *
  * @remarks
  */
@@ -15,9 +15,10 @@ export const TraceStatus = {
   Running: "RUNNING",
   Succeeded: "SUCCEEDED",
   Failed: "FAILED",
+  Canceled: "CANCELED",
 } as const;
 /**
- * How an invocation or one of its attempts ended, or `RUNNING` while it is still in flight.
+ * How an invocation or one of its attempts ended, or `RUNNING` while it is still in flight. `CANCELED` means it was stopped on request before it answered.
  *
  * @remarks
  */

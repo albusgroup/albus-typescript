@@ -186,6 +186,7 @@ run();
 
 ### [Memories](docs/sdks/memories/README.md)
 
+* [listMemoryGroups](docs/sdks/memories/README.md#listmemorygroups) - List memory groups
 * [listMemories](docs/sdks/memories/README.md#listmemories) - List a group's memories
 * [deleteMemoryGroup](docs/sdks/memories/README.md#deletememorygroup) - Delete a group's memories
 * [deleteMemory](docs/sdks/memories/README.md#deletememory) - Delete one memory
@@ -208,6 +209,7 @@ run();
 * [getSession](docs/sdks/sessions/README.md#getsession) - Get a session with its messages
 * [runSession](docs/sdks/sessions/README.md#runsession) - Run or resume a session
 * [deleteSession](docs/sdks/sessions/README.md#deletesession) - Delete a session
+* [cancelSession](docs/sdks/sessions/README.md#cancelsession) - Cancel a session's running invocation
 * [getSessionAudit](docs/sdks/sessions/README.md#getsessionaudit) - List a session's audit log
 
 ### [Tokens](docs/sdks/tokens/README.md)
@@ -249,12 +251,14 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 - [`memoriesDeleteMemory`](docs/sdks/memories/README.md#deletememory) - Delete one memory
 - [`memoriesDeleteMemoryGroup`](docs/sdks/memories/README.md#deletememorygroup) - Delete a group's memories
 - [`memoriesListMemories`](docs/sdks/memories/README.md#listmemories) - List a group's memories
+- [`memoriesListMemoryGroups`](docs/sdks/memories/README.md#listmemorygroups) - List memory groups
 - [`modelsListModels`](docs/sdks/models/README.md#listmodels) - List models
 - [`secretsCreateSecret`](docs/sdks/secrets/README.md#createsecret) - Create a secret
 - [`secretsDeleteSecret`](docs/sdks/secrets/README.md#deletesecret) - Delete a secret by name
 - [`secretsGetSecret`](docs/sdks/secrets/README.md#getsecret) - Get a secret by name
 - [`secretsListSecrets`](docs/sdks/secrets/README.md#listsecrets) - List all secrets
 - [`secretsUpdateSecret`](docs/sdks/secrets/README.md#updatesecret) - Update a secret by name
+- [`sessionsCancelSession`](docs/sdks/sessions/README.md#cancelsession) - Cancel a session's running invocation
 - [`sessionsDeleteSession`](docs/sdks/sessions/README.md#deletesession) - Delete a session
 - [`sessionsGetSession`](docs/sdks/sessions/README.md#getsession) - Get a session with its messages
 - [`sessionsGetSessionAudit`](docs/sdks/sessions/README.md#getsessionaudit) - List a session's audit log
@@ -392,7 +396,7 @@ run();
 * [`AlbusError`](./src/models/errors/albus-error.ts): The base class for HTTP error responses.
   * [`ErrUnauthorized`](./src/models/errors/err-unauthorized.ts): Status code `401`. *
 
-<details><summary>Less common errors (15)</summary>
+<details><summary>Less common errors (17)</summary>
 
 <br />
 
@@ -405,15 +409,17 @@ run();
 
 
 **Inherit from [`AlbusError`](./src/models/errors/albus-error.ts)**:
-* [`ErrNotFound`](./src/models/errors/err-not-found.ts): Status code `404`. Applicable to 13 of 26 methods.*
-* [`ErrBadRequest`](./src/models/errors/err-bad-request.ts): Status code `400`. Applicable to 11 of 26 methods.*
-* [`ErrConflict`](./src/models/errors/err-conflict.ts): Status code `409`. Applicable to 2 of 26 methods.*
-* [`ErrLocked`](./src/models/errors/err-locked.ts): Another invocation is currently running for this session. Status code `423`. Applicable to 1 of 26 methods.*
-* [`ErrQuotaExceeded`](./src/models/errors/err-quota-exceeded.ts): The organization has reached its invocation quota. Status code `429`. Applicable to 1 of 26 methods.*
-* [`ErrInvocationFailed`](./src/models/errors/err-invocation-failed.ts): The invocation failed instead of producing a response (only possible while waiting for a response, or when replaying a failed invocation). The body carries the failure kind and detail. Status code `502`. Applicable to 1 of 26 methods.*
-* [`ErrUnavailable`](./src/models/errors/err-unavailable.ts): The invocation's spans could not be read. Retry the request; the invocation and its spans are unaffected. Status code `503`. Applicable to 1 of 26 methods.*
-* [`HealthResponseError`](./src/models/errors/health-response-error.ts): Service is healthy. Status code `503`. Applicable to 1 of 26 methods.*
-* [`ErrTimeout`](./src/models/errors/err-timeout.ts): Timed out waiting for the assistant response. Status code `504`. Applicable to 1 of 26 methods.*
+* [`ErrNotFound`](./src/models/errors/err-not-found.ts): Status code `404`. Applicable to 14 of 28 methods.*
+* [`ErrBadRequest`](./src/models/errors/err-bad-request.ts): Status code `400`. Applicable to 12 of 28 methods.*
+* [`ErrConflict`](./src/models/errors/err-conflict.ts): Status code `409`. Applicable to 3 of 28 methods.*
+* [`ErrInsufficientCredit`](./src/models/errors/err-insufficient-credit.ts): The organization has no credit balance remaining. Status code `402`. Applicable to 1 of 28 methods.*
+* [`ErrInvocationCanceled`](./src/models/errors/err-invocation-canceled.ts): The invocation was canceled instead of producing a response (only possible while waiting for a response, or when replaying a canceled invocation). Status code `410`. Applicable to 1 of 28 methods.*
+* [`ErrLocked`](./src/models/errors/err-locked.ts): Another invocation is currently running for this session. Status code `423`. Applicable to 1 of 28 methods.*
+* [`ErrQuotaExceeded`](./src/models/errors/err-quota-exceeded.ts): The organization has reached its invocation quota. Status code `429`. Applicable to 1 of 28 methods.*
+* [`ErrInvocationFailed`](./src/models/errors/err-invocation-failed.ts): The invocation failed instead of producing a response (only possible while waiting for a response, or when replaying a failed invocation). The body carries the failure kind and detail. Status code `502`. Applicable to 1 of 28 methods.*
+* [`ErrUnavailable`](./src/models/errors/err-unavailable.ts): The invocation's spans could not be read. Retry the request; the invocation and its spans are unaffected. Status code `503`. Applicable to 1 of 28 methods.*
+* [`HealthResponseError`](./src/models/errors/health-response-error.ts): Service is healthy. Status code `503`. Applicable to 1 of 28 methods.*
+* [`ErrTimeout`](./src/models/errors/err-timeout.ts): Timed out waiting for the assistant response. Status code `504`. Applicable to 1 of 28 methods.*
 * [`ResponseValidationError`](./src/models/errors/response-validation-error.ts): Type mismatch between the data returned from the server and the structure expected by the SDK. See `error.rawValue` for the raw value and `error.pretty()` for a nicely formatted multi-line string.
 
 </details>

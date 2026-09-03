@@ -6,21 +6,23 @@ import * as z from "zod/v4-mini";
 
 export type DeleteMemoryRequest = {
   /**
-   * The memory's identifier, as returned by `GET /memories`.
-   */
-  id: string;
-  /**
    * The memory group to read or delete — the `memory.group` value the agents sharing those memories run with.
    *
    * @remarks
    */
   group: string;
+  /**
+   * The memory's identifier, as returned by `GET /memorygroups/{group}`.
+   *
+   * @remarks
+   */
+  id: string;
 };
 
 /** @internal */
 export type DeleteMemoryRequest$Outbound = {
-  id: string;
   group: string;
+  id: string;
 };
 
 /** @internal */
@@ -28,8 +30,8 @@ export const DeleteMemoryRequest$outboundSchema: z.ZodMiniType<
   DeleteMemoryRequest$Outbound,
   DeleteMemoryRequest
 > = z.object({
-  id: z.string(),
   group: z.string(),
+  id: z.string(),
 });
 
 export function deleteMemoryRequestToJSON(

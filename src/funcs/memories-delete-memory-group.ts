@@ -4,7 +4,7 @@
 
 import * as z from "zod/v4-mini";
 import { AlbusCore } from "../core.js";
-import { encodeFormQuery } from "../lib/encodings.js";
+import { encodeSimple } from "../lib/encodings.js";
 import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
@@ -95,11 +95,13 @@ async function $do(
   const payload = parsed.value;
   const body = null;
 
-  const path = pathToFunc("/memories")();
-
-  const query = encodeFormQuery({
-    "group": payload.group,
-  });
+  const pathParams = {
+    group: encodeSimple("group", payload.group, {
+      explode: false,
+      charEncoding: "percent",
+    }),
+  };
+  const path = pathToFunc("/memorygroups/{group}")(pathParams);
 
   const headers = new Headers(compactMap({
     Accept: "application/json",
@@ -129,7 +131,6 @@ async function $do(
     baseURL: options?.serverURL,
     path: path,
     headers: headers,
-    query: query,
     body: body,
     userAgent: client._options.userAgent,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,

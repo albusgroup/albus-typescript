@@ -6,9 +6,88 @@ Read and delete what your agents remember.
 
 ### Available Operations
 
+* [listMemoryGroups](#listmemorygroups) - List memory groups
 * [listMemories](#listmemories) - List a group's memories
 * [deleteMemoryGroup](#deletememorygroup) - Delete a group's memories
 * [deleteMemory](#deletememory) - Delete one memory
+
+## listMemoryGroups
+
+Lists the memory groups of your organization, ordered by key: every `memory.group` value an agent has run with, along with how many memories agents in the group currently read. Read a group's memories with `GET /memorygroups/{group}`.
+
+Page with `after` and `limit`: pass the response's `next_cursor` as the next request's `after`, and keep requesting while `next_cursor` is present — you have reached the end when it is absent.
+
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="listMemoryGroups" method="get" path="/memorygroups" -->
+```typescript
+import { Albus } from "@albus-ts/sdk";
+
+const albus = new Albus({
+  security: {
+    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
+  },
+});
+
+async function run() {
+  const result = await albus.memories.listMemoryGroups({});
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { AlbusCore } from "@albus-ts/sdk/core.js";
+import { memoriesListMemoryGroups } from "@albus-ts/sdk/funcs/memories-list-memory-groups.js";
+
+// Use `AlbusCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const albus = new AlbusCore({
+  security: {
+    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
+  },
+});
+
+async function run() {
+  const res = await memoriesListMemoryGroups(albus, {});
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("memoriesListMemoryGroups failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [operations.ListMemoryGroupsRequest](../../models/operations/list-memory-groups-request.md)                                                                                    | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.ListMemoryGroupsResponse](../../models/list-memory-groups-response.md)\>**
+
+### Errors
+
+| Error Type               | Status Code              | Content Type             |
+| ------------------------ | ------------------------ | ------------------------ |
+| errors.ErrBadRequest     | 400                      | application/json         |
+| errors.ErrUnauthorized   | 401                      | application/json         |
+| errors.AlbusDefaultError | 4XX, 5XX                 | \*/\*                    |
 
 ## listMemories
 
@@ -19,7 +98,7 @@ Page with `after` and `limit`: pass the response's `next_cursor` as the next req
 
 ### Example Usage
 
-<!-- UsageSnippet language="typescript" operationID="listMemories" method="get" path="/memories" -->
+<!-- UsageSnippet language="typescript" operationID="listMemories" method="get" path="/memorygroups/{group}" -->
 ```typescript
 import { Albus } from "@albus-ts/sdk";
 
@@ -99,7 +178,7 @@ Deletes every memory of one memory group. Agents bound to the group remember not
 
 ### Example Usage
 
-<!-- UsageSnippet language="typescript" operationID="deleteMemoryGroup" method="delete" path="/memories" -->
+<!-- UsageSnippet language="typescript" operationID="deleteMemoryGroup" method="delete" path="/memorygroups/{group}" -->
 ```typescript
 import { Albus } from "@albus-ts/sdk";
 
@@ -179,7 +258,7 @@ Deletes one memory of a memory group. Agents bound to the group stop reading it,
 
 ### Example Usage
 
-<!-- UsageSnippet language="typescript" operationID="deleteMemory" method="delete" path="/memories/{id}" -->
+<!-- UsageSnippet language="typescript" operationID="deleteMemory" method="delete" path="/memorygroups/{group}/memories/{id}" -->
 ```typescript
 import { Albus } from "@albus-ts/sdk";
 
@@ -191,8 +270,8 @@ const albus = new Albus({
 
 async function run() {
   await albus.memories.deleteMemory({
-    id: "<id>",
     group: "<value>",
+    id: "<id>",
   });
 
 
@@ -219,8 +298,8 @@ const albus = new AlbusCore({
 
 async function run() {
   const res = await memoriesDeleteMemory(albus, {
-    id: "<id>",
     group: "<value>",
+    id: "<id>",
   });
   if (res.ok) {
     const { value: result } = res;

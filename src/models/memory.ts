@@ -29,7 +29,7 @@ export type MemoryStatus = OpenEnum<typeof MemoryStatus>;
 
 export type Memory = {
   /**
-   * Identifier of this memory; pass it to `DELETE /memories/{id}`.
+   * Identifier of this memory; pass it to `DELETE /memorygroups/{group}/memories/{id}`.
    *
    * @remarks
    */

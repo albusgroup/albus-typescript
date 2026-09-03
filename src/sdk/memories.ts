@@ -5,12 +5,32 @@
 import { memoriesDeleteMemoryGroup } from "../funcs/memories-delete-memory-group.js";
 import { memoriesDeleteMemory } from "../funcs/memories-delete-memory.js";
 import { memoriesListMemories } from "../funcs/memories-list-memories.js";
+import { memoriesListMemoryGroups } from "../funcs/memories-list-memory-groups.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import * as models from "../models/index.js";
 import * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Memories extends ClientSDK {
+  /**
+   * List memory groups
+   *
+   * @remarks
+   * Lists the memory groups of your organization, ordered by key: every `memory.group` value an agent has run with, along with how many memories agents in the group currently read. Read a group's memories with `GET /memorygroups/{group}`.
+   *
+   * Page with `after` and `limit`: pass the response's `next_cursor` as the next request's `after`, and keep requesting while `next_cursor` is present — you have reached the end when it is absent.
+   */
+  async listMemoryGroups(
+    request?: operations.ListMemoryGroupsRequest | undefined,
+    options?: RequestOptions,
+  ): Promise<models.ListMemoryGroupsResponse> {
+    return unwrapAsync(memoriesListMemoryGroups(
+      this,
+      request,
+      options,
+    ));
+  }
+
   /**
    * List a group's memories
    *
