@@ -5,6 +5,15 @@
 import * as z from "zod/v4-mini";
 import * as models from "../index.js";
 
+export type UpdateSecretGlobals = {
+  /**
+   * The id of the organization the request acts on, which must be one the caller belongs to. Defaults to the organization the caller joined first. Ignored for API keys, which are bound to one organization.
+   *
+   * @remarks
+   */
+  xAlbusOrganization?: string | undefined;
+};
+
 export type UpdateSecretRequest = {
   name: string;
   body: models.UpdateSecretRequest;

@@ -5,25 +5,10 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
-import * as openEnums from "../types/enums.js";
-import { OpenEnum } from "../types/enums.js";
 import { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
 import { SDKValidationError } from "./errors/sdk-validation-error.js";
-
-/**
- * Lifecycle state of the session.
- */
-export const State = {
-  Running: "RUNNING",
-  Done: "DONE",
-  Failed: "FAILED",
-  Canceled: "CANCELED",
-} as const;
-/**
- * Lifecycle state of the session.
- */
-export type State = OpenEnum<typeof State>;
+import { SessionState, SessionState$inboundSchema } from "./session-state.js";
 
 export type Session = {
   /**
@@ -31,9 +16,11 @@ export type Session = {
    */
   id: string;
   /**
-   * Lifecycle state of the session.
+   * Lifecycle state of the session: `RUNNING` while an invocation is in flight, otherwise how its latest invocation ended.
+   *
+   * @remarks
    */
-  state: State;
+  state: SessionState;
   /**
    * The key of the invocation currently running, if any. Omitted when the session is idle.
    *
@@ -59,14 +46,10 @@ export type Session = {
 };
 
 /** @internal */
-export const State$inboundSchema: z.ZodMiniType<State, unknown> = openEnums
-  .inboundSchema(State);
-
-/** @internal */
 export const Session$inboundSchema: z.ZodMiniType<Session, unknown> = z.pipe(
   z.object({
     id: types.string(),
-    state: State$inboundSchema,
+    state: SessionState$inboundSchema,
     current_invocation_key: types.optional(types.string()),
     invocation_count: types.number(),
     agent_name: types.optional(types.string()),

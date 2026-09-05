@@ -3,10 +3,16 @@
  */
 
 import * as z from "zod/v4-mini";
+import { SDKOptions } from "./config.js";
 
 export interface Env {
   ALBUS_BEARER_AUTH?: string | undefined;
   ALBUS_API_KEY?: string | undefined;
+
+  /**
+   * Sets the xAlbusOrganization parameter for all supported operations
+   */
+  ALBUS_X_ALBUS_ORGANIZATION?: string | undefined;
 
   ALBUS_DEBUG?: boolean | undefined;
 }
@@ -14,6 +20,8 @@ export interface Env {
 export const envSchema: z.ZodMiniType<Env, unknown> = z.object({
   ALBUS_BEARER_AUTH: z.optional(z.string()),
   ALBUS_API_KEY: z.optional(z.string()),
+
+  ALBUS_X_ALBUS_ORGANIZATION: z.optional(z.string()),
 
   ALBUS_DEBUG: z.optional(z.coerce.boolean()),
 });
@@ -60,4 +68,19 @@ export function env(): Env {
  */
 export function resetEnv() {
   envMemo = undefined;
+}
+
+/**
+ * Populates global parameters with environment variables.
+ */
+export function fillGlobals(options: SDKOptions): SDKOptions {
+  const clone = { ...options };
+
+  const envVars = env();
+
+  if (typeof envVars.ALBUS_X_ALBUS_ORGANIZATION !== "undefined") {
+    clone.xAlbusOrganization ??= envVars.ALBUS_X_ALBUS_ORGANIZATION;
+  }
+
+  return clone;
 }

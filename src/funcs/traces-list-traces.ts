@@ -4,7 +4,7 @@
 
 import * as z from "zod/v4-mini";
 import { AlbusCore } from "../core.js";
-import { encodeFormQuery } from "../lib/encodings.js";
+import { encodeFormQuery, encodeSimple } from "../lib/encodings.js";
 import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
@@ -117,6 +117,11 @@ async function $do(
 
   const headers = new Headers(compactMap({
     Accept: "application/json",
+    "X-Albus-Organization": encodeSimple(
+      "X-Albus-Organization",
+      client._options.xAlbusOrganization,
+      { explode: false, charEncoding: "none" },
+    ),
   }));
 
   const securityInput = await extractSecurity(client._options.security);

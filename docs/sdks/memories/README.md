@@ -25,6 +25,7 @@ Page with `after` and `limit`: pass the response's `next_cursor` as the next req
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -50,6 +51,7 @@ import { memoriesListMemoryGroups } from "@albus-ts/sdk/funcs/memories-list-memo
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -103,6 +105,7 @@ Page with `after` and `limit`: pass the response's `next_cursor` as the next req
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -130,6 +133,7 @@ import { memoriesListMemories } from "@albus-ts/sdk/funcs/memories-list-memories
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -183,6 +187,7 @@ Deletes every memory of one memory group. Agents bound to the group remember not
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -210,6 +215,7 @@ import { memoriesDeleteMemoryGroup } from "@albus-ts/sdk/funcs/memories-delete-m
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -263,6 +269,7 @@ Deletes one memory of a memory group. Agents bound to the group stop reading it,
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -291,6 +298,7 @@ import { memoriesDeleteMemory } from "@albus-ts/sdk/funcs/memories-delete-memory
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },

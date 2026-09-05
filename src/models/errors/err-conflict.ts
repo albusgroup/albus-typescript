@@ -11,9 +11,18 @@ export type ErrConflictData = {
    * Human-readable error message
    */
   message: string;
+  /**
+   * Machine-readable reason (e.g. "last_admin").
+   */
+  code?: string | undefined;
 };
 
 export class ErrConflict extends AlbusError {
+  /**
+   * Machine-readable reason (e.g. "last_admin").
+   */
+  code?: string | undefined;
+
   /** The original data that was passed to this error instance. */
   data$: ErrConflictData;
 
@@ -24,6 +33,7 @@ export class ErrConflict extends AlbusError {
     const message = err.message || `API error occurred: ${JSON.stringify(err)}`;
     super(message, httpMeta);
     this.data$ = err;
+    if (err.code != null) this.code = err.code;
 
     this.name = "ErrConflict";
   }
@@ -34,6 +44,7 @@ export const ErrConflict$inboundSchema: z.ZodMiniType<ErrConflict, unknown> = z
   .pipe(
     z.object({
       message: types.string(),
+      code: types.optional(types.string()),
       request$: z.custom<Request>(x => x instanceof Request),
       response$: z.custom<Response>(x => x instanceof Response),
       body$: z.string(),

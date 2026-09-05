@@ -3,22 +3,43 @@
  */
 
 import * as z from "zod/v4-mini";
+import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
 import { Result as SafeParseResult } from "../types/fp.js";
+import * as types from "../types/primitives.js";
 import { SDKValidationError } from "./errors/sdk-validation-error.js";
 import { Session, Session$inboundSchema } from "./session.js";
 
 export type ListSessionsResponse = {
+  /**
+   * This page of sessions: most recently used first, or by most recent matching invocation when filtered. It can hold fewer than `limit`, or none at all, while `next_cursor` is present.
+   *
+   * @remarks
+   */
   sessions: Array<Session>;
+  /**
+   * Cursor for the next page. Pass it as `after`, with no filters or with every filter this listing used repeated exactly, to fetch the following sessions. Present whenever there may be more sessions, however few this page returned; omitted only once there are none left.
+   *
+   * @remarks
+   */
+  nextCursor?: string | undefined;
 };
 
 /** @internal */
 export const ListSessionsResponse$inboundSchema: z.ZodMiniType<
   ListSessionsResponse,
   unknown
-> = z.object({
-  sessions: z.array(Session$inboundSchema),
-});
+> = z.pipe(
+  z.object({
+    sessions: z.array(Session$inboundSchema),
+    next_cursor: types.optional(types.string()),
+  }),
+  z.transform((v) => {
+    return remap$(v, {
+      "next_cursor": "nextCursor",
+    });
+  }),
+);
 
 export function listSessionsResponseFromJSON(
   jsonString: string,

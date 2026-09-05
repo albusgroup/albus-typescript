@@ -1,0 +1,15 @@
+overlay: 1.0.0
+info:
+  title: Organization header as a hidden client option
+  version: 1.0.0
+actions:
+  - target: "$"
+    description: Accept X-Albus-Organization once on the client, not per method.
+    update:
+      x-speakeasy-globals:
+        parameters:
+          - $ref: "#/components/parameters/OrganizationHeader"
+  - target: "$.components.parameters.OrganizationHeader"
+    description: Keep the header out of the documented method signatures.
+    update:
+      x-speakeasy-globals-hidden: true

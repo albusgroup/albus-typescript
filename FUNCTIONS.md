@@ -25,6 +25,7 @@ import { secretsListSecrets } from "@albus-ts/sdk/funcs/secrets-list-secrets.js"
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },

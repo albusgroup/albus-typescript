@@ -15,13 +15,22 @@ import { unwrapAsync } from "../types/fp.js";
 
 export class Sessions extends ClientSDK {
   /**
-   * List all sessions
+   * List sessions
+   *
+   * @remarks
+   * Lists your organization's sessions, most recently used first. Filter by agent name, agent revision, invocation state, time window, or an invocation it ran: a session matches when any of its invocations does, and a filtered listing is ordered by each session's most recent matching invocation. A filter that matches nothing returns an empty page rather than an error.
+   *
+   * Page with `after` and `limit`: pass the response's `next_cursor` as the next request's `after`, and keep requesting while `next_cursor` is present — you have reached the end when it is absent. A page can hold fewer sessions than `limit`, or none at all, and still have a `next_cursor`; a short page is not the end of the results.
+   *
+   * A listing covers the window given by `since` and `until`, and omitting `since` searches the last 31 days. The window is fixed when the first page is requested, so paging with `after` keeps returning results from the window that page used: `after` carries that window and the filters it was made with, so send it with no filters, or with every filter repeated exactly, and expect a `400` otherwise.
    */
   async listSessions(
+    request?: operations.ListSessionsRequest | undefined,
     options?: RequestOptions,
   ): Promise<models.ListSessionsResponse> {
     return unwrapAsync(sessionsListSessions(
       this,
+      request,
       options,
     ));
   }

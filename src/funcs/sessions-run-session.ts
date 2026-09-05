@@ -125,6 +125,11 @@ async function $do(
   const headers = new Headers(compactMap({
     "Content-Type": "application/json",
     Accept: "application/json",
+    "X-Albus-Organization": encodeSimple(
+      "X-Albus-Organization",
+      client._options.xAlbusOrganization,
+      { explode: false, charEncoding: "none" },
+    ),
     "Idempotency-Key": encodeSimple("Idempotency-Key", payload.invocation_key, {
       explode: false,
       charEncoding: "none",

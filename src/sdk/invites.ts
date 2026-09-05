@@ -3,22 +3,59 @@
  */
 
 import { invitesCreateInvite } from "../funcs/invites-create-invite.js";
+import { invitesListInvites } from "../funcs/invites-list-invites.js";
+import { invitesRevokeInvite } from "../funcs/invites-revoke-invite.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import * as models from "../models/index.js";
+import * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Invites extends ClientSDK {
   /**
+   * List pending invitations
+   *
+   * @remarks
+   * Lists the unexpired invitations into your organization. Requires the admin role.
+   */
+  async listInvites(
+    request?: operations.ListInvitesRequest | undefined,
+    options?: RequestOptions,
+  ): Promise<models.ListInvitesResponse> {
+    return unwrapAsync(invitesListInvites(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
    * Invite a user by email
    *
    * @remarks
-   * Creates a pending invitation for an email address. Omit organization_id to invite the user as the founder of a new organization that is created on their first sign-in; provide it to invite them into an existing organization. The invitation is redeemed automatically the first time the invitee signs in with that email.
+   * Invites an email address into your organization. The invitation is redeemed automatically the next time the invitee signs in with that email, and expires after 14 days. Requires the admin role.
    */
   async createInvite(
     request: models.CreateInviteRequest,
     options?: RequestOptions,
   ): Promise<models.Invite> {
     return unwrapAsync(invitesCreateInvite(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Revoke a pending invitation
+   *
+   * @remarks
+   * Requires the admin role.
+   */
+  async revokeInvite(
+    request: operations.RevokeInviteRequest,
+    options?: RequestOptions,
+  ): Promise<void> {
+    return unwrapAsync(invitesRevokeInvite(
       this,
       request,
       options,

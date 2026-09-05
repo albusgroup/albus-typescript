@@ -23,11 +23,13 @@ export type Invite = {
    */
   role: string;
   /**
-   * Organization the invitee will join. Absent when the invitation creates a new organization on first sign-in.
-   *
-   * @remarks
+   * When the invitation stops being redeemable
    */
-  organizationId?: string | undefined;
+  expiresAt: Date;
+  /**
+   * When the invitation was created
+   */
+  createdAt: Date;
 };
 
 /** @internal */
@@ -36,11 +38,13 @@ export const Invite$inboundSchema: z.ZodMiniType<Invite, unknown> = z.pipe(
     id: types.string(),
     email: types.string(),
     role: types.string(),
-    organization_id: types.optional(types.string()),
+    expires_at: types.date(),
+    created_at: types.date(),
   }),
   z.transform((v) => {
     return remap$(v, {
-      "organization_id": "organizationId",
+      "expires_at": "expiresAt",
+      "created_at": "createdAt",
     });
   }),
 );

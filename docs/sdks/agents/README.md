@@ -22,6 +22,7 @@ Lists the agents that have run in your organization, each with its latest revisi
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -47,6 +48,7 @@ import { agentsListAgents } from "@albus-ts/sdk/funcs/agents-list-agents.js";
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -69,6 +71,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [operations.ListAgentsRequest](../../models/operations/list-agents-request.md)                                                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -96,6 +99,7 @@ Returns the agent with the given name, its current revision, and the list of all
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -123,6 +127,7 @@ import { agentsGetAgent } from "@albus-ts/sdk/funcs/agents-get-agent.js";
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -176,6 +181,7 @@ Returns the full configuration of one revision of an agent — its model, tools,
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -204,6 +210,7 @@ import { agentsGetAgentRevision } from "@albus-ts/sdk/funcs/agents-get-agent-rev
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },

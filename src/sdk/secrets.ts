@@ -17,10 +17,12 @@ export class Secrets extends ClientSDK {
    * List all secrets
    */
   async listSecrets(
+    request?: operations.ListSecretsRequest | undefined,
     options?: RequestOptions,
   ): Promise<models.ListSecretsResponse> {
     return unwrapAsync(secretsListSecrets(
       this,
+      request,
       options,
     ));
   }

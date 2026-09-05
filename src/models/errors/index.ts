@@ -6,6 +6,7 @@ export * from "./albus-default-error.js";
 export * from "./albus-error.js";
 export * from "./err-bad-request.js";
 export * from "./err-conflict.js";
+export * from "./err-forbidden.js";
 export * from "./err-insufficient-credit.js";
 export * from "./err-invocation-canceled.js";
 export * from "./err-invocation-failed.js";

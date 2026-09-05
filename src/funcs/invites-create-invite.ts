@@ -4,7 +4,7 @@
 
 import * as z from "zod/v4-mini";
 import { AlbusCore } from "../core.js";
-import { encodeJSON } from "../lib/encodings.js";
+import { encodeJSON, encodeSimple } from "../lib/encodings.js";
 import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
@@ -31,7 +31,7 @@ import { Result } from "../types/fp.js";
  * Invite a user by email
  *
  * @remarks
- * Creates a pending invitation for an email address. Omit organization_id to invite the user as the founder of a new organization that is created on their first sign-in; provide it to invite them into an existing organization. The invitation is redeemed automatically the first time the invitee signs in with that email.
+ * Invites an email address into your organization. The invitation is redeemed automatically the next time the invitee signs in with that email, and expires after 14 days. Requires the admin role.
  *
  * If set, this operation will use {@link Security.bearerAuth} from the global security.
  */
@@ -44,6 +44,7 @@ export function invitesCreateInvite(
     models.Invite,
     | errors.ErrBadRequest
     | errors.ErrUnauthorized
+    | errors.ErrForbidden
     | errors.ErrConflict
     | AlbusError
     | ResponseValidationError
@@ -72,6 +73,7 @@ async function $do(
       models.Invite,
       | errors.ErrBadRequest
       | errors.ErrUnauthorized
+      | errors.ErrForbidden
       | errors.ErrConflict
       | AlbusError
       | ResponseValidationError
@@ -96,11 +98,16 @@ async function $do(
   const payload = parsed.value;
   const body = encodeJSON("body", payload, { explode: true });
 
-  const path = pathToFunc("/invites")();
+  const path = pathToFunc("/organization/invites")();
 
   const headers = new Headers(compactMap({
     "Content-Type": "application/json",
     Accept: "application/json",
+    "X-Albus-Organization": encodeSimple(
+      "X-Albus-Organization",
+      client._options.xAlbusOrganization,
+      { explode: false, charEncoding: "none" },
+    ),
   }));
 
   const securityInput = await extractSecurity(client._options.security);
@@ -156,6 +163,7 @@ async function $do(
     models.Invite,
     | errors.ErrBadRequest
     | errors.ErrUnauthorized
+    | errors.ErrForbidden
     | errors.ErrConflict
     | AlbusError
     | ResponseValidationError
@@ -169,6 +177,7 @@ async function $do(
     M.json(200, models.Invite$inboundSchema),
     M.jsonErr(400, errors.ErrBadRequest$inboundSchema),
     M.jsonErr(401, errors.ErrUnauthorized$inboundSchema),
+    M.jsonErr(403, errors.ErrForbidden$inboundSchema),
     M.jsonErr(409, errors.ErrConflict$inboundSchema),
     M.fail("4XX"),
     M.fail("5XX"),

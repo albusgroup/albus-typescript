@@ -4,7 +4,7 @@
 
 import * as z from "zod/v4-mini";
 import { AlbusCore } from "../core.js";
-import { encodeJSON } from "../lib/encodings.js";
+import { encodeJSON, encodeSimple } from "../lib/encodings.js";
 import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
@@ -30,6 +30,9 @@ import { Result } from "../types/fp.js";
 /**
  * Create an API token. The token value is returned only in this response.
  *
+ * @remarks
+ * Requires the admin role.
+ *
  * If set, this operation will use {@link Security.bearerAuth} from the global security.
  */
 export function tokensCreateToken(
@@ -40,6 +43,7 @@ export function tokensCreateToken(
   Result<
     models.CreateTokenResponse,
     | errors.ErrUnauthorized
+    | errors.ErrForbidden
     | AlbusError
     | ResponseValidationError
     | ConnectionError
@@ -66,6 +70,7 @@ async function $do(
     Result<
       models.CreateTokenResponse,
       | errors.ErrUnauthorized
+      | errors.ErrForbidden
       | AlbusError
       | ResponseValidationError
       | ConnectionError
@@ -94,6 +99,11 @@ async function $do(
   const headers = new Headers(compactMap({
     "Content-Type": "application/json",
     Accept: "application/json",
+    "X-Albus-Organization": encodeSimple(
+      "X-Albus-Organization",
+      client._options.xAlbusOrganization,
+      { explode: false, charEncoding: "none" },
+    ),
   }));
 
   const securityInput = await extractSecurity(client._options.security);
@@ -148,6 +158,7 @@ async function $do(
   const [result] = await M.match<
     models.CreateTokenResponse,
     | errors.ErrUnauthorized
+    | errors.ErrForbidden
     | AlbusError
     | ResponseValidationError
     | ConnectionError
@@ -159,6 +170,7 @@ async function $do(
   >(
     M.json(200, models.CreateTokenResponse$inboundSchema),
     M.jsonErr(401, errors.ErrUnauthorized$inboundSchema),
+    M.jsonErr(403, errors.ErrForbidden$inboundSchema),
     M.fail("4XX"),
     M.fail("5XX"),
   )(response, req, { extraFields: responseFields });

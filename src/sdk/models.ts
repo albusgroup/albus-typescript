@@ -5,6 +5,7 @@
 import { modelsListModels } from "../funcs/models-list-models.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import * as models from "../models/index.js";
+import * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Models extends ClientSDK {
@@ -15,10 +16,12 @@ export class Models extends ClientSDK {
    * Lists the models available to run agents on, each with the provider that serves it.
    */
   async listModels(
+    request?: operations.ListModelsRequest | undefined,
     options?: RequestOptions,
   ): Promise<models.ListModelsResponse> {
     return unwrapAsync(modelsListModels(
       this,
+      request,
       options,
     ));
   }

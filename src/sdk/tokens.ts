@@ -16,16 +16,21 @@ export class Tokens extends ClientSDK {
    * List all API tokens. Never returns token values, only metadata.
    */
   async listTokens(
+    request?: operations.ListTokensRequest | undefined,
     options?: RequestOptions,
   ): Promise<models.ListTokensResponse> {
     return unwrapAsync(tokensListTokens(
       this,
+      request,
       options,
     ));
   }
 
   /**
    * Create an API token. The token value is returned only in this response.
+   *
+   * @remarks
+   * Requires the admin role.
    */
   async createToken(
     request: models.CreateTokenRequest,
@@ -54,6 +59,9 @@ export class Tokens extends ClientSDK {
 
   /**
    * Revoke an API token by ID
+   *
+   * @remarks
+   * Requires the admin role.
    */
   async deleteToken(
     request: operations.DeleteTokenRequest,

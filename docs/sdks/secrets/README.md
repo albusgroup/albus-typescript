@@ -23,6 +23,7 @@ List all secrets
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -48,6 +49,7 @@ import { secretsListSecrets } from "@albus-ts/sdk/funcs/secrets-list-secrets.js"
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -70,6 +72,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [operations.ListSecretsRequest](../../models/operations/list-secrets-request.md)                                                                                               | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -96,6 +99,7 @@ Create a secret
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -124,6 +128,7 @@ import { secretsCreateSecret } from "@albus-ts/sdk/funcs/secrets-create-secret.j
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -177,6 +182,7 @@ Get a secret by name
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -204,6 +210,7 @@ import { secretsGetSecret } from "@albus-ts/sdk/funcs/secrets-get-secret.js";
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -256,6 +263,7 @@ Update a secret by name
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -286,6 +294,7 @@ import { secretsUpdateSecret } from "@albus-ts/sdk/funcs/secrets-update-secret.j
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -342,6 +351,7 @@ Delete a secret by name
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -369,6 +379,7 @@ import { secretsDeleteSecret } from "@albus-ts/sdk/funcs/secrets-delete-secret.j
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },

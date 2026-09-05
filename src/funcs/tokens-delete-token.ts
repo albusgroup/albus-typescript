@@ -30,6 +30,9 @@ import { Result } from "../types/fp.js";
 /**
  * Revoke an API token by ID
  *
+ * @remarks
+ * Requires the admin role.
+ *
  * If set, this operation will use {@link Security.bearerAuth} from the global security.
  */
 export function tokensDeleteToken(
@@ -40,6 +43,7 @@ export function tokensDeleteToken(
   Result<
     void,
     | errors.ErrUnauthorized
+    | errors.ErrForbidden
     | errors.ErrNotFound
     | AlbusError
     | ResponseValidationError
@@ -67,6 +71,7 @@ async function $do(
     Result<
       void,
       | errors.ErrUnauthorized
+      | errors.ErrForbidden
       | errors.ErrNotFound
       | AlbusError
       | ResponseValidationError
@@ -101,6 +106,11 @@ async function $do(
 
   const headers = new Headers(compactMap({
     Accept: "application/json",
+    "X-Albus-Organization": encodeSimple(
+      "X-Albus-Organization",
+      client._options.xAlbusOrganization,
+      { explode: false, charEncoding: "none" },
+    ),
   }));
 
   const securityInput = await extractSecurity(client._options.security);
@@ -155,6 +165,7 @@ async function $do(
   const [result] = await M.match<
     void,
     | errors.ErrUnauthorized
+    | errors.ErrForbidden
     | errors.ErrNotFound
     | AlbusError
     | ResponseValidationError
@@ -167,6 +178,7 @@ async function $do(
   >(
     M.nil(204, z.void()),
     M.jsonErr(401, errors.ErrUnauthorized$inboundSchema),
+    M.jsonErr(403, errors.ErrForbidden$inboundSchema),
     M.jsonErr(404, errors.ErrNotFound$inboundSchema),
     M.fail("4XX"),
     M.fail("5XX"),

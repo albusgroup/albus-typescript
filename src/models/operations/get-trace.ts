@@ -10,6 +10,15 @@ import { Result as SafeParseResult } from "../../types/fp.js";
 import { SDKValidationError } from "../errors/sdk-validation-error.js";
 import * as models from "../index.js";
 
+export type GetTraceGlobals = {
+  /**
+   * The id of the organization the request acts on, which must be one the caller belongs to. Defaults to the organization the caller joined first. Ignored for API keys, which are bound to one organization.
+   *
+   * @remarks
+   */
+  xAlbusOrganization?: string | undefined;
+};
+
 /**
  * Which attempts to return spans for. `final`, the default, returns only the spans of the latest attempt — the one that produced the invocation's outcome, or the one still in flight; `all` also returns the spans of the attempts before it, each marked `superseded`. Either way `attempts` in the response lists every attempt that ran.
  *

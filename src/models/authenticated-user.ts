@@ -27,17 +27,15 @@ export type AuthenticatedUser = {
    */
   name?: string | undefined;
   /**
-   * Roles in the active organization (present only when a single organization is in scope).
-   *
-   * @remarks
+   * Roles in the active organization.
    */
   roles?: Array<string> | undefined;
   /**
-   * The organization this session is scoped to. Present when the user belongs to exactly one organization; absent when they belong to several and none is selected yet.
+   * The organization the request acts on: the one named by the X-Albus-Organization header, or the one the user joined first.
    *
    * @remarks
    */
-  activeOrganization?: OrganizationMembership | undefined;
+  activeOrganization: OrganizationMembership;
   /**
    * Every organization the user belongs to, with their roles.
    */
@@ -62,7 +60,7 @@ export const AuthenticatedUser$inboundSchema: z.ZodMiniType<
     email: types.string(),
     name: types.optional(types.string()),
     roles: types.optional(z.array(types.string())),
-    active_organization: types.optional(OrganizationMembership$inboundSchema),
+    active_organization: OrganizationMembership$inboundSchema,
     organizations: z.array(OrganizationMembership$inboundSchema),
     issued_at: types.optional(types.number()),
     expires_at: types.optional(types.number()),

@@ -111,6 +111,7 @@ For supported JavaScript runtimes, please consult [RUNTIMES.md](RUNTIMES.md).
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -147,6 +148,7 @@ const albus = new Albus({
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
+  xAlbusOrganization: "<value>",
 });
 
 async function run() {
@@ -182,7 +184,9 @@ run();
 
 ### [Invites](docs/sdks/invites/README.md)
 
+* [listInvites](docs/sdks/invites/README.md#listinvites) - List pending invitations
 * [createInvite](docs/sdks/invites/README.md#createinvite) - Invite a user by email
+* [revokeInvite](docs/sdks/invites/README.md#revokeinvite) - Revoke a pending invitation
 
 ### [Memories](docs/sdks/memories/README.md)
 
@@ -195,6 +199,14 @@ run();
 
 * [listModels](docs/sdks/models/README.md#listmodels) - List models
 
+### [Organization](docs/sdks/organization/README.md)
+
+* [getOrganization](docs/sdks/organization/README.md#getorganization) - Get the organization the request acts in
+* [updateOrganization](docs/sdks/organization/README.md#updateorganization) - Rename the organization the request acts in
+* [listOrganizationMembers](docs/sdks/organization/README.md#listorganizationmembers) - List the members of the organization the request acts in
+* [removeOrganizationMember](docs/sdks/organization/README.md#removeorganizationmember) - Remove a member from the organization the request acts in
+* [setOrganizationMemberRole](docs/sdks/organization/README.md#setorganizationmemberrole) - Set a member's role in the organization the request acts in
+
 ### [Secrets](docs/sdks/secrets/README.md)
 
 * [listSecrets](docs/sdks/secrets/README.md#listsecrets) - List all secrets
@@ -205,7 +217,7 @@ run();
 
 ### [Sessions](docs/sdks/sessions/README.md)
 
-* [listSessions](docs/sdks/sessions/README.md#listsessions) - List all sessions
+* [listSessions](docs/sdks/sessions/README.md#listsessions) - List sessions
 * [getSession](docs/sdks/sessions/README.md#getsession) - Get a session with its messages
 * [runSession](docs/sdks/sessions/README.md#runsession) - Run or resume a session
 * [deleteSession](docs/sdks/sessions/README.md#deletesession) - Delete a session
@@ -248,11 +260,18 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 - [`authWhoami`](docs/sdks/auth/README.md#whoami) - Get the authenticated caller
 - [`healthHealth`](docs/sdks/health/README.md#health) - Health check endpoint
 - [`invitesCreateInvite`](docs/sdks/invites/README.md#createinvite) - Invite a user by email
+- [`invitesListInvites`](docs/sdks/invites/README.md#listinvites) - List pending invitations
+- [`invitesRevokeInvite`](docs/sdks/invites/README.md#revokeinvite) - Revoke a pending invitation
 - [`memoriesDeleteMemory`](docs/sdks/memories/README.md#deletememory) - Delete one memory
 - [`memoriesDeleteMemoryGroup`](docs/sdks/memories/README.md#deletememorygroup) - Delete a group's memories
 - [`memoriesListMemories`](docs/sdks/memories/README.md#listmemories) - List a group's memories
 - [`memoriesListMemoryGroups`](docs/sdks/memories/README.md#listmemorygroups) - List memory groups
 - [`modelsListModels`](docs/sdks/models/README.md#listmodels) - List models
+- [`organizationGetOrganization`](docs/sdks/organization/README.md#getorganization) - Get the organization the request acts in
+- [`organizationListOrganizationMembers`](docs/sdks/organization/README.md#listorganizationmembers) - List the members of the organization the request acts in
+- [`organizationRemoveOrganizationMember`](docs/sdks/organization/README.md#removeorganizationmember) - Remove a member from the organization the request acts in
+- [`organizationSetOrganizationMemberRole`](docs/sdks/organization/README.md#setorganizationmemberrole) - Set a member's role in the organization the request acts in
+- [`organizationUpdateOrganization`](docs/sdks/organization/README.md#updateorganization) - Rename the organization the request acts in
 - [`secretsCreateSecret`](docs/sdks/secrets/README.md#createsecret) - Create a secret
 - [`secretsDeleteSecret`](docs/sdks/secrets/README.md#deletesecret) - Delete a secret by name
 - [`secretsGetSecret`](docs/sdks/secrets/README.md#getsecret) - Get a secret by name
@@ -262,7 +281,7 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 - [`sessionsDeleteSession`](docs/sdks/sessions/README.md#deletesession) - Delete a session
 - [`sessionsGetSession`](docs/sdks/sessions/README.md#getsession) - Get a session with its messages
 - [`sessionsGetSessionAudit`](docs/sdks/sessions/README.md#getsessionaudit) - List a session's audit log
-- [`sessionsListSessions`](docs/sdks/sessions/README.md#listsessions) - List all sessions
+- [`sessionsListSessions`](docs/sdks/sessions/README.md#listsessions) - List sessions
 - [`sessionsRunSession`](docs/sdks/sessions/README.md#runsession) - Run or resume a session
 - [`tokensCreateToken`](docs/sdks/tokens/README.md#createtoken) - Create an API token. The token value is returned only in this response.
 - [`tokensDeleteToken`](docs/sdks/tokens/README.md#deletetoken) - Revoke an API token by ID
@@ -284,13 +303,14 @@ To change the default retry strategy for a single API call, simply provide a ret
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
 });
 
 async function run() {
-  const result = await albus.secrets.listSecrets({
+  const result = await albus.secrets.listSecrets(undefined, {
     retries: {
       strategy: "backoff",
       backoff: {
@@ -325,6 +345,7 @@ const albus = new Albus({
     },
     retryConnectionErrors: false,
   },
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -361,6 +382,7 @@ import { Albus } from "@albus-ts/sdk";
 import * as errors from "@albus-ts/sdk/models/errors";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -396,7 +418,7 @@ run();
 * [`AlbusError`](./src/models/errors/albus-error.ts): The base class for HTTP error responses.
   * [`ErrUnauthorized`](./src/models/errors/err-unauthorized.ts): Status code `401`. *
 
-<details><summary>Less common errors (17)</summary>
+<details><summary>Less common errors (18)</summary>
 
 <br />
 
@@ -409,17 +431,18 @@ run();
 
 
 **Inherit from [`AlbusError`](./src/models/errors/albus-error.ts)**:
-* [`ErrNotFound`](./src/models/errors/err-not-found.ts): Status code `404`. Applicable to 14 of 28 methods.*
-* [`ErrBadRequest`](./src/models/errors/err-bad-request.ts): Status code `400`. Applicable to 12 of 28 methods.*
-* [`ErrConflict`](./src/models/errors/err-conflict.ts): Status code `409`. Applicable to 3 of 28 methods.*
-* [`ErrInsufficientCredit`](./src/models/errors/err-insufficient-credit.ts): The organization has no credit balance remaining. Status code `402`. Applicable to 1 of 28 methods.*
-* [`ErrInvocationCanceled`](./src/models/errors/err-invocation-canceled.ts): The invocation was canceled instead of producing a response (only possible while waiting for a response, or when replaying a canceled invocation). Status code `410`. Applicable to 1 of 28 methods.*
-* [`ErrLocked`](./src/models/errors/err-locked.ts): Another invocation is currently running for this session. Status code `423`. Applicable to 1 of 28 methods.*
-* [`ErrQuotaExceeded`](./src/models/errors/err-quota-exceeded.ts): The organization has reached its invocation quota. Status code `429`. Applicable to 1 of 28 methods.*
-* [`ErrInvocationFailed`](./src/models/errors/err-invocation-failed.ts): The invocation failed instead of producing a response (only possible while waiting for a response, or when replaying a failed invocation). The body carries the failure kind and detail. Status code `502`. Applicable to 1 of 28 methods.*
-* [`ErrUnavailable`](./src/models/errors/err-unavailable.ts): The invocation's spans could not be read. Retry the request; the invocation and its spans are unaffected. Status code `503`. Applicable to 1 of 28 methods.*
-* [`HealthResponseError`](./src/models/errors/health-response-error.ts): Service is healthy. Status code `503`. Applicable to 1 of 28 methods.*
-* [`ErrTimeout`](./src/models/errors/err-timeout.ts): Timed out waiting for the assistant response. Status code `504`. Applicable to 1 of 28 methods.*
+* [`ErrNotFound`](./src/models/errors/err-not-found.ts): Status code `404`. Applicable to 17 of 35 methods.*
+* [`ErrBadRequest`](./src/models/errors/err-bad-request.ts): Status code `400`. Applicable to 16 of 35 methods.*
+* [`ErrForbidden`](./src/models/errors/err-forbidden.ts): Forbidden - the caller is not an admin. Status code `403`. Applicable to 9 of 35 methods.*
+* [`ErrConflict`](./src/models/errors/err-conflict.ts): Status code `409`. Applicable to 5 of 35 methods.*
+* [`ErrInsufficientCredit`](./src/models/errors/err-insufficient-credit.ts): The organization has no credit balance remaining. Status code `402`. Applicable to 1 of 35 methods.*
+* [`ErrInvocationCanceled`](./src/models/errors/err-invocation-canceled.ts): The invocation was canceled instead of producing a response (only possible while waiting for a response, or when replaying a canceled invocation). Status code `410`. Applicable to 1 of 35 methods.*
+* [`ErrLocked`](./src/models/errors/err-locked.ts): Another invocation is currently running for this session. Status code `423`. Applicable to 1 of 35 methods.*
+* [`ErrQuotaExceeded`](./src/models/errors/err-quota-exceeded.ts): The organization has reached its invocation quota. Status code `429`. Applicable to 1 of 35 methods.*
+* [`ErrInvocationFailed`](./src/models/errors/err-invocation-failed.ts): The invocation failed instead of producing a response (only possible while waiting for a response, or when replaying a failed invocation). The body carries the failure kind and detail. Status code `502`. Applicable to 1 of 35 methods.*
+* [`ErrUnavailable`](./src/models/errors/err-unavailable.ts): The invocation's spans could not be read. Retry the request; the invocation and its spans are unaffected. Status code `503`. Applicable to 1 of 35 methods.*
+* [`HealthResponseError`](./src/models/errors/health-response-error.ts): Service is healthy. Status code `503`. Applicable to 1 of 35 methods.*
+* [`ErrTimeout`](./src/models/errors/err-timeout.ts): Timed out waiting for the assistant response. Status code `504`. Applicable to 1 of 35 methods.*
 * [`ResponseValidationError`](./src/models/errors/response-validation-error.ts): Type mismatch between the data returned from the server and the structure expected by the SDK. See `error.rawValue` for the raw value and `error.pretty()` for a nicely formatted multi-line string.
 
 </details>
@@ -446,6 +469,7 @@ import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   serverIdx: 0,
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -469,6 +493,7 @@ import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
   serverURL: "http://localhost:8080",
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },

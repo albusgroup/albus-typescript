@@ -6,7 +6,7 @@ Run and inspect agent sessions.
 
 ### Available Operations
 
-* [listSessions](#listsessions) - List all sessions
+* [listSessions](#listsessions) - List sessions
 * [getSession](#getsession) - Get a session with its messages
 * [runSession](#runsession) - Run or resume a session
 * [deleteSession](#deletesession) - Delete a session
@@ -15,7 +15,12 @@ Run and inspect agent sessions.
 
 ## listSessions
 
-List all sessions
+Lists your organization's sessions, most recently used first. Filter by agent name, agent revision, invocation state, time window, or an invocation it ran: a session matches when any of its invocations does, and a filtered listing is ordered by each session's most recent matching invocation. A filter that matches nothing returns an empty page rather than an error.
+
+Page with `after` and `limit`: pass the response's `next_cursor` as the next request's `after`, and keep requesting while `next_cursor` is present — you have reached the end when it is absent. A page can hold fewer sessions than `limit`, or none at all, and still have a `next_cursor`; a short page is not the end of the results.
+
+A listing covers the window given by `since` and `until`, and omitting `since` searches the last 31 days. The window is fixed when the first page is requested, so paging with `after` keeps returning results from the window that page used: `after` carries that window and the filters it was made with, so send it with no filters, or with every filter repeated exactly, and expect a `400` otherwise.
+
 
 ### Example Usage
 
@@ -24,13 +29,14 @@ List all sessions
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
 });
 
 async function run() {
-  const result = await albus.sessions.listSessions();
+  const result = await albus.sessions.listSessions({});
 
   console.log(result);
 }
@@ -49,13 +55,14 @@ import { sessionsListSessions } from "@albus-ts/sdk/funcs/sessions-list-sessions
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
 });
 
 async function run() {
-  const res = await sessionsListSessions(albus);
+  const res = await sessionsListSessions(albus, {});
   if (res.ok) {
     const { value: result } = res;
     console.log(result);
@@ -71,6 +78,7 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [operations.ListSessionsRequest](../../models/operations/list-sessions-request.md)                                                                                             | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -83,6 +91,7 @@ run();
 
 | Error Type               | Status Code              | Content Type             |
 | ------------------------ | ------------------------ | ------------------------ |
+| errors.ErrBadRequest     | 400                      | application/json         |
 | errors.ErrUnauthorized   | 401                      | application/json         |
 | errors.AlbusDefaultError | 4XX, 5XX                 | \*/\*                    |
 
@@ -98,6 +107,7 @@ Returns the session's metadata and a page of its messages ordered by cursor asce
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -125,6 +135,7 @@ import { sessionsGetSession } from "@albus-ts/sdk/funcs/sessions-get-session.js"
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -181,6 +192,7 @@ With `wait_timeout_seconds` the request long-polls: it blocks until the invocati
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -217,6 +229,7 @@ import { sessionsRunSession } from "@albus-ts/sdk/funcs/sessions-run-session.js"
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -285,6 +298,7 @@ Delete a session
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -312,6 +326,7 @@ import { sessionsDeleteSession } from "@albus-ts/sdk/funcs/sessions-delete-sessi
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -365,6 +380,7 @@ Requests cancellation of the invocation currently running for the session. Cance
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -392,6 +408,7 @@ import { sessionsCancelSession } from "@albus-ts/sdk/funcs/sessions-cancel-sessi
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -446,6 +463,7 @@ Returns the session's audit log — an immutable, time-ordered record of what ha
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },
@@ -473,6 +491,7 @@ import { sessionsGetSessionAudit } from "@albus-ts/sdk/funcs/sessions-get-sessio
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
+  xAlbusOrganization: "<value>",
   security: {
     bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
   },

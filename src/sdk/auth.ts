@@ -5,6 +5,7 @@
 import { authWhoami } from "../funcs/auth-whoami.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import * as models from "../models/index.js";
+import * as operations from "../models/operations/index.js";
 import { unwrapAsync } from "../types/fp.js";
 
 export class Auth extends ClientSDK {
@@ -15,10 +16,12 @@ export class Auth extends ClientSDK {
    * Returns the caller a credential authenticates: a signed-in user with every organization they belong to and their roles in each, or the API key that signed the request, along with the organization it acts in.
    */
   async whoami(
+    request?: operations.WhoamiRequest | undefined,
     options?: RequestOptions,
   ): Promise<models.WhoamiResponse> {
     return unwrapAsync(authWhoami(
       this,
+      request,
       options,
     ));
   }

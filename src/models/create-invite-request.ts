@@ -3,22 +3,17 @@
  */
 
 import * as z from "zod/v4-mini";
-import { remap as remap$ } from "../lib/primitives.js";
 import { ClosedEnum } from "../types/enums.js";
 
 /**
- * Role to grant the invitee. Defaults to admin when inviting to a new organization and member when inviting into an existing one.
- *
- * @remarks
+ * Role to grant the invitee.
  */
 export const CreateInviteRequestRole = {
   Admin: "admin",
   Member: "member",
 } as const;
 /**
- * Role to grant the invitee. Defaults to admin when inviting to a new organization and member when inviting into an existing one.
- *
- * @remarks
+ * Role to grant the invitee.
  */
 export type CreateInviteRequestRole = ClosedEnum<
   typeof CreateInviteRequestRole
@@ -30,17 +25,9 @@ export type CreateInviteRequest = {
    */
   email: string;
   /**
-   * Role to grant the invitee. Defaults to admin when inviting to a new organization and member when inviting into an existing one.
-   *
-   * @remarks
+   * Role to grant the invitee.
    */
   role?: CreateInviteRequestRole | undefined;
-  /**
-   * Organization to invite the user into (e.g. "42"). Omit to create a new organization for the user on their first sign-in.
-   *
-   * @remarks
-   */
-  organizationId?: string | undefined;
 };
 
 /** @internal */
@@ -51,26 +38,17 @@ export const CreateInviteRequestRole$outboundSchema: z.ZodMiniEnum<
 /** @internal */
 export type CreateInviteRequest$Outbound = {
   email: string;
-  role?: string | undefined;
-  organization_id?: string | undefined;
+  role: string;
 };
 
 /** @internal */
 export const CreateInviteRequest$outboundSchema: z.ZodMiniType<
   CreateInviteRequest$Outbound,
   CreateInviteRequest
-> = z.pipe(
-  z.object({
-    email: z.string(),
-    role: z.optional(CreateInviteRequestRole$outboundSchema),
-    organizationId: z.optional(z.string()),
-  }),
-  z.transform((v) => {
-    return remap$(v, {
-      organizationId: "organization_id",
-    });
-  }),
-);
+> = z.object({
+  email: z.string(),
+  role: z._default(CreateInviteRequestRole$outboundSchema, "member"),
+});
 
 export function createInviteRequestToJSON(
   createInviteRequest: CreateInviteRequest,

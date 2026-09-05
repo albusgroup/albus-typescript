@@ -9,6 +9,7 @@ import { Health } from "./health.js";
 import { Invites } from "./invites.js";
 import { Memories } from "./memories.js";
 import { Models } from "./models.js";
+import { Organization } from "./organization.js";
 import { Secrets } from "./secrets.js";
 import { Sessions } from "./sessions.js";
 import { Tokens } from "./tokens.js";
@@ -28,6 +29,16 @@ export class Albus extends ClientSDK {
   private _traces?: Traces;
   get traces(): Traces {
     return (this._traces ??= new Traces(this._options));
+  }
+
+  private _organization?: Organization;
+  get organization(): Organization {
+    return (this._organization ??= new Organization(this._options));
+  }
+
+  private _invites?: Invites;
+  get invites(): Invites {
+    return (this._invites ??= new Invites(this._options));
   }
 
   private _tokens?: Tokens;
@@ -58,10 +69,5 @@ export class Albus extends ClientSDK {
   private _auth?: Auth;
   get auth(): Auth {
     return (this._auth ??= new Auth(this._options));
-  }
-
-  private _invites?: Invites;
-  get invites(): Invites {
-    return (this._invites ??= new Invites(this._options));
   }
 }

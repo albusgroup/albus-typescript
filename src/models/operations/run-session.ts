@@ -9,6 +9,15 @@ import { Result as SafeParseResult } from "../../types/fp.js";
 import { SDKValidationError } from "../errors/sdk-validation-error.js";
 import * as models from "../index.js";
 
+export type RunSessionGlobals = {
+  /**
+   * The id of the organization the request acts on, which must be one the caller belongs to. Defaults to the organization the caller joined first. Ignored for API keys, which are bound to one organization.
+   *
+   * @remarks
+   */
+  xAlbusOrganization?: string | undefined;
+};
+
 export type RunSessionRequest = {
   /**
    * Client-provided session identifier. Use the same value across requests to continue the same agent session.

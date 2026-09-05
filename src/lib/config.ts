@@ -28,6 +28,11 @@ export type SDKOptions = {
    */
   security?: models.Security | (() => Promise<models.Security>) | undefined;
 
+  /**
+   * Allows setting the xAlbusOrganization parameter for all supported operations
+   */
+  xAlbusOrganization?: string | undefined;
+
   httpClient?: HTTPClient;
   /**
    * Allows overriding the default server used by the SDK
@@ -69,7 +74,7 @@ export function serverURLFromOptions(options: SDKOptions): URL | null {
 export const SDK_METADATA = {
   language: "typescript",
   openapiDocVersion: "1.0.0",
-  sdkVersion: "0.9.0",
+  sdkVersion: "0.10.0",
   genVersion: "2.924.0",
-  userAgent: "speakeasy-sdk/typescript 0.9.0 2.924.0 1.0.0 @albus-ts/sdk",
+  userAgent: "speakeasy-sdk/typescript 0.10.0 2.924.0 1.0.0 @albus-ts/sdk",
 } as const;
