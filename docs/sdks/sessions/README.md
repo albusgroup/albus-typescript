@@ -282,7 +282,6 @@ run();
 | errors.ErrConflict           | 409                          | application/json             |
 | errors.ErrInvocationCanceled | 410                          | application/json             |
 | errors.ErrLocked             | 423                          | application/json             |
-| errors.ErrQuotaExceeded      | 429                          | application/json             |
 | errors.ErrInvocationFailed   | 502                          | application/json             |
 | errors.ErrTimeout            | 504                          | application/json             |
 | errors.AlbusDefaultError     | 4XX, 5XX                     | \*/\*                        |

@@ -4,7 +4,7 @@
 
 import * as z from "zod/v4-mini";
 import { AlbusCore } from "../core.js";
-import { encodeFormQuery, encodeSimple } from "../lib/encodings.js";
+import { encodeJSON, encodeSimple } from "../lib/encodings.js";
 import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
@@ -24,29 +24,27 @@ import * as errors from "../models/errors/index.js";
 import { ResponseValidationError } from "../models/errors/response-validation-error.js";
 import { SDKValidationError } from "../models/errors/sdk-validation-error.js";
 import * as models from "../models/index.js";
-import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * List a group's memories
+ * Buy prepaid credits
  *
  * @remarks
- * Lists the memories of one memory group that agents currently read, newest first. Memories a later memory has replaced are not returned. A group nothing has been remembered in yet is an empty list, not an error.
+ * Starts a credit purchase for your organization. Returns the URL of a payment page to send the buyer's browser to; the credits are added to your balance once the payment completes there.
  *
- * Page with `after` and `limit`: pass the response's `next_cursor` as the next request's `after`, and keep requesting while `next_cursor` is present — you have reached the end when it is absent.
- *
- * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKey} from the global security.
+ * If set, this operation will use {@link Security.bearerAuth} from the global security.
  */
-export function memoriesListMemories(
+export function billingCreateCheckout(
   client: AlbusCore,
-  request: operations.ListMemoriesRequest,
+  request: models.CreateCheckoutRequest,
   options?: RequestOptions,
 ): APIPromise<
   Result<
-    models.ListMemoriesResponse,
+    models.CreateCheckoutResponse,
     | errors.ErrBadRequest
     | errors.ErrUnauthorized
+    | errors.ErrUnavailable
     | AlbusError
     | ResponseValidationError
     | ConnectionError
@@ -66,14 +64,15 @@ export function memoriesListMemories(
 
 async function $do(
   client: AlbusCore,
-  request: operations.ListMemoriesRequest,
+  request: models.CreateCheckoutRequest,
   options?: RequestOptions,
 ): Promise<
   [
     Result<
-      models.ListMemoriesResponse,
+      models.CreateCheckoutResponse,
       | errors.ErrBadRequest
       | errors.ErrUnauthorized
+      | errors.ErrUnavailable
       | AlbusError
       | ResponseValidationError
       | ConnectionError
@@ -88,29 +87,19 @@ async function $do(
 > {
   const parsed = safeParse(
     request,
-    (value) => z.parse(operations.ListMemoriesRequest$outboundSchema, value),
+    (value) => z.parse(models.CreateCheckoutRequest$outboundSchema, value),
     "Input validation failed",
   );
   if (!parsed.ok) {
     return [parsed, { status: "invalid" }];
   }
   const payload = parsed.value;
-  const body = null;
+  const body = encodeJSON("body", payload, { explode: true });
 
-  const pathParams = {
-    group: encodeSimple("group", payload.group, {
-      explode: false,
-      charEncoding: "percent",
-    }),
-  };
-  const path = pathToFunc("/memorygroups/{group}")(pathParams);
-
-  const query = encodeFormQuery({
-    "after": payload.after,
-    "limit": payload.limit,
-  });
+  const path = pathToFunc("/billing/checkout")();
 
   const headers = new Headers(compactMap({
+    "Content-Type": "application/json",
     Accept: "application/json",
     "X-Albus-Organization": encodeSimple(
       "X-Albus-Organization",
@@ -120,12 +109,12 @@ async function $do(
   }));
 
   const securityInput = await extractSecurity(client._options.security);
-  const requestSecurity = resolveGlobalSecurity(securityInput, [0, 1]);
+  const requestSecurity = resolveGlobalSecurity(securityInput, [0]);
 
   const context = {
     options: client._options,
     baseURL: options?.serverURL ?? client._baseURL ?? "",
-    operationID: "listMemories",
+    operationID: "createCheckout",
     oAuth2Scopes: null,
 
     resolvedSecurity: requestSecurity,
@@ -139,11 +128,10 @@ async function $do(
 
   const requestRes = client._createRequest(context, {
     security: requestSecurity,
-    method: "GET",
+    method: "POST",
     baseURL: options?.serverURL,
     path: path,
     headers: headers,
-    query: query,
     body: body,
     userAgent: client._options.userAgent,
     timeoutMs: options?.timeoutMs || client._options.timeoutMs || -1,
@@ -170,9 +158,10 @@ async function $do(
   };
 
   const [result] = await M.match<
-    models.ListMemoriesResponse,
+    models.CreateCheckoutResponse,
     | errors.ErrBadRequest
     | errors.ErrUnauthorized
+    | errors.ErrUnavailable
     | AlbusError
     | ResponseValidationError
     | ConnectionError
@@ -182,9 +171,10 @@ async function $do(
     | UnexpectedClientError
     | SDKValidationError
   >(
-    M.json(200, models.ListMemoriesResponse$inboundSchema),
+    M.json(200, models.CreateCheckoutResponse$inboundSchema),
     M.jsonErr(400, errors.ErrBadRequest$inboundSchema),
     M.jsonErr(401, errors.ErrUnauthorized$inboundSchema),
+    M.jsonErr(503, errors.ErrUnavailable$inboundSchema),
     M.fail("4XX"),
     M.fail("5XX"),
   )(response, req, { extraFields: responseFields });

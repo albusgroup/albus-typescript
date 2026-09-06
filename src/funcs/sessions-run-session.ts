@@ -50,7 +50,6 @@ export function sessionsRunSession(
     | errors.ErrConflict
     | errors.ErrInvocationCanceled
     | errors.ErrLocked
-    | errors.ErrQuotaExceeded
     | errors.ErrInvocationFailed
     | errors.ErrTimeout
     | AlbusError
@@ -84,7 +83,6 @@ async function $do(
       | errors.ErrConflict
       | errors.ErrInvocationCanceled
       | errors.ErrLocked
-      | errors.ErrQuotaExceeded
       | errors.ErrInvocationFailed
       | errors.ErrTimeout
       | AlbusError
@@ -194,7 +192,6 @@ async function $do(
     | errors.ErrConflict
     | errors.ErrInvocationCanceled
     | errors.ErrLocked
-    | errors.ErrQuotaExceeded
     | errors.ErrInvocationFailed
     | errors.ErrTimeout
     | AlbusError
@@ -216,7 +213,6 @@ async function $do(
     M.jsonErr(409, errors.ErrConflict$inboundSchema),
     M.jsonErr(410, errors.ErrInvocationCanceled$inboundSchema),
     M.jsonErr(423, errors.ErrLocked$inboundSchema),
-    M.jsonErr(429, errors.ErrQuotaExceeded$inboundSchema),
     M.jsonErr(502, errors.ErrInvocationFailed$inboundSchema),
     M.jsonErr(504, errors.ErrTimeout$inboundSchema),
     M.fail("4XX"),

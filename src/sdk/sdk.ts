@@ -5,6 +5,7 @@
 import { ClientSDK } from "../lib/sdks.js";
 import { Agents } from "./agents.js";
 import { Auth } from "./auth.js";
+import { Billing } from "./billing.js";
 import { Health } from "./health.js";
 import { Invites } from "./invites.js";
 import { Memories } from "./memories.js";
@@ -69,5 +70,10 @@ export class Albus extends ClientSDK {
   private _auth?: Auth;
   get auth(): Auth {
     return (this._auth ??= new Auth(this._options));
+  }
+
+  private _billing?: Billing;
+  get billing(): Billing {
+    return (this._billing ??= new Billing(this._options));
   }
 }

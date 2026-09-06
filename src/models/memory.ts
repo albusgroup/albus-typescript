@@ -5,27 +5,21 @@
 import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
-import * as openEnums from "../types/enums.js";
-import { OpenEnum } from "../types/enums.js";
+import { ClosedEnum } from "../types/enums.js";
 import { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
 import { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 /**
- * `active` while agents read this memory, `invalidated` once a later memory replaced it.
- *
- * @remarks
+ * Always `active`; only memories agents read are listed.
  */
 export const MemoryStatus = {
   Active: "active",
-  Invalidated: "invalidated",
 } as const;
 /**
- * `active` while agents read this memory, `invalidated` once a later memory replaced it.
- *
- * @remarks
+ * Always `active`; only memories agents read are listed.
  */
-export type MemoryStatus = OpenEnum<typeof MemoryStatus>;
+export type MemoryStatus = ClosedEnum<typeof MemoryStatus>;
 
 export type Memory = {
   /**
@@ -39,9 +33,7 @@ export type Memory = {
    */
   content: string;
   /**
-   * `active` while agents read this memory, `invalidated` once a later memory replaced it.
-   *
-   * @remarks
+   * Always `active`; only memories agents read are listed.
    */
   status: MemoryStatus;
   /**
@@ -61,8 +53,8 @@ export type Memory = {
 };
 
 /** @internal */
-export const MemoryStatus$inboundSchema: z.ZodMiniType<MemoryStatus, unknown> =
-  openEnums.inboundSchema(MemoryStatus);
+export const MemoryStatus$inboundSchema: z.ZodMiniEnum<typeof MemoryStatus> = z
+  .enum(MemoryStatus);
 
 /** @internal */
 export const Memory$inboundSchema: z.ZodMiniType<Memory, unknown> = z.pipe(

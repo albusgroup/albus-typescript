@@ -13,6 +13,8 @@ tags:
     description: Inspect the agents that have run in your organization.
   - name: Auth
     description: Identify the authenticated user.
+  - name: Billing
+    description: Buy the prepaid credits agent sessions run on.
   - name: Health
     description: Check service availability.
   - name: Memories
@@ -409,12 +411,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/ErrInsufficientCredit"
-        "429":
-          description: The organization has reached its invocation quota
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/ErrQuotaExceeded"
         "410":
           description: >
             The invocation was canceled instead of producing a response (only possible while waiting for a response, or when replaying a canceled invocation).
@@ -1342,7 +1338,7 @@ paths:
       operationId: listMemories
       summary: List a group's memories
       description: >
-        Lists the memories of one memory group, newest first: both the memories agents currently read and those a later memory has replaced. A group nothing has been remembered in yet is an empty list, not an error.
+        Lists the memories of one memory group that agents currently read, newest first. Memories a later memory has replaced are not returned. A group nothing has been remembered in yet is an empty list, not an error.
 
 
         Page with `after` and `limit`: pass the response's `next_cursor` as the next request's `after`, and keep requesting while `next_cursor` is present — you have reached the end when it is absent.
@@ -1513,6 +1509,118 @@ paths:
                 $ref: "#/components/schemas/WhoamiResponse"
         "401":
           description: Unauthorized - invalid or missing token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrUnauthorized"
+  /billing/checkout:
+    post:
+      operationId: createCheckout
+      summary: Buy prepaid credits
+      description: >
+        Starts a credit purchase for your organization. Returns the URL of a payment page to send the buyer's browser to; the credits are added to your balance once the payment completes there.
+
+      tags:
+        - Billing
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: "#/components/parameters/OrganizationHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateCheckoutRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateCheckoutResponse"
+        "400":
+          description: Bad request (invalid amount or URL)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrBadRequest"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrUnauthorized"
+        "503":
+          description: Credit purchases are not available on this deployment
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrUnavailable"
+  /billing/balance:
+    get:
+      operationId: getCreditBalance
+      summary: Read your credit balance
+      description: >
+        Returns your organization's current prepaid credit balance in USD.
+
+      tags:
+        - Billing
+      security:
+        - bearerAuth: []
+        - apiKey: []
+      parameters:
+        - $ref: "#/components/parameters/OrganizationHeader"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreditBalanceResponse"
+        "400":
+          description: Bad request (no active organization)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrBadRequest"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrUnauthorized"
+  /billing/ledger:
+    get:
+      operationId: listCreditLedger
+      summary: List your credit history
+      description: >
+        Lists your organization's credit ledger, newest first: purchases, grants, usage charges, and adjustments, each with the signed USD amount it moved the balance by. Page with `after` and `limit`: pass the response's `next_cursor` as the next request's `after`, and keep requesting while `next_cursor` is present.
+
+      tags:
+        - Billing
+      security:
+        - bearerAuth: []
+        - apiKey: []
+      parameters:
+        - $ref: "#/components/parameters/OrganizationHeader"
+        - $ref: "#/components/parameters/AfterCursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ListCreditLedgerResponse"
+        "400":
+          description: Bad request (invalid cursor or limit)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrBadRequest"
+        "401":
+          description: Unauthorized
           content:
             application/json:
               schema:
@@ -1959,15 +2067,6 @@ components:
           type: string
           description: Human-readable error message
           example: "Another invocation is currently running for this session"
-    ErrQuotaExceeded:
-      type: object
-      required:
-        - message
-      properties:
-        message:
-          type: string
-          description: Human-readable error message
-          example: "organization invocation quota exceeded"
     ErrInsufficientCredit:
       type: object
       required:
@@ -1977,6 +2076,89 @@ components:
           type: string
           description: Human-readable error message
           example: "organization has no credit balance remaining"
+    CreateCheckoutRequest:
+      type: object
+      required:
+        - amount_usd
+        - success_url
+        - cancel_url
+      properties:
+        amount_usd:
+          type: integer
+          format: int64
+          minimum: 5
+          maximum: 10000
+          description: Whole US dollars of credit to buy (e.g. 20).
+        success_url:
+          type: string
+          description: >
+            Where the buyer's browser goes after paying. Must be https (or http on localhost).
+
+        cancel_url:
+          type: string
+          description: >
+            Where the buyer's browser goes if they back out. Must be https (or http on localhost).
+
+    CreateCheckoutResponse:
+      type: object
+      required:
+        - url
+      properties:
+        url:
+          type: string
+          description: The payment page to send the buyer's browser to.
+    CreditBalanceResponse:
+      type: object
+      required:
+        - balance_usd
+      properties:
+        balance_usd:
+          type: string
+          description: >
+            Your current credit balance as a decimal USD string (e.g. "14.99"). Negative when overdrawn.
+
+    CreditLedgerEntry:
+      type: object
+      required:
+        - kind
+        - amount_usd
+        - reference
+        - created_at
+      properties:
+        kind:
+          type: string
+          enum: [purchase, grant, usage_burn, adjustment]
+          description: >
+            What moved the balance: a paid purchase, an operator grant, a usage charge, or a manual adjustment.
+
+        amount_usd:
+          type: string
+          description: >
+            The signed decimal USD amount the entry moved the balance by: positive for money in, negative for usage charged.
+
+        reference:
+          type: string
+          description: >
+            Identifies what the entry paid for or charged (e.g. the payment for a purchase, the metering window for a usage charge).
+
+        created_at:
+          type: string
+          format: date-time
+          description: When the entry was recorded.
+    ListCreditLedgerResponse:
+      type: object
+      required:
+        - entries
+      properties:
+        entries:
+          type: array
+          items:
+            $ref: "#/components/schemas/CreditLedgerEntry"
+        next_cursor:
+          type: string
+          description: >
+            Cursor for the next page. Pass it as `after` to fetch the following entries. Omitted when there are no more entries.
+
     CancelSessionResponse:
       type: object
       required:
@@ -2488,10 +2670,8 @@ components:
           description: The fact remembered, as the agent stated it.
         status:
           type: string
-          enum: [active, invalidated]
-          description: >
-            `active` while agents read this memory, `invalidated` once a later memory replaced it.
-
+          enum: [active]
+          description: Always `active`; only memories agents read are listed.
         created_at:
           type: string
           format: date-time

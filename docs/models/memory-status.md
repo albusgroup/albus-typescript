@@ -1,20 +1,17 @@
 # MemoryStatus
 
-`active` while agents read this memory, `invalidated` once a later memory replaced it.
-
+Always `active`; only memories agents read are listed.
 
 ## Example Usage
 
 ```typescript
 import { MemoryStatus } from "@albus-ts/sdk/models";
 
-let value: MemoryStatus = "invalidated";
-
-// Open enum: unrecognized values are captured as Unrecognized<string>
+let value: MemoryStatus = "active";
 ```
 
 ## Values
 
 ```typescript
-"active" | "invalidated" | Unrecognized<string>
+"active"
 ```

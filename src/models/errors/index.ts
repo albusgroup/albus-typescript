@@ -12,7 +12,6 @@ export * from "./err-invocation-canceled.js";
 export * from "./err-invocation-failed.js";
 export * from "./err-locked.js";
 export * from "./err-not-found.js";
-export * from "./err-quota-exceeded.js";
 export * from "./err-timeout.js";
 export * from "./err-unauthorized.js";
 export * from "./err-unavailable.js";

@@ -178,6 +178,12 @@ run();
 
 * [whoami](docs/sdks/auth/README.md#whoami) - Get the authenticated caller
 
+### [Billing](docs/sdks/billing/README.md)
+
+* [createCheckout](docs/sdks/billing/README.md#createcheckout) - Buy prepaid credits
+* [getCreditBalance](docs/sdks/billing/README.md#getcreditbalance) - Read your credit balance
+* [listCreditLedger](docs/sdks/billing/README.md#listcreditledger) - List your credit history
+
 ### [Health](docs/sdks/health/README.md)
 
 * [health](docs/sdks/health/README.md#health) - Health check endpoint
@@ -258,6 +264,9 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 - [`agentsGetAgentRevision`](docs/sdks/agents/README.md#getagentrevision) - Get a specific revision of an agent
 - [`agentsListAgents`](docs/sdks/agents/README.md#listagents) - List agents
 - [`authWhoami`](docs/sdks/auth/README.md#whoami) - Get the authenticated caller
+- [`billingCreateCheckout`](docs/sdks/billing/README.md#createcheckout) - Buy prepaid credits
+- [`billingGetCreditBalance`](docs/sdks/billing/README.md#getcreditbalance) - Read your credit balance
+- [`billingListCreditLedger`](docs/sdks/billing/README.md#listcreditledger) - List your credit history
 - [`healthHealth`](docs/sdks/health/README.md#health) - Health check endpoint
 - [`invitesCreateInvite`](docs/sdks/invites/README.md#createinvite) - Invite a user by email
 - [`invitesListInvites`](docs/sdks/invites/README.md#listinvites) - List pending invitations
@@ -418,7 +427,7 @@ run();
 * [`AlbusError`](./src/models/errors/albus-error.ts): The base class for HTTP error responses.
   * [`ErrUnauthorized`](./src/models/errors/err-unauthorized.ts): Status code `401`. *
 
-<details><summary>Less common errors (18)</summary>
+<details><summary>Less common errors (17)</summary>
 
 <br />
 
@@ -431,18 +440,17 @@ run();
 
 
 **Inherit from [`AlbusError`](./src/models/errors/albus-error.ts)**:
-* [`ErrNotFound`](./src/models/errors/err-not-found.ts): Status code `404`. Applicable to 17 of 35 methods.*
-* [`ErrBadRequest`](./src/models/errors/err-bad-request.ts): Status code `400`. Applicable to 16 of 35 methods.*
-* [`ErrForbidden`](./src/models/errors/err-forbidden.ts): Forbidden - the caller is not an admin. Status code `403`. Applicable to 9 of 35 methods.*
-* [`ErrConflict`](./src/models/errors/err-conflict.ts): Status code `409`. Applicable to 5 of 35 methods.*
-* [`ErrInsufficientCredit`](./src/models/errors/err-insufficient-credit.ts): The organization has no credit balance remaining. Status code `402`. Applicable to 1 of 35 methods.*
-* [`ErrInvocationCanceled`](./src/models/errors/err-invocation-canceled.ts): The invocation was canceled instead of producing a response (only possible while waiting for a response, or when replaying a canceled invocation). Status code `410`. Applicable to 1 of 35 methods.*
-* [`ErrLocked`](./src/models/errors/err-locked.ts): Another invocation is currently running for this session. Status code `423`. Applicable to 1 of 35 methods.*
-* [`ErrQuotaExceeded`](./src/models/errors/err-quota-exceeded.ts): The organization has reached its invocation quota. Status code `429`. Applicable to 1 of 35 methods.*
-* [`ErrInvocationFailed`](./src/models/errors/err-invocation-failed.ts): The invocation failed instead of producing a response (only possible while waiting for a response, or when replaying a failed invocation). The body carries the failure kind and detail. Status code `502`. Applicable to 1 of 35 methods.*
-* [`ErrUnavailable`](./src/models/errors/err-unavailable.ts): The invocation's spans could not be read. Retry the request; the invocation and its spans are unaffected. Status code `503`. Applicable to 1 of 35 methods.*
-* [`HealthResponseError`](./src/models/errors/health-response-error.ts): Service is healthy. Status code `503`. Applicable to 1 of 35 methods.*
-* [`ErrTimeout`](./src/models/errors/err-timeout.ts): Timed out waiting for the assistant response. Status code `504`. Applicable to 1 of 35 methods.*
+* [`ErrBadRequest`](./src/models/errors/err-bad-request.ts): Status code `400`. Applicable to 19 of 38 methods.*
+* [`ErrNotFound`](./src/models/errors/err-not-found.ts): Status code `404`. Applicable to 17 of 38 methods.*
+* [`ErrForbidden`](./src/models/errors/err-forbidden.ts): Forbidden - the caller is not an admin. Status code `403`. Applicable to 9 of 38 methods.*
+* [`ErrConflict`](./src/models/errors/err-conflict.ts): Status code `409`. Applicable to 5 of 38 methods.*
+* [`ErrUnavailable`](./src/models/errors/err-unavailable.ts): Status code `503`. Applicable to 2 of 38 methods.*
+* [`ErrInsufficientCredit`](./src/models/errors/err-insufficient-credit.ts): The organization has no credit balance remaining. Status code `402`. Applicable to 1 of 38 methods.*
+* [`ErrInvocationCanceled`](./src/models/errors/err-invocation-canceled.ts): The invocation was canceled instead of producing a response (only possible while waiting for a response, or when replaying a canceled invocation). Status code `410`. Applicable to 1 of 38 methods.*
+* [`ErrLocked`](./src/models/errors/err-locked.ts): Another invocation is currently running for this session. Status code `423`. Applicable to 1 of 38 methods.*
+* [`ErrInvocationFailed`](./src/models/errors/err-invocation-failed.ts): The invocation failed instead of producing a response (only possible while waiting for a response, or when replaying a failed invocation). The body carries the failure kind and detail. Status code `502`. Applicable to 1 of 38 methods.*
+* [`HealthResponseError`](./src/models/errors/health-response-error.ts): Service is healthy. Status code `503`. Applicable to 1 of 38 methods.*
+* [`ErrTimeout`](./src/models/errors/err-timeout.ts): Timed out waiting for the assistant response. Status code `504`. Applicable to 1 of 38 methods.*
 * [`ResponseValidationError`](./src/models/errors/response-validation-error.ts): Type mismatch between the data returned from the server and the structure expected by the SDK. See `error.rawValue` for the raw value and `error.pretty()` for a nicely formatted multi-line string.
 
 </details>
