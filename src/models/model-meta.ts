@@ -7,6 +7,7 @@ import { safeParse } from "../lib/schemas.js";
 import { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
 import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import { ModelPricing, ModelPricing$inboundSchema } from "./model-pricing.js";
 
 /**
  * A model Albus can run, and the provider serving it.
@@ -24,6 +25,12 @@ export type ModelMeta = {
    * @remarks
    */
   provider: string;
+  /**
+   * What the model currently costs, as decimal USD strings per one million tokens (e.g. "1.25"). Absent when the model is not yet priced.
+   *
+   * @remarks
+   */
+  pricing?: ModelPricing | undefined;
 };
 
 /** @internal */
@@ -31,6 +38,7 @@ export const ModelMeta$inboundSchema: z.ZodMiniType<ModelMeta, unknown> = z
   .object({
     name: types.string(),
     provider: types.string(),
+    pricing: types.optional(ModelPricing$inboundSchema),
   });
 
 export function modelMetaFromJSON(

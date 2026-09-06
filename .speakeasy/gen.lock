@@ -4,13 +4,13 @@ management:
   docVersion: 1.0.0
   speakeasyVersion: 1.791.0
   generationVersion: 2.924.0
-  releaseVersion: 0.11.0
+  releaseVersion: 0.12.0
   repoURL: https://github.com/albusgroup/albus-typescript
   installationURL: https://github.com/albusgroup/albus-typescript
 persistentEdits:
-  generation_id: b976e73b-2beb-4242-b1e0-ff3e4d055710
-  pristine_commit_hash: b18f2d9daef530490f5c68613eb4fed4493f5abc
-  pristine_tree_hash: 2f64d79df7f2df659049a92c8a833b586a1e0afb
+  generation_id: 2b91c150-0d19-4628-8832-e0443abe0ca8
+  pristine_commit_hash: bf12a9b1d30bdf9ea8dba22ef335e2fa5f18fa8a
+  pristine_tree_hash: fc3a3418ca35f11ed966bb3082b883b077936da7
 features:
   typescript:
     additionalDependencies: 0.1.0
@@ -269,8 +269,12 @@ trackedFiles:
     pristine_git_object: bc0b7e189dc2cebcb3096eb01934d76d14cb756d
   docs/models/model-meta.md:
     id: f01a80b69634
-    last_write_checksum: sha1:a91f6f338d9a784e43a7045a6f9486565754917e
-    pristine_git_object: 010b35a31d4605a66127a1025e63ec99d16ef073
+    last_write_checksum: sha1:0a45becdebc48d68526c7aa3972ee26d0121b1e2
+    pristine_git_object: fd24027b160089704d8192bc9ded3d4d45965301
+  docs/models/model-pricing.md:
+    id: b6d0d38cc08d
+    last_write_checksum: sha1:031c530e9b006c111e8fa9a4454375dfa7d87c23
+    pristine_git_object: 8af4a4ef4201f465f0890d58164f6ac60febbd8c
   docs/models/model.md:
     id: 66e0236ac289
     last_write_checksum: sha1:3b3fd951f3936a266dd4c1c870ad6541e20792f4
@@ -753,12 +757,12 @@ trackedFiles:
     pristine_git_object: 0a44ff8934bf053ed7a0b190f7a0205a3d046862
   jsr.json:
     id: 7f6ab7767282
-    last_write_checksum: sha1:e85a80fd9c1ce25d225570a31d5f70a4f0c49b2e
-    pristine_git_object: e82edd7f2d7053b11b78fe84b7a6a35880f2bdf6
+    last_write_checksum: sha1:fa57d5c049d90e1acb151c5de99b308e90691831
+    pristine_git_object: 34e802edf4bf1fb72a28a3291b90802383dfa6f8
   package.json:
     id: 7030d0b2f71b
-    last_write_checksum: sha1:97a4c8f343f283b55dd51ed6ec4c6edff2dec98a
-    pristine_git_object: 429f55d18139414dd9dac18dd78bcd3da0bb206b
+    last_write_checksum: sha1:c0f5886b107500a07f607ebdcc976b59cc5f114d
+    pristine_git_object: 7f7e39ffa9edd37de13f61aadd38d30aacecd31d
   src/core.ts:
     id: f431fdbcd144
     last_write_checksum: sha1:5550b787a3b13b658cec1f8b17f6f633ba218412
@@ -937,8 +941,8 @@ trackedFiles:
     pristine_git_object: 44be0eae8246521b230e8e711a88eff738fc015d
   src/lib/config.ts:
     id: 320761608fb3
-    last_write_checksum: sha1:0567b264bdbcf076eb408538dec255303f3c9f4b
-    pristine_git_object: c131c9529d50ba4ae89cc2275a5f03a5214bea64
+    last_write_checksum: sha1:1aa6d3109cf4160c85f120e7abe2e8488e19cb87
+    pristine_git_object: df93c90aaec42a7b800713113e828334d6abd87e
   src/lib/encodings.ts:
     id: 3bd8ead98afd
     last_write_checksum: sha1:7533dcb79b22b8c84ac7b90aec94317d12bad5f8
@@ -1133,8 +1137,8 @@ trackedFiles:
     pristine_git_object: 41dbd80834bc4f2136c2d4ff7111f2bdd9961be0
   src/models/index.ts:
     id: f93644b0f37e
-    last_write_checksum: sha1:5020b4dbcc2f92cce973d3ada5215f1d575daf46
-    pristine_git_object: 75f2f4d46bc9841647d4ed8f93c5fb7f233564bf
+    last_write_checksum: sha1:e9c962f270487cacf7b73d71d0f39cd8aca65889
+    pristine_git_object: 638c86671848ab04c342c1bfac6f6e36531c5d86
   src/models/invite.ts:
     id: 3970f8792d50
     last_write_checksum: sha1:1708a8b074ed131f8797d1a8098939249887091c
@@ -1205,8 +1209,12 @@ trackedFiles:
     pristine_git_object: a35433ee8f64d6901a17ca2adfb6df3192a9fb9d
   src/models/model-meta.ts:
     id: 66a8840e5c65
-    last_write_checksum: sha1:6dfb947ea16a64673cddf1fd82c2d9711b3d5ad6
-    pristine_git_object: 5ced063a4948acd29f96e4cd776ab01d70ca1b6d
+    last_write_checksum: sha1:78eedfb9281858b6abc63efd5880ed85ee6165d9
+    pristine_git_object: 5d10121661caf947a340e1f42d72ac1303669391
+  src/models/model-pricing.ts:
+    id: 5ec00947500f
+    last_write_checksum: sha1:91dc43f7db5019b252ce62c73f12f96df0d1deaa
+    pristine_git_object: dc75653c5b624570ac3badc5785edd188713d958
   src/models/model.ts:
     id: b99d4c14e794
     last_write_checksum: sha1:8e8f7f67bbd91050469b50d5eb13d2db075d30a5

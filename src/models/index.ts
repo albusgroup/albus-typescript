@@ -38,6 +38,7 @@ export * from "./memory-config.js";
 export * from "./memory-group.js";
 export * from "./memory.js";
 export * from "./model-meta.js";
+export * from "./model-pricing.js";
 export * from "./model.js";
 export * from "./organization-member.js";
 export * from "./organization-membership.js";
