@@ -15,15 +15,13 @@ export class Invites extends ClientSDK {
    * List pending invitations
    *
    * @remarks
-   * Lists the unexpired invitations into your organization. Requires the admin role.
+   * Returns unexpired invitations. Requires the admin role.
    */
   async listInvites(
-    request?: operations.ListInvitesRequest | undefined,
     options?: RequestOptions,
   ): Promise<models.ListInvitesResponse> {
     return unwrapAsync(invitesListInvites(
       this,
-      request,
       options,
     ));
   }
@@ -32,7 +30,7 @@ export class Invites extends ClientSDK {
    * Invite a user by email
    *
    * @remarks
-   * Invites an email address into your organization. The invitation is redeemed automatically the next time the invitee signs in with that email, and expires after 14 days. Requires the admin role.
+   * The invitation is accepted when the recipient signs in and expires after 14 days. Requires the admin role.
    */
   async createInvite(
     request: models.CreateInviteRequest,

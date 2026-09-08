@@ -1,8 +1,14 @@
 import assert from "node:assert/strict";
+import { mkdirSync, mkdtempSync, readFileSync, writeFileSync } from "node:fs";
+import { tmpdir as osTmpdir } from "node:os";
+import { join } from "node:path";
 import test from "node:test";
 
 import { Albus, HTTPClient } from "../esm/index.js";
+import { resetEnv } from "../esm/lib/env.js";
 import { ErrUnauthorized } from "../esm/models/errors/index.js";
+
+const tmpdir = join(osTmpdir(), "albus-sdk-test-");
 
 function jsonResponse(body, status = 200) {
   return new Response(JSON.stringify(body), {
@@ -48,7 +54,7 @@ test("sends an organization key as a bearer credential", async () => {
   });
   const albus = new Albus({
     httpClient,
-    security: { apiKey: "organization-key" },
+    apiKey: "organization-key",
   });
 
   const response = await albus.sessions.listSessions();
@@ -83,7 +89,7 @@ test("long-polls a run with wait_timeout_seconds", async () => {
   });
   const albus = new Albus({
     httpClient,
-    security: { apiKey: "organization-key" },
+    apiKey: "organization-key",
   });
 
   const response = await albus.sessions.runSession({
@@ -113,7 +119,7 @@ test("defaults a run to a 30-minute wait", async () => {
   });
   const albus = new Albus({
     httpClient,
-    security: { apiKey: "organization-key" },
+    apiKey: "organization-key",
   });
 
   const response = await albus.sessions.runSession({
@@ -140,7 +146,7 @@ test("uses zero for a fire-and-forget run", async () => {
   });
   const albus = new Albus({
     httpClient,
-    security: { apiKey: "organization-key" },
+    apiKey: "organization-key",
   });
 
   const response = await albus.sessions.runSession({
@@ -167,7 +173,7 @@ test("sends a user token and returns typed errors", async () => {
   });
   const albus = new Albus({
     httpClient,
-    security: { bearerAuth: "user-token" },
+    apiKey: "user-token",
   });
 
   await assert.rejects(
@@ -177,6 +183,182 @@ test("sends a user token and returns typed errors", async () => {
       assert.equal(error.statusCode, 401);
       assert.equal(error.data$.message, "invalid user token");
       return true;
+    },
+  );
+});
+
+test("the client takes an apiKey string and a serverURL, nothing generated", () => {
+  const options = readFileSync(
+    new URL("../esm/lib/config.d.ts", import.meta.url),
+    "utf8",
+  );
+  assert.match(options, /^\s+apiKey\?: string \| undefined;$/m);
+  assert.match(options, /^\s+serverURL\?: string \| undefined;$/m);
+  for (const removed of [
+    "security",
+    "serverIdx",
+    "xAlbusOrganization",
+    "Promise<string>",
+  ]) {
+    assert.doesNotMatch(options, new RegExp(removed));
+  }
+});
+
+function withEnvironment(values, run) {
+  const saved = {};
+  for (const [name, value] of Object.entries(values)) {
+    saved[name] = process.env[name];
+    if (value === undefined) {
+      delete process.env[name];
+    } else {
+      process.env[name] = value;
+    }
+  }
+  resetEnv();
+  return Promise.resolve()
+    .then(run)
+    .finally(() => {
+      for (const [name, value] of Object.entries(saved)) {
+        if (value === undefined) {
+          delete process.env[name];
+        } else {
+          process.env[name] = value;
+        }
+      }
+      resetEnv();
+    });
+}
+
+function authorizationProbe() {
+  const seen = {};
+  const httpClient = new HTTPClient({
+    fetcher: async (request) => {
+      seen.authorization = request.headers.get("authorization");
+      seen.organization = request.headers.get("x-albus-organization");
+      return jsonResponse({ sessions: [] });
+    },
+  });
+  return { httpClient, seen };
+}
+
+function writeStoredSession(directory, entry) {
+  writeFileSync(
+    join(directory, "credentials.json"),
+    JSON.stringify({
+      version: 1,
+      credentials: { "https://albus.sh/api": entry },
+    }),
+  );
+}
+
+test("ALBUS_API_KEY applies when apiKey is unset or empty", async () => {
+  await withEnvironment(
+    { ALBUS_API_KEY: "env-key", ALBUS_CONFIG_DIR: mkdtempSync(tmpdir) },
+    async () => {
+      for (const apiKey of [undefined, ""]) {
+        const { httpClient, seen } = authorizationProbe();
+        await new Albus({ httpClient, apiKey }).sessions.listSessions();
+        assert.equal(seen.authorization, "Bearer env-key");
+        assert.equal(seen.organization, null);
+      }
+    },
+  );
+});
+
+test("an explicit apiKey wins over ALBUS_API_KEY", async () => {
+  await withEnvironment({ ALBUS_API_KEY: "env-key" }, async () => {
+    const { httpClient, seen } = authorizationProbe();
+    await new Albus({ httpClient, apiKey: "explicit" }).sessions
+      .listSessions();
+    assert.equal(seen.authorization, "Bearer explicit");
+  });
+});
+
+test("the stored login session applies when no API key is set", async () => {
+  const directory = mkdtempSync(tmpdir);
+  writeStoredSession(directory, {
+    access_token: "session-token",
+    organization_id: "org_123",
+  });
+  await withEnvironment(
+    { ALBUS_API_KEY: undefined, ALBUS_CONFIG_DIR: directory },
+    async () => {
+      const { httpClient, seen } = authorizationProbe();
+      await new Albus({ httpClient }).sessions.listSessions();
+      assert.equal(seen.authorization, "Bearer session-token");
+      assert.equal(seen.organization, "org_123");
+    },
+  );
+});
+
+test("the stored session is keyed by server URL and yields to an API key", async () => {
+  const directory = mkdtempSync(tmpdir);
+  writeStoredSession(directory, { access_token: "session-token" });
+  await withEnvironment(
+    { ALBUS_API_KEY: undefined, ALBUS_CONFIG_DIR: directory },
+    async () => {
+      let probe = authorizationProbe();
+      await new Albus({ httpClient: probe.httpClient, apiKey: "key" }).sessions
+        .listSessions();
+      assert.equal(probe.seen.authorization, "Bearer key");
+      assert.equal(probe.seen.organization, null);
+
+      probe = authorizationProbe();
+      await new Albus({
+        httpClient: probe.httpClient,
+        serverURL: "http://localhost:8080",
+      }).sessions.listSessions();
+      assert.equal(probe.seen.authorization, null);
+    },
+  );
+});
+
+test("XDG_CONFIG_HOME and HOME locate the stored session", async () => {
+  const xdg = mkdtempSync(tmpdir);
+  mkdirSync(join(xdg, "albus"));
+  writeStoredSession(join(xdg, "albus"), { access_token: "xdg-token" });
+  const home = mkdtempSync(tmpdir);
+  mkdirSync(join(home, ".config", "albus"), { recursive: true });
+  writeStoredSession(join(home, ".config", "albus"), {
+    access_token: "home-token",
+  });
+  await withEnvironment(
+    {
+      ALBUS_API_KEY: undefined,
+      ALBUS_CONFIG_DIR: undefined,
+      XDG_CONFIG_HOME: xdg,
+      HOME: home,
+    },
+    async () => {
+      let probe = authorizationProbe();
+      await new Albus({ httpClient: probe.httpClient }).sessions
+        .listSessions();
+      assert.equal(probe.seen.authorization, "Bearer xdg-token");
+
+      delete process.env.XDG_CONFIG_HOME;
+      probe = authorizationProbe();
+      await new Albus({ httpClient: probe.httpClient }).sessions
+        .listSessions();
+      assert.equal(probe.seen.authorization, "Bearer home-token");
+    },
+  );
+});
+
+test("a missing or malformed credentials file means no credential", async () => {
+  const directory = mkdtempSync(tmpdir);
+  await withEnvironment(
+    { ALBUS_API_KEY: undefined, ALBUS_CONFIG_DIR: directory },
+    async () => {
+      let probe = authorizationProbe();
+      await new Albus({ httpClient: probe.httpClient }).sessions
+        .listSessions();
+      assert.equal(probe.seen.authorization, null);
+
+      writeFileSync(join(directory, "credentials.json"), "{not json");
+      probe = authorizationProbe();
+      await new Albus({ httpClient: probe.httpClient }).sessions
+        .listSessions();
+      assert.equal(probe.seen.authorization, null);
     },
   );
 });

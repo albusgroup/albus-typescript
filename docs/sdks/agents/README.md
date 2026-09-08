@@ -7,12 +7,12 @@ Inspect the agents that have run in your organization.
 ### Available Operations
 
 * [listAgents](#listagents) - List agents
-* [getAgent](#getagent) - Get an agent by name
-* [getAgentRevision](#getagentrevision) - Get a specific revision of an agent
+* [getAgent](#getagent) - Get an agent
+* [getAgentRevision](#getagentrevision) - Get an agent revision
 
 ## listAgents
 
-Lists the agents that have run in your organization, each with its latest revision.
+Returns agents that have run, with each agent's latest revision.
 
 
 ### Example Usage
@@ -22,10 +22,7 @@ Lists the agents that have run in your organization, each with its latest revisi
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -48,10 +45,7 @@ import { agentsListAgents } from "@albus-ts/sdk/funcs/agents-list-agents.js";
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -71,7 +65,6 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.ListAgentsRequest](../../models/operations/list-agents-request.md)                                                                                                 | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -89,7 +82,7 @@ run();
 
 ## getAgent
 
-Returns the agent with the given name, its current revision, and the list of all its revisions newest first.
+Returns the current revision and all revisions newest first.
 
 
 ### Example Usage
@@ -99,10 +92,7 @@ Returns the agent with the given name, its current revision, and the list of all
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -127,10 +117,7 @@ import { agentsGetAgent } from "@albus-ts/sdk/funcs/agents-get-agent.js";
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -171,7 +158,7 @@ run();
 
 ## getAgentRevision
 
-Returns the full configuration of one revision of an agent — its model, tools, instructions, and MCP servers.
+Returns the revision's model, tools, instructions, and MCP servers.
 
 
 ### Example Usage
@@ -181,10 +168,7 @@ Returns the full configuration of one revision of an agent — its model, tools,
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -210,10 +194,7 @@ import { agentsGetAgentRevision } from "@albus-ts/sdk/funcs/agents-get-agent-rev
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {

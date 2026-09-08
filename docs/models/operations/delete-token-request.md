@@ -12,6 +12,6 @@ let value: DeleteTokenRequest = {
 
 ## Fields
 
-| Field                  | Type                   | Required               | Description            |
-| ---------------------- | ---------------------- | ---------------------- | ---------------------- |
-| `id`                   | *string*               | :heavy_check_mark:     | The token's lookup ID. |
+| Field                                     | Type                                      | Required                                  | Description                               |
+| ----------------------------------------- | ----------------------------------------- | ----------------------------------------- | ----------------------------------------- |
+| `id`                                      | *string*                                  | :heavy_check_mark:                        | Lookup identifier of the token to revoke. |

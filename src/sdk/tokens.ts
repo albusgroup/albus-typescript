@@ -13,24 +13,25 @@ import { unwrapAsync } from "../types/fp.js";
 
 export class Tokens extends ClientSDK {
   /**
-   * List all API tokens. Never returns token values, only metadata.
+   * List API tokens
+   *
+   * @remarks
+   * Returns token metadata without token values.
    */
   async listTokens(
-    request?: operations.ListTokensRequest | undefined,
     options?: RequestOptions,
   ): Promise<models.ListTokensResponse> {
     return unwrapAsync(tokensListTokens(
       this,
-      request,
       options,
     ));
   }
 
   /**
-   * Create an API token. The token value is returned only in this response.
+   * Create an API token
    *
    * @remarks
-   * Requires the admin role.
+   * Returns the token value only in this response. Requires the admin role.
    */
   async createToken(
     request: models.CreateTokenRequest,
@@ -44,7 +45,10 @@ export class Tokens extends ClientSDK {
   }
 
   /**
-   * Get token metadata by ID. Never returns the token value.
+   * Get API token metadata
+   *
+   * @remarks
+   * Does not return the token value.
    */
   async getToken(
     request: operations.GetTokenRequest,
@@ -58,7 +62,7 @@ export class Tokens extends ClientSDK {
   }
 
   /**
-   * Revoke an API token by ID
+   * Revoke an API token
    *
    * @remarks
    * Requires the admin role.

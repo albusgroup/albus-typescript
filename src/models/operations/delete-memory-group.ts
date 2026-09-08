@@ -4,18 +4,9 @@
 
 import * as z from "zod/v4-mini";
 
-export type DeleteMemoryGroupGlobals = {
-  /**
-   * The id of the organization the request acts on, which must be one the caller belongs to. Defaults to the organization the caller joined first. Ignored for API keys, which are bound to one organization.
-   *
-   * @remarks
-   */
-  xAlbusOrganization?: string | undefined;
-};
-
 export type DeleteMemoryGroupRequest = {
   /**
-   * The memory group to read or delete — the `memory.group` value the agents sharing those memories run with.
+   * Memory group to read or delete, matching the agent's `memory.group`.
    *
    * @remarks
    */

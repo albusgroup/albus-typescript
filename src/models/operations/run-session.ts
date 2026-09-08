@@ -9,28 +9,21 @@ import { Result as SafeParseResult } from "../../types/fp.js";
 import { SDKValidationError } from "../errors/sdk-validation-error.js";
 import * as models from "../index.js";
 
-export type RunSessionGlobals = {
+export type RunSessionRequest = {
   /**
-   * The id of the organization the request acts on, which must be one the caller belongs to. Defaults to the organization the caller joined first. Ignored for API keys, which are bound to one organization.
+   * Client-provided session identifier. Reuse it to continue the session.
    *
    * @remarks
    */
-  xAlbusOrganization?: string | undefined;
-};
-
-export type RunSessionRequest = {
-  /**
-   * Client-provided session identifier. Use the same value across requests to continue the same agent session.
-   */
   id: string;
   /**
-   * Optional but strongly encouraged. The key naming this invocation of the session, unique within your organization: reuse the same value to safely retry a request, read the invocation back with `GET /traces/{invocation_key}`, and use a new value to start a new invocation. When omitted, the server generates a key for the invocation and returns it in the Idempotency-Key response header, but the request is not retry-safe.
+   * Names the invocation and makes identical requests safe to retry. Reuse with a different body returns `409`. When omitted, the response returns a generated key and the request is not retry-safe.
    *
    * @remarks
    */
   invocationKey?: string | undefined;
   /**
-   * Wait up to this many seconds for the assistant response. Omit to wait up to 30 minutes; use 0 to return after the invocation is accepted.
+   * Wait up to this many seconds for the assistant response. Omit to wait 30 minutes; use 0 to return once accepted. A timeout does not stop the invocation.
    *
    * @remarks
    */

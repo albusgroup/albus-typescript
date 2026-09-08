@@ -6,62 +6,51 @@ import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../../lib/primitives.js";
 import * as models from "../index.js";
 
-export type ListTracesGlobals = {
-  /**
-   * The id of the organization the request acts on, which must be one the caller belongs to. Defaults to the organization the caller joined first. Ignored for API keys, which are bound to one organization.
-   *
-   * @remarks
-   */
-  xAlbusOrganization?: string | undefined;
-};
-
 export type ListTracesRequest = {
   /**
-   * Return only invocations of this agent (e.g. "support-triage"). Invocations with no recorded agent name are not matched.
+   * Return only invocations of this agent (e.g. "support-triage").
    *
    * @remarks
    */
   agentName?: string | undefined;
   /**
-   * Return only invocations of this exact agent revision (e.g. "a1b2c3d4"). Combines with `agent_name`. Invocations with no recorded revision are not matched.
+   * Return only invocations of this agent revision (e.g. "a1b2c3d4"). Combines with `agent_name`.
    *
    * @remarks
    */
   agentRevision?: string | undefined;
   /**
-   * Return only invocations with this outcome. An invocation whose spans have aged out is still matched by the outcome it recorded.
+   * Return only invocations with this status.
    *
    * @remarks
    */
   status?: models.TraceStatus | undefined;
   /**
-   * Return only invocations of this session — the session identifier you ran it with. A session you do not have is a `404`.
+   * Return only invocations in this session. An unknown session returns `404`.
    *
    * @remarks
    */
   sessionId?: string | undefined;
   /**
-   * Return only invocations that started at or after this time. Defaults to 31 days ago; pass it to search further back.
+   * Return only invocations that started at or after this time. Defaults to 31 days ago.
    *
    * @remarks
    */
   since?: Date | undefined;
   /**
-   * Return only invocations that started at or before this time. Defaults to now, and must be after `since`; an earlier `until` is a `400`.
+   * Return only invocations that started at or before this time. Defaults to now and must be after `since`.
    *
    * @remarks
    */
   until?: Date | undefined;
   /**
-   * Opaque pagination cursor. Return only items positioned after it; pass a value obtained from a previous page to fetch the next one.
+   * Continue after this cursor. For list responses, pass the preceding page's `next_cursor`; for session messages, pass the preceding page's last message `cursor`.
    *
    * @remarks
    */
   after?: string | undefined;
   /**
-   * Maximum number of traces to return. A page can be shorter, so page while `next_cursor` is present.
-   *
-   * @remarks
+   * Maximum number of traces to return.
    */
   limit?: number | undefined;
 };

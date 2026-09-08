@@ -252,14 +252,7 @@ export function resolveGlobalSecurity(
       {
         fieldName: "Authorization",
         type: "http:bearer",
-        value: security?.bearerAuth ?? env().ALBUS_BEARER_AUTH,
-      },
-    ],
-    [
-      {
-        fieldName: "Authorization",
-        type: "http:bearer",
-        value: security?.apiKey ?? env().ALBUS_API_KEY,
+        value: security?.apiKey || env().ALBUS_API_KEY,
       },
     ],
   ];

@@ -10,7 +10,7 @@ Identify the authenticated user.
 
 ## whoami
 
-Returns the caller a credential authenticates: a signed-in user with every organization they belong to and their roles in each, or the API key that signed the request, along with the organization it acts in.
+Returns the signed-in user and their organizations, or the API key and its organization.
 
 
 ### Example Usage
@@ -20,10 +20,7 @@ Returns the caller a credential authenticates: a signed-in user with every organ
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -46,10 +43,7 @@ import { authWhoami } from "@albus-ts/sdk/funcs/auth-whoami.js";
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -69,7 +63,6 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.WhoamiRequest](../../models/operations/whoami-request.md)                                                                                                          | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |

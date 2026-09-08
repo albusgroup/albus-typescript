@@ -12,6 +12,6 @@ let value: GetTokenRequest = {
 
 ## Fields
 
-| Field                                                               | Type                                                                | Required                                                            | Description                                                         |
-| ------------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| `id`                                                                | *string*                                                            | :heavy_check_mark:                                                  | The token's lookup ID (the identifier portion of the token string). |
+| Field                                   | Type                                    | Required                                | Description                             |
+| --------------------------------------- | --------------------------------------- | --------------------------------------- | --------------------------------------- |
+| `id`                                    | *string*                                | :heavy_check_mark:                      | Lookup identifier from the token value. |

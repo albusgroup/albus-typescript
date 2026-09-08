@@ -28,12 +28,10 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Remove a member from the organization the request acts in
+ * Remove an organization member
  *
  * @remarks
  * Requires the admin role. The last admin cannot be removed.
- *
- * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKey} from the global security.
  */
 export function organizationRemoveOrganizationMember(
   client: AlbusCore,
@@ -111,15 +109,11 @@ async function $do(
 
   const headers = new Headers(compactMap({
     Accept: "application/json",
-    "X-Albus-Organization": encodeSimple(
-      "X-Albus-Organization",
-      client._options.xAlbusOrganization,
-      { explode: false, charEncoding: "none" },
-    ),
   }));
 
-  const securityInput = await extractSecurity(client._options.security);
-  const requestSecurity = resolveGlobalSecurity(securityInput, [0, 1]);
+  const secConfig = await extractSecurity(client._options.apiKey);
+  const securityInput = secConfig == null ? {} : { apiKey: secConfig };
+  const requestSecurity = resolveGlobalSecurity(securityInput);
 
   const context = {
     options: client._options,
@@ -129,7 +123,7 @@ async function $do(
 
     resolvedSecurity: requestSecurity,
 
-    securitySource: client._options.security,
+    securitySource: client._options.apiKey,
     retryConfig: options?.retries
       || client._options.retryConfig
       || { strategy: "none" },

@@ -14,21 +14,19 @@ import { unwrapAsync } from "../types/fp.js";
 
 export class Organization extends ClientSDK {
   /**
-   * Get the organization the request acts in
+   * Get the current organization
    */
   async getOrganization(
-    request?: operations.GetOrganizationRequest | undefined,
     options?: RequestOptions,
   ): Promise<models.Organization> {
     return unwrapAsync(organizationGetOrganization(
       this,
-      request,
       options,
     ));
   }
 
   /**
-   * Rename the organization the request acts in
+   * Rename the current organization
    *
    * @remarks
    * Requires the admin role.
@@ -45,21 +43,19 @@ export class Organization extends ClientSDK {
   }
 
   /**
-   * List the members of the organization the request acts in
+   * List organization members
    */
   async listOrganizationMembers(
-    request?: operations.ListOrganizationMembersRequest | undefined,
     options?: RequestOptions,
   ): Promise<models.ListOrganizationMembersResponse> {
     return unwrapAsync(organizationListOrganizationMembers(
       this,
-      request,
       options,
     ));
   }
 
   /**
-   * Remove a member from the organization the request acts in
+   * Remove an organization member
    *
    * @remarks
    * Requires the admin role. The last admin cannot be removed.
@@ -76,7 +72,7 @@ export class Organization extends ClientSDK {
   }
 
   /**
-   * Set a member's role in the organization the request acts in
+   * Set an organization member's role
    *
    * @remarks
    * Requires the admin role. The last admin cannot be demoted.

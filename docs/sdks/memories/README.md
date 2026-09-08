@@ -13,9 +13,7 @@ Read and delete what your agents remember.
 
 ## listMemoryGroups
 
-Lists the memory groups of your organization, ordered by key: every `memory.group` value an agent has run with, along with how many memories agents in the group currently read. Read a group's memories with `GET /memorygroups/{group}`.
-
-Page with `after` and `limit`: pass the response's `next_cursor` as the next request's `after`, and keep requesting while `next_cursor` is present — you have reached the end when it is absent.
+Returns memory groups ordered by key, with each group's active memory count.
 
 
 ### Example Usage
@@ -25,10 +23,7 @@ Page with `after` and `limit`: pass the response's `next_cursor` as the next req
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -51,10 +46,7 @@ import { memoriesListMemoryGroups } from "@albus-ts/sdk/funcs/memories-list-memo
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -93,9 +85,7 @@ run();
 
 ## listMemories
 
-Lists the memories of one memory group that agents currently read, newest first. Memories a later memory has replaced are not returned. A group nothing has been remembered in yet is an empty list, not an error.
-
-Page with `after` and `limit`: pass the response's `next_cursor` as the next request's `after`, and keep requesting while `next_cursor` is present — you have reached the end when it is absent.
+Returns active memories newest first. Replaced memories are omitted.
 
 
 ### Example Usage
@@ -105,10 +95,7 @@ Page with `after` and `limit`: pass the response's `next_cursor` as the next req
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -133,10 +120,7 @@ import { memoriesListMemories } from "@albus-ts/sdk/funcs/memories-list-memories
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -177,7 +161,7 @@ run();
 
 ## deleteMemoryGroup
 
-Deletes every memory of one memory group. Agents bound to the group remember nothing from before the call and can remember again after it. A group that holds no memories is deleted just the same, so the call is safe to repeat.
+Removes every memory in the group. Agents can add new memories later.
 
 
 ### Example Usage
@@ -187,10 +171,7 @@ Deletes every memory of one memory group. Agents bound to the group remember not
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -215,10 +196,7 @@ import { memoriesDeleteMemoryGroup } from "@albus-ts/sdk/funcs/memories-delete-m
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -259,7 +237,7 @@ run();
 
 ## deleteMemory
 
-Deletes one memory of a memory group. Agents bound to the group stop reading it, and the deletion is permanent. A memory the group does not hold is a `404`.
+Permanently removes the memory from the group.
 
 
 ### Example Usage
@@ -269,10 +247,7 @@ Deletes one memory of a memory group. Agents bound to the group stop reading it,
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -298,10 +273,7 @@ import { memoriesDeleteMemory } from "@albus-ts/sdk/funcs/memories-delete-memory
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {

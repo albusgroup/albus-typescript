@@ -10,7 +10,7 @@
 
 ## listInvites
 
-Lists the unexpired invitations into your organization. Requires the admin role.
+Returns unexpired invitations. Requires the admin role.
 
 
 ### Example Usage
@@ -20,10 +20,7 @@ Lists the unexpired invitations into your organization. Requires the admin role.
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -46,10 +43,7 @@ import { invitesListInvites } from "@albus-ts/sdk/funcs/invites-list-invites.js"
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -69,7 +63,6 @@ run();
 
 | Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
 | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `request`                                                                                                                                                                      | [operations.ListInvitesRequest](../../models/operations/list-invites-request.md)                                                                                               | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
 | `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
 | `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
 | `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
@@ -88,7 +81,7 @@ run();
 
 ## createInvite
 
-Invites an email address into your organization. The invitation is redeemed automatically the next time the invitee signs in with that email, and expires after 14 days. Requires the admin role.
+The invitation is accepted when the recipient signs in and expires after 14 days. Requires the admin role.
 
 
 ### Example Usage
@@ -98,10 +91,7 @@ Invites an email address into your organization. The invitation is redeemed auto
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -126,10 +116,7 @@ import { invitesCreateInvite } from "@albus-ts/sdk/funcs/invites-create-invite.j
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -181,10 +168,7 @@ Requires the admin role.
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -209,10 +193,7 @@ import { invitesRevokeInvite } from "@albus-ts/sdk/funcs/invites-revoke-invite.j
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {

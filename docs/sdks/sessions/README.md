@@ -15,11 +15,7 @@ Run and inspect agent sessions.
 
 ## listSessions
 
-Lists your organization's sessions, most recently used first. Filter by agent name, agent revision, invocation state, time window, or an invocation it ran: a session matches when any of its invocations does, and a filtered listing is ordered by each session's most recent matching invocation. A filter that matches nothing returns an empty page rather than an error.
-
-Page with `after` and `limit`: pass the response's `next_cursor` as the next request's `after`, and keep requesting while `next_cursor` is present — you have reached the end when it is absent. A page can hold fewer sessions than `limit`, or none at all, and still have a `next_cursor`; a short page is not the end of the results.
-
-A listing covers the window given by `since` and `until`, and omitting `since` searches the last 31 days. The window is fixed when the first page is requested, so paging with `after` keeps returning results from the window that page used: `after` carries that window and the filters it was made with, so send it with no filters, or with every filter repeated exactly, and expect a `400` otherwise.
+Returns sessions ordered by their most recent matching invocation.
 
 
 ### Example Usage
@@ -29,10 +25,7 @@ A listing covers the window given by `since` and `until`, and omitting `since` s
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -55,10 +48,7 @@ import { sessionsListSessions } from "@albus-ts/sdk/funcs/sessions-list-sessions
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -97,7 +87,7 @@ run();
 
 ## getSession
 
-Returns the session's metadata and a page of its messages ordered by cursor ascending. Use `after` and `limit` to page through messages.
+Returns session metadata and messages in chronological order.
 
 
 ### Example Usage
@@ -107,10 +97,7 @@ Returns the session's metadata and a page of its messages ordered by cursor asce
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -135,10 +122,7 @@ import { sessionsGetSession } from "@albus-ts/sdk/funcs/sessions-get-session.js"
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -180,9 +164,7 @@ run();
 
 ## runSession
 
-Runs the session with the given ID, creating it if it does not exist and resuming it otherwise. Each call is a single invocation, optionally named by the Idempotency-Key header, whose value is the invocation's key. Supplying a key makes the call safe to retry: retrying with the same key and an identical body re-attaches to the in-flight invocation and returns its current state; a differing body for the same key returns 409; a new key while another invocation is still running returns 423. Omitting the header starts a fresh, non-idempotent invocation each time; the server generates a key and returns it in the Idempotency-Key response header.
-
-With `wait_timeout_seconds` the request long-polls: it blocks until the invocation's assistant response is available and returns it in `message`. Omit it to wait up to 30 minutes, or pass 0 to return as soon as the invocation is accepted. A positive value bounds the wait in seconds; if it elapses first the request fails with 504 and a JSON body, letting the client distinguish an expected server-side timeout from a transport error; the client may retry.
+Starts a new session or continues an existing one with another agent invocation.
 
 
 ### Example Usage
@@ -192,10 +174,7 @@ With `wait_timeout_seconds` the request long-polls: it blocks until the invocati
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -229,10 +208,7 @@ import { sessionsRunSession } from "@albus-ts/sdk/funcs/sessions-run-session.js"
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -297,10 +273,7 @@ Delete a session
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -325,10 +298,7 @@ import { sessionsDeleteSession } from "@albus-ts/sdk/funcs/sessions-delete-sessi
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -369,7 +339,7 @@ run();
 
 ## cancelSession
 
-Requests cancellation of the invocation currently running for the session. Cancellation is asynchronous: the call returns once the request is accepted, and the invocation resolves as canceled shortly after, unlocking the session for new invocations. A request waiting on the invocation receives its terminal outcome. Returns 409 when the session has no invocation running.
+Requests asynchronous cancellation and returns once accepted.
 
 
 ### Example Usage
@@ -379,10 +349,7 @@ Requests cancellation of the invocation currently running for the session. Cance
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -407,10 +374,7 @@ import { sessionsCancelSession } from "@albus-ts/sdk/funcs/sessions-cancel-sessi
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -452,7 +416,7 @@ run();
 
 ## getSessionAudit
 
-Returns the session's audit log — an immutable, time-ordered record of what happened during its invocations (LLM calls, tool results, and invocation outcomes). Events are ordered by the time they occurred. Use `after` and `limit` to page through them; pass the response's `next_cursor` as the next request's `after` to fetch the following page.
+Returns an immutable record of session events in chronological order.
 
 
 ### Example Usage
@@ -462,10 +426,7 @@ Returns the session's audit log — an immutable, time-ordered record of what ha
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -490,10 +451,7 @@ import { sessionsGetSessionAudit } from "@albus-ts/sdk/funcs/sessions-get-sessio
 // Use `AlbusCore` for best tree-shaking performance.
 // You can create one instance of it to use across an application.
 const albus = new AlbusCore({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {

@@ -15,24 +15,22 @@ export class Agents extends ClientSDK {
    * List agents
    *
    * @remarks
-   * Lists the agents that have run in your organization, each with its latest revision.
+   * Returns agents that have run, with each agent's latest revision.
    */
   async listAgents(
-    request?: operations.ListAgentsRequest | undefined,
     options?: RequestOptions,
   ): Promise<models.ListAgentsResponse> {
     return unwrapAsync(agentsListAgents(
       this,
-      request,
       options,
     ));
   }
 
   /**
-   * Get an agent by name
+   * Get an agent
    *
    * @remarks
-   * Returns the agent with the given name, its current revision, and the list of all its revisions newest first.
+   * Returns the current revision and all revisions newest first.
    */
   async getAgent(
     request: operations.GetAgentRequest,
@@ -46,10 +44,10 @@ export class Agents extends ClientSDK {
   }
 
   /**
-   * Get a specific revision of an agent
+   * Get an agent revision
    *
    * @remarks
-   * Returns the full configuration of one revision of an agent — its model, tools, instructions, and MCP servers.
+   * Returns the revision's model, tools, instructions, and MCP servers.
    */
   async getAgentRevision(
     request: operations.GetAgentRevisionRequest,

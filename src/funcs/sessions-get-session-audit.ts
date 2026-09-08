@@ -32,9 +32,7 @@ import { Result } from "../types/fp.js";
  * List a session's audit log
  *
  * @remarks
- * Returns the session's audit log — an immutable, time-ordered record of what happened during its invocations (LLM calls, tool results, and invocation outcomes). Events are ordered by the time they occurred. Use `after` and `limit` to page through them; pass the response's `next_cursor` as the next request's `after` to fetch the following page.
- *
- * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKey} from the global security.
+ * Returns an immutable record of session events in chronological order.
  */
 export function sessionsGetSessionAudit(
   client: AlbusCore,
@@ -112,15 +110,11 @@ async function $do(
 
   const headers = new Headers(compactMap({
     Accept: "application/json",
-    "X-Albus-Organization": encodeSimple(
-      "X-Albus-Organization",
-      client._options.xAlbusOrganization,
-      { explode: false, charEncoding: "none" },
-    ),
   }));
 
-  const securityInput = await extractSecurity(client._options.security);
-  const requestSecurity = resolveGlobalSecurity(securityInput, [0, 1]);
+  const secConfig = await extractSecurity(client._options.apiKey);
+  const securityInput = secConfig == null ? {} : { apiKey: secConfig };
+  const requestSecurity = resolveGlobalSecurity(securityInput);
 
   const context = {
     options: client._options,
@@ -130,7 +124,7 @@ async function $do(
 
     resolvedSecurity: requestSecurity,
 
-    securitySource: client._options.security,
+    securitySource: client._options.apiKey,
     retryConfig: options?.retries
       || client._options.retryConfig
       || { strategy: "none" },

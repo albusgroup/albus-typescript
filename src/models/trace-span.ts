@@ -101,11 +101,11 @@ export type TraceSpan = {
    */
   error?: string | undefined;
   /**
-   * When the span began.
+   * An RFC 3339 timestamp with millisecond precision.
    */
   startedAt: Date;
   /**
-   * When the span finished.
+   * An RFC 3339 timestamp with millisecond precision.
    */
   endedAt: Date;
   /**

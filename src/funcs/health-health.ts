@@ -24,10 +24,7 @@ import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
 /**
- * Health check endpoint
- *
- * @remarks
- * Returns 200 OK if the service is healthy
+ * Check service health
  */
 export function healthHealth(
   client: AlbusCore,

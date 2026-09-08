@@ -22,11 +22,11 @@ const options = {
     : false,
 };
 
-// The spec allows `bearer_auth` alone on the token operations, so an apiKey
-// client is answered with a spec-correct 401 there.
-const albus = () => new Albus({ serverURL, security: { apiKey: "key" } });
-const bearerAlbus = () =>
-  new Albus({ serverURL, security: { bearerAuth: "token" } });
+// The spec allows `bearer_auth` alone on the token operations, so an
+// organization key is answered with a spec-correct 401 there; a user token
+// rides in apiKey the same way.
+const albus = () => new Albus({ serverURL, apiKey: "key" });
+const bearerAlbus = () => new Albus({ serverURL, apiKey: "token" });
 
 test("health answers the documented shape", options, async () => {
   assert.equal(typeof (await albus().health.health()).status, "string");

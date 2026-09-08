@@ -6,15 +6,6 @@ import * as z from "zod/v4-mini";
 import { remap as remap$ } from "../../lib/primitives.js";
 import * as models from "../index.js";
 
-export type ListSessionsGlobals = {
-  /**
-   * The id of the organization the request acts on, which must be one the caller belongs to. Defaults to the organization the caller joined first. Ignored for API keys, which are bound to one organization.
-   *
-   * @remarks
-   */
-  xAlbusOrganization?: string | undefined;
-};
-
 export type ListSessionsRequest = {
   /**
    * Return only sessions that ran this agent (e.g. "support-triage").
@@ -23,45 +14,43 @@ export type ListSessionsRequest = {
    */
   agentName?: string | undefined;
   /**
-   * Return only sessions that ran this exact agent revision (e.g. "a1b2c3d4"). Requires `agent_name`; a revision without an agent name is a `400`.
+   * Return only sessions that ran this agent revision (e.g. "a1b2c3d4"). Requires `agent_name`.
    *
    * @remarks
    */
   agentRevision?: string | undefined;
   /**
-   * Return only sessions with an invocation that ended this way, or is `RUNNING` now. `DONE` matches a successful invocation.
+   * Return only sessions with an invocation in this state. `DONE` matches a successful invocation.
    *
    * @remarks
    */
   status?: models.SessionState | undefined;
   /**
-   * Return only the session that ran this invocation, whether it is still running or has ended.
+   * Return only the session containing this invocation.
    *
    * @remarks
    */
   invocationKey?: string | undefined;
   /**
-   * Return only sessions with an invocation that started at or after this time. Without `since` or `until`, the listing covers sessions used in the last 31 days; pass it to search further back.
+   * Return only sessions with an invocation that started at or after this time. Defaults to 31 days ago.
    *
    * @remarks
    */
   since?: Date | undefined;
   /**
-   * Return only sessions with an invocation that started at or before this time. Defaults to now, and must be after `since`; an earlier `until` is a `400`.
+   * Return only sessions with an invocation that started at or before this time. Defaults to now and must be after `since`.
    *
    * @remarks
    */
   until?: Date | undefined;
   /**
-   * Opaque pagination cursor. Return only items positioned after it; pass a value obtained from a previous page to fetch the next one.
+   * Continue after this cursor. For list responses, pass the preceding page's `next_cursor`; for session messages, pass the preceding page's last message `cursor`.
    *
    * @remarks
    */
   after?: string | undefined;
   /**
-   * Maximum number of sessions to return. A page can be shorter, so page while `next_cursor` is present.
-   *
-   * @remarks
+   * Maximum number of sessions to return.
    */
   limit?: number | undefined;
 };

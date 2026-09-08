@@ -21,9 +21,8 @@ workflow:
             inputs:
                 - location: openapi/openapi.yaml
             overlays:
-                - location: .speakeasy/organization-header.overlay.yaml
-                - location: .speakeasy/invocation-key.overlay.yaml
                 - location: .speakeasy/run-session-timeout.overlay.yaml
+                - location: .speakeasy/generator-hints.overlay.yaml
             output: .speakeasy/out.openapi.yaml
     targets:
         albus:

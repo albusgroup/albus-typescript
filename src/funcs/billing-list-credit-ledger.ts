@@ -4,7 +4,7 @@
 
 import * as z from "zod/v4-mini";
 import { AlbusCore } from "../core.js";
-import { encodeFormQuery, encodeSimple } from "../lib/encodings.js";
+import { encodeFormQuery } from "../lib/encodings.js";
 import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
@@ -32,9 +32,7 @@ import { Result } from "../types/fp.js";
  * List your credit history
  *
  * @remarks
- * Lists your organization's credit ledger, newest first: purchases, grants, usage charges, and adjustments, each with the signed USD amount it moved the balance by. Page with `after` and `limit`: pass the response's `next_cursor` as the next request's `after`, and keep requesting while `next_cursor` is present.
- *
- * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKey} from the global security.
+ * Returns purchases, grants, usage charges, and adjustments newest first, with the signed USD amount of each balance change.
  */
 export function billingListCreditLedger(
   client: AlbusCore,
@@ -108,15 +106,11 @@ async function $do(
 
   const headers = new Headers(compactMap({
     Accept: "application/json",
-    "X-Albus-Organization": encodeSimple(
-      "X-Albus-Organization",
-      client._options.xAlbusOrganization,
-      { explode: false, charEncoding: "none" },
-    ),
   }));
 
-  const securityInput = await extractSecurity(client._options.security);
-  const requestSecurity = resolveGlobalSecurity(securityInput, [0, 1]);
+  const secConfig = await extractSecurity(client._options.apiKey);
+  const securityInput = secConfig == null ? {} : { apiKey: secConfig };
+  const requestSecurity = resolveGlobalSecurity(securityInput);
 
   const context = {
     options: client._options,
@@ -126,7 +120,7 @@ async function $do(
 
     resolvedSecurity: requestSecurity,
 
-    securitySource: client._options.security,
+    securitySource: client._options.apiKey,
     retryConfig: options?.retries
       || client._options.retryConfig
       || { strategy: "none" },

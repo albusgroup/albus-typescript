@@ -14,15 +14,13 @@ import { unwrapAsync } from "../types/fp.js";
 
 export class Secrets extends ClientSDK {
   /**
-   * List all secrets
+   * List secrets
    */
   async listSecrets(
-    request?: operations.ListSecretsRequest | undefined,
     options?: RequestOptions,
   ): Promise<models.ListSecretsResponse> {
     return unwrapAsync(secretsListSecrets(
       this,
-      request,
       options,
     ));
   }
@@ -42,7 +40,7 @@ export class Secrets extends ClientSDK {
   }
 
   /**
-   * Get a secret by name
+   * Get a secret
    */
   async getSecret(
     request: operations.GetSecretRequest,
@@ -56,7 +54,7 @@ export class Secrets extends ClientSDK {
   }
 
   /**
-   * Update a secret by name
+   * Update a secret
    */
   async updateSecret(
     request: operations.UpdateSecretRequest,
@@ -70,7 +68,7 @@ export class Secrets extends ClientSDK {
   }
 
   /**
-   * Delete a secret by name
+   * Delete a secret
    */
   async deleteSecret(
     request: operations.DeleteSecretRequest,

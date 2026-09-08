@@ -1,0 +1,35 @@
+overlay: 1.0.0
+info:
+  title: Generator hints the public spec does not carry
+  version: 1.0.0
+actions:
+  - target: "$.servers[?(@.url != 'https://albus.sh/api')]"
+    description: The SDK targets production; anything else is a serverURL override.
+    remove: true
+  - target: "$.components.securitySchemes.bearerAuth"
+    description: >-
+      Both schemes are a bearer token on the wire. The SDK exposes one
+      credential, apiKey, and a browser-session token rides in it too.
+    remove: true
+  - target: "$.security[?(@.bearerAuth != null)]"
+    remove: true
+  - target: "$.paths.*.*.security"
+    description: >-
+      Every operation authenticates the one way the SDK knows, including the
+      ones the public spec restricts to user tokens.
+    remove: true
+  - target: "$.paths['/health'].get"
+    description: Health stays anonymous.
+    update:
+      security: []
+  - target: "$.paths.*.*.parameters[?(@['$ref'] == '#/components/parameters/OrganizationHeader')]"
+    description: >-
+      The organization is neither a method argument nor a client option; the
+      SDK sends it from the stored browser session when no API key is used.
+    remove: true
+  - target: "$.components.parameters.OrganizationHeader"
+    remove: true
+  - target: "$.components.parameters.IdempotencyKey"
+    description: Name the parameter for the invocation it identifies.
+    update:
+      x-speakeasy-name-override: invocation_key

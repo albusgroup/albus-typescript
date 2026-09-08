@@ -30,11 +30,11 @@ export type TraceAttempt = {
    */
   status: TraceStatus;
   /**
-   * When the attempt began.
+   * An RFC 3339 timestamp with millisecond precision.
    */
   startedAt: Date;
   /**
-   * When the attempt ended. Absent while it runs.
+   * An RFC 3339 timestamp with millisecond precision.
    */
   endedAt?: Date | undefined;
   /**

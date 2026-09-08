@@ -31,15 +31,7 @@ import { Result } from "../types/fp.js";
  * Get one invocation's trace
  *
  * @remarks
- * Returns one agent invocation and a page of its spans in chronological order — the model calls it made and the tool calls they requested, with their payloads.
- *
- * Page with `after` and `limit`: pass the response's `next_cursor` as the next request's `after`, and keep requesting while `next_cursor` is present — you have reached the end when it is absent. A page can hold fewer spans than `limit`, or none at all, and still have a `next_cursor`; a short page is not the end of the spans.
- *
- * An invocation that was retried has more than one attempt, and by default only the spans of the latest attempt come back — the one that produced its outcome, or the one still in flight: the attempts before it are hidden, so a retried invocation reads as one history. They are hidden, not absent — every attempt ran, spent tokens, and may have made tool calls whose effects stand — so `attempts` lists all of them with their own outcomes and token usage, and `attempts=all` returns their spans too, each marked `superseded`.
- *
- * A span becomes readable seconds after it happens, so an invocation still in flight can return fewer spans than it has already taken. A payload can come back shortened, or left out when it is too large — `input` and `output` say when, and `*_bytes`, `*_sha256` and `*_truncated` describe the complete value where the span carries them. Reading the shape of an invocation without its payloads is a request with `payloads=false`: the same spans with their timings, statuses and token usage, and `limit` up to 500, so a whole trace usually fits in one request. Spans age out after a retention window: past it `spans_expired` is true and no spans come back, while the invocation itself stays readable.
- *
- * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKey} from the global security.
+ * Returns an invocation and its spans in chronological order. Spans may appear shortly after they occur and expire before the invocation does.
  */
 export function tracesGetTrace(
   client: AlbusCore,
@@ -121,15 +113,11 @@ async function $do(
 
   const headers = new Headers(compactMap({
     Accept: "application/json",
-    "X-Albus-Organization": encodeSimple(
-      "X-Albus-Organization",
-      client._options.xAlbusOrganization,
-      { explode: false, charEncoding: "none" },
-    ),
   }));
 
-  const securityInput = await extractSecurity(client._options.security);
-  const requestSecurity = resolveGlobalSecurity(securityInput, [0, 1]);
+  const secConfig = await extractSecurity(client._options.apiKey);
+  const securityInput = secConfig == null ? {} : { apiKey: secConfig };
+  const requestSecurity = resolveGlobalSecurity(securityInput);
 
   const context = {
     options: client._options,
@@ -139,7 +127,7 @@ async function $do(
 
     resolvedSecurity: requestSecurity,
 
-    securitySource: client._options.security,
+    securitySource: client._options.apiKey,
     retryConfig: options?.retries
       || client._options.retryConfig
       || { strategy: "none" },

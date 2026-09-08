@@ -3,7 +3,6 @@
  */
 
 import { AlbusCore } from "../core.js";
-import { encodeSimple } from "../lib/encodings.js";
 import { matchStatusCode } from "../lib/http.js";
 import * as M from "../lib/matchers.js";
 import { compactMap } from "../lib/primitives.js";
@@ -22,7 +21,6 @@ import * as errors from "../models/errors/index.js";
 import { ResponseValidationError } from "../models/errors/response-validation-error.js";
 import { SDKValidationError } from "../models/errors/sdk-validation-error.js";
 import * as models from "../models/index.js";
-import * as operations from "../models/operations/index.js";
 import { APICall, APIPromise } from "../types/async.js";
 import { Result } from "../types/fp.js";
 
@@ -30,13 +28,10 @@ import { Result } from "../types/fp.js";
  * Get the authenticated caller
  *
  * @remarks
- * Returns the caller a credential authenticates: a signed-in user with every organization they belong to and their roles in each, or the API key that signed the request, along with the organization it acts in.
- *
- * If set, this operation will use either {@link Security.bearerAuth} or {@link Security.apiKey} from the global security.
+ * Returns the signed-in user and their organizations, or the API key and its organization.
  */
 export function authWhoami(
   client: AlbusCore,
-  _request?: operations.WhoamiRequest | undefined,
   options?: RequestOptions,
 ): APIPromise<
   Result<
@@ -54,14 +49,12 @@ export function authWhoami(
 > {
   return new APIPromise($do(
     client,
-    _request,
     options,
   ));
 }
 
 async function $do(
   client: AlbusCore,
-  _request?: operations.WhoamiRequest | undefined,
   options?: RequestOptions,
 ): Promise<
   [
@@ -84,15 +77,11 @@ async function $do(
 
   const headers = new Headers(compactMap({
     Accept: "application/json",
-    "X-Albus-Organization": encodeSimple(
-      "X-Albus-Organization",
-      client._options.xAlbusOrganization,
-      { explode: false, charEncoding: "none" },
-    ),
   }));
 
-  const securityInput = await extractSecurity(client._options.security);
-  const requestSecurity = resolveGlobalSecurity(securityInput, [0, 1]);
+  const secConfig = await extractSecurity(client._options.apiKey);
+  const securityInput = secConfig == null ? {} : { apiKey: secConfig };
+  const requestSecurity = resolveGlobalSecurity(securityInput);
 
   const context = {
     options: client._options,
@@ -102,7 +91,7 @@ async function $do(
 
     resolvedSecurity: requestSecurity,
 
-    securitySource: client._options.security,
+    securitySource: client._options.apiKey,
     retryConfig: options?.retries
       || client._options.retryConfig
       || { strategy: "none" },

@@ -13,23 +13,23 @@ Install the SDK from npm:
 npm install @albus-ts/sdk
 ```
 
-Session operations use an organization API key:
+Authenticate with an organization API key:
 
 ```typescript
 import { Albus } from "@albus-ts/sdk";
 
-const albus = new Albus({
-  security: {
-    apiKey: process.env.ALBUS_API_KEY ?? "",
-  },
-});
+const albus = new Albus({ apiKey: "..." });
 
 const response = await albus.sessions.listSessions();
 console.log(response.sessions);
 ```
 
-User and token operations use a user bearer token. Secret operations accept
-either credential. Production requests use `https://albus.sh/api` by default.
+Without `apiKey`, the client reads `ALBUS_API_KEY`; without either, on Node
+it signs requests with the login session that `albus login` stored under
+`~/.config/albus/` (honoring `ALBUS_CONFIG_DIR` and `XDG_CONFIG_HOME`),
+acting in the organization selected there. Production requests use
+`https://albus.sh/api` by default; pass `serverURL` to target another
+deployment.
 
 <!-- Start Summary [summary] -->
 ## Summary
@@ -111,10 +111,7 @@ For supported JavaScript runtimes, please consult [RUNTIMES.md](RUNTIMES.md).
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -133,22 +130,18 @@ run();
 
 ### Per-Client Security Schemes
 
-This SDK supports the following security schemes globally:
+This SDK supports the following security scheme globally:
 
-| Name         | Type | Scheme      | Environment Variable |
-| ------------ | ---- | ----------- | -------------------- |
-| `bearerAuth` | http | HTTP Bearer | `ALBUS_BEARER_AUTH`  |
-| `apiKey`     | http | HTTP Bearer | `ALBUS_API_KEY`      |
+| Name     | Type | Scheme      | Environment Variable |
+| -------- | ---- | ----------- | -------------------- |
+| `apiKey` | http | HTTP Bearer | `ALBUS_API_KEY`      |
 
-You can set the security parameters through the `security` optional parameter when initializing the SDK client instance. The selected scheme will be used by default to authenticate with the API for all operations that support it. For example:
+To authenticate with the API the `apiKey` parameter must be set when initializing the SDK client instance. For example:
 ```typescript
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
-  xAlbusOrganization: "<value>",
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -171,8 +164,8 @@ run();
 ### [Agents](docs/sdks/agents/README.md)
 
 * [listAgents](docs/sdks/agents/README.md#listagents) - List agents
-* [getAgent](docs/sdks/agents/README.md#getagent) - Get an agent by name
-* [getAgentRevision](docs/sdks/agents/README.md#getagentrevision) - Get a specific revision of an agent
+* [getAgent](docs/sdks/agents/README.md#getagent) - Get an agent
+* [getAgentRevision](docs/sdks/agents/README.md#getagentrevision) - Get an agent revision
 
 ### [Auth](docs/sdks/auth/README.md)
 
@@ -186,7 +179,7 @@ run();
 
 ### [Health](docs/sdks/health/README.md)
 
-* [health](docs/sdks/health/README.md#health) - Health check endpoint
+* [health](docs/sdks/health/README.md#health) - Check service health
 
 ### [Invites](docs/sdks/invites/README.md)
 
@@ -207,19 +200,19 @@ run();
 
 ### [Organization](docs/sdks/organization/README.md)
 
-* [getOrganization](docs/sdks/organization/README.md#getorganization) - Get the organization the request acts in
-* [updateOrganization](docs/sdks/organization/README.md#updateorganization) - Rename the organization the request acts in
-* [listOrganizationMembers](docs/sdks/organization/README.md#listorganizationmembers) - List the members of the organization the request acts in
-* [removeOrganizationMember](docs/sdks/organization/README.md#removeorganizationmember) - Remove a member from the organization the request acts in
-* [setOrganizationMemberRole](docs/sdks/organization/README.md#setorganizationmemberrole) - Set a member's role in the organization the request acts in
+* [getOrganization](docs/sdks/organization/README.md#getorganization) - Get the current organization
+* [updateOrganization](docs/sdks/organization/README.md#updateorganization) - Rename the current organization
+* [listOrganizationMembers](docs/sdks/organization/README.md#listorganizationmembers) - List organization members
+* [removeOrganizationMember](docs/sdks/organization/README.md#removeorganizationmember) - Remove an organization member
+* [setOrganizationMemberRole](docs/sdks/organization/README.md#setorganizationmemberrole) - Set an organization member's role
 
 ### [Secrets](docs/sdks/secrets/README.md)
 
-* [listSecrets](docs/sdks/secrets/README.md#listsecrets) - List all secrets
+* [listSecrets](docs/sdks/secrets/README.md#listsecrets) - List secrets
 * [createSecret](docs/sdks/secrets/README.md#createsecret) - Create a secret
-* [getSecret](docs/sdks/secrets/README.md#getsecret) - Get a secret by name
-* [updateSecret](docs/sdks/secrets/README.md#updatesecret) - Update a secret by name
-* [deleteSecret](docs/sdks/secrets/README.md#deletesecret) - Delete a secret by name
+* [getSecret](docs/sdks/secrets/README.md#getsecret) - Get a secret
+* [updateSecret](docs/sdks/secrets/README.md#updatesecret) - Update a secret
+* [deleteSecret](docs/sdks/secrets/README.md#deletesecret) - Delete a secret
 
 ### [Sessions](docs/sdks/sessions/README.md)
 
@@ -232,10 +225,10 @@ run();
 
 ### [Tokens](docs/sdks/tokens/README.md)
 
-* [listTokens](docs/sdks/tokens/README.md#listtokens) - List all API tokens. Never returns token values, only metadata.
-* [createToken](docs/sdks/tokens/README.md#createtoken) - Create an API token. The token value is returned only in this response.
-* [getToken](docs/sdks/tokens/README.md#gettoken) - Get token metadata by ID. Never returns the token value.
-* [deleteToken](docs/sdks/tokens/README.md#deletetoken) - Revoke an API token by ID
+* [listTokens](docs/sdks/tokens/README.md#listtokens) - List API tokens
+* [createToken](docs/sdks/tokens/README.md#createtoken) - Create an API token
+* [getToken](docs/sdks/tokens/README.md#gettoken) - Get API token metadata
+* [deleteToken](docs/sdks/tokens/README.md#deletetoken) - Revoke an API token
 
 ### [Traces](docs/sdks/traces/README.md)
 
@@ -260,14 +253,14 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 
 <summary>Available standalone functions</summary>
 
-- [`agentsGetAgent`](docs/sdks/agents/README.md#getagent) - Get an agent by name
-- [`agentsGetAgentRevision`](docs/sdks/agents/README.md#getagentrevision) - Get a specific revision of an agent
+- [`agentsGetAgent`](docs/sdks/agents/README.md#getagent) - Get an agent
+- [`agentsGetAgentRevision`](docs/sdks/agents/README.md#getagentrevision) - Get an agent revision
 - [`agentsListAgents`](docs/sdks/agents/README.md#listagents) - List agents
 - [`authWhoami`](docs/sdks/auth/README.md#whoami) - Get the authenticated caller
 - [`billingCreateCheckout`](docs/sdks/billing/README.md#createcheckout) - Buy prepaid credits
 - [`billingGetCreditBalance`](docs/sdks/billing/README.md#getcreditbalance) - Read your credit balance
 - [`billingListCreditLedger`](docs/sdks/billing/README.md#listcreditledger) - List your credit history
-- [`healthHealth`](docs/sdks/health/README.md#health) - Health check endpoint
+- [`healthHealth`](docs/sdks/health/README.md#health) - Check service health
 - [`invitesCreateInvite`](docs/sdks/invites/README.md#createinvite) - Invite a user by email
 - [`invitesListInvites`](docs/sdks/invites/README.md#listinvites) - List pending invitations
 - [`invitesRevokeInvite`](docs/sdks/invites/README.md#revokeinvite) - Revoke a pending invitation
@@ -276,26 +269,26 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 - [`memoriesListMemories`](docs/sdks/memories/README.md#listmemories) - List a group's memories
 - [`memoriesListMemoryGroups`](docs/sdks/memories/README.md#listmemorygroups) - List memory groups
 - [`modelsListModels`](docs/sdks/models/README.md#listmodels) - List models
-- [`organizationGetOrganization`](docs/sdks/organization/README.md#getorganization) - Get the organization the request acts in
-- [`organizationListOrganizationMembers`](docs/sdks/organization/README.md#listorganizationmembers) - List the members of the organization the request acts in
-- [`organizationRemoveOrganizationMember`](docs/sdks/organization/README.md#removeorganizationmember) - Remove a member from the organization the request acts in
-- [`organizationSetOrganizationMemberRole`](docs/sdks/organization/README.md#setorganizationmemberrole) - Set a member's role in the organization the request acts in
-- [`organizationUpdateOrganization`](docs/sdks/organization/README.md#updateorganization) - Rename the organization the request acts in
+- [`organizationGetOrganization`](docs/sdks/organization/README.md#getorganization) - Get the current organization
+- [`organizationListOrganizationMembers`](docs/sdks/organization/README.md#listorganizationmembers) - List organization members
+- [`organizationRemoveOrganizationMember`](docs/sdks/organization/README.md#removeorganizationmember) - Remove an organization member
+- [`organizationSetOrganizationMemberRole`](docs/sdks/organization/README.md#setorganizationmemberrole) - Set an organization member's role
+- [`organizationUpdateOrganization`](docs/sdks/organization/README.md#updateorganization) - Rename the current organization
 - [`secretsCreateSecret`](docs/sdks/secrets/README.md#createsecret) - Create a secret
-- [`secretsDeleteSecret`](docs/sdks/secrets/README.md#deletesecret) - Delete a secret by name
-- [`secretsGetSecret`](docs/sdks/secrets/README.md#getsecret) - Get a secret by name
-- [`secretsListSecrets`](docs/sdks/secrets/README.md#listsecrets) - List all secrets
-- [`secretsUpdateSecret`](docs/sdks/secrets/README.md#updatesecret) - Update a secret by name
+- [`secretsDeleteSecret`](docs/sdks/secrets/README.md#deletesecret) - Delete a secret
+- [`secretsGetSecret`](docs/sdks/secrets/README.md#getsecret) - Get a secret
+- [`secretsListSecrets`](docs/sdks/secrets/README.md#listsecrets) - List secrets
+- [`secretsUpdateSecret`](docs/sdks/secrets/README.md#updatesecret) - Update a secret
 - [`sessionsCancelSession`](docs/sdks/sessions/README.md#cancelsession) - Cancel a session's running invocation
 - [`sessionsDeleteSession`](docs/sdks/sessions/README.md#deletesession) - Delete a session
 - [`sessionsGetSession`](docs/sdks/sessions/README.md#getsession) - Get a session with its messages
 - [`sessionsGetSessionAudit`](docs/sdks/sessions/README.md#getsessionaudit) - List a session's audit log
 - [`sessionsListSessions`](docs/sdks/sessions/README.md#listsessions) - List sessions
 - [`sessionsRunSession`](docs/sdks/sessions/README.md#runsession) - Run or resume a session
-- [`tokensCreateToken`](docs/sdks/tokens/README.md#createtoken) - Create an API token. The token value is returned only in this response.
-- [`tokensDeleteToken`](docs/sdks/tokens/README.md#deletetoken) - Revoke an API token by ID
-- [`tokensGetToken`](docs/sdks/tokens/README.md#gettoken) - Get token metadata by ID. Never returns the token value.
-- [`tokensListTokens`](docs/sdks/tokens/README.md#listtokens) - List all API tokens. Never returns token values, only metadata.
+- [`tokensCreateToken`](docs/sdks/tokens/README.md#createtoken) - Create an API token
+- [`tokensDeleteToken`](docs/sdks/tokens/README.md#deletetoken) - Revoke an API token
+- [`tokensGetToken`](docs/sdks/tokens/README.md#gettoken) - Get API token metadata
+- [`tokensListTokens`](docs/sdks/tokens/README.md#listtokens) - List API tokens
 - [`tracesGetTrace`](docs/sdks/traces/README.md#gettrace) - Get one invocation's trace
 - [`tracesListTraces`](docs/sdks/traces/README.md#listtraces) - Search traces
 
@@ -312,14 +305,11 @@ To change the default retry strategy for a single API call, simply provide a ret
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
-  const result = await albus.secrets.listSecrets(undefined, {
+  const result = await albus.secrets.listSecrets({
     retries: {
       strategy: "backoff",
       backoff: {
@@ -354,10 +344,7 @@ const albus = new Albus({
     },
     retryConnectionErrors: false,
   },
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -391,10 +378,7 @@ import { Albus } from "@albus-ts/sdk";
 import * as errors from "@albus-ts/sdk/models/errors";
 
 const albus = new Albus({
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {
@@ -461,50 +445,15 @@ run();
 <!-- Start Server Selection [server] -->
 ## Server Selection
 
-### Select Server by Index
-
-You can override the default server globally by passing a server index to the `serverIdx: number` optional parameter when initializing the SDK client instance. The selected server will then be used as the default on the operations that use it. This table lists the indexes associated with the available servers:
-
-| #   | Server                  | Description              |
-| --- | ----------------------- | ------------------------ |
-| 0   | `https://albus.sh/api`  | Production server        |
-| 1   | `http://localhost:8080` | Local development server |
-
-#### Example
-
-```typescript
-import { Albus } from "@albus-ts/sdk";
-
-const albus = new Albus({
-  serverIdx: 0,
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
-});
-
-async function run() {
-  const result = await albus.secrets.listSecrets();
-
-  console.log(result);
-}
-
-run();
-
-```
-
 ### Override Server URL Per-Client
 
-The default server can also be overridden globally by passing a URL to the `serverURL: string` optional parameter when initializing the SDK client instance. For example:
+The default server can be overridden globally by passing a URL to the `serverURL: string` optional parameter when initializing the SDK client instance. For example:
 ```typescript
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  serverURL: "http://localhost:8080",
-  xAlbusOrganization: "<value>",
-  security: {
-    bearerAuth: process.env["ALBUS_BEARER_AUTH"] ?? "",
-  },
+  serverURL: "https://albus.sh/api",
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 
 async function run() {

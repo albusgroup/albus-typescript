@@ -15,7 +15,7 @@ export class Billing extends ClientSDK {
    * Buy prepaid credits
    *
    * @remarks
-   * Starts a credit purchase for your organization. Returns the URL of a payment page to send the buyer's browser to; the credits are added to your balance once the payment completes there.
+   * Creates a purchase and returns its payment URL. Credits are added when payment completes.
    */
   async createCheckout(
     request: models.CreateCheckoutRequest,
@@ -35,12 +35,10 @@ export class Billing extends ClientSDK {
    * Returns your organization's current prepaid credit balance in USD.
    */
   async getCreditBalance(
-    request?: operations.GetCreditBalanceRequest | undefined,
     options?: RequestOptions,
   ): Promise<models.CreditBalanceResponse> {
     return unwrapAsync(billingGetCreditBalance(
       this,
-      request,
       options,
     ));
   }
@@ -49,7 +47,7 @@ export class Billing extends ClientSDK {
    * List your credit history
    *
    * @remarks
-   * Lists your organization's credit ledger, newest first: purchases, grants, usage charges, and adjustments, each with the signed USD amount it moved the balance by. Page with `after` and `limit`: pass the response's `next_cursor` as the next request's `after`, and keep requesting while `next_cursor` is present.
+   * Returns purchases, grants, usage charges, and adjustments newest first, with the signed USD amount of each balance change.
    */
   async listCreditLedger(
     request?: operations.ListCreditLedgerRequest | undefined,

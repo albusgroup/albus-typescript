@@ -4,24 +4,15 @@
 
 import * as z from "zod/v4-mini";
 
-export type ListMemoriesGlobals = {
-  /**
-   * The id of the organization the request acts on, which must be one the caller belongs to. Defaults to the organization the caller joined first. Ignored for API keys, which are bound to one organization.
-   *
-   * @remarks
-   */
-  xAlbusOrganization?: string | undefined;
-};
-
 export type ListMemoriesRequest = {
   /**
-   * The memory group to read or delete — the `memory.group` value the agents sharing those memories run with.
+   * Memory group to read or delete, matching the agent's `memory.group`.
    *
    * @remarks
    */
   group: string;
   /**
-   * Opaque pagination cursor. Return only items positioned after it; pass a value obtained from a previous page to fetch the next one.
+   * Continue after this cursor. For list responses, pass the preceding page's `next_cursor`; for session messages, pass the preceding page's last message `cursor`.
    *
    * @remarks
    */

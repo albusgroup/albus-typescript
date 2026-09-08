@@ -10,17 +10,8 @@ import { Result as SafeParseResult } from "../../types/fp.js";
 import { SDKValidationError } from "../errors/sdk-validation-error.js";
 import * as models from "../index.js";
 
-export type GetTraceGlobals = {
-  /**
-   * The id of the organization the request acts on, which must be one the caller belongs to. Defaults to the organization the caller joined first. Ignored for API keys, which are bound to one organization.
-   *
-   * @remarks
-   */
-  xAlbusOrganization?: string | undefined;
-};
-
 /**
- * Which attempts to return spans for. `final`, the default, returns only the spans of the latest attempt — the one that produced the invocation's outcome, or the one still in flight; `all` also returns the spans of the attempts before it, each marked `superseded`. Either way `attempts` in the response lists every attempt that ran.
+ * Attempts whose spans to return. `final` returns only the latest; `all` includes earlier spans marked `superseded`.
  *
  * @remarks
  */
@@ -29,7 +20,7 @@ export const Attempts = {
   All: "all",
 } as const;
 /**
- * Which attempts to return spans for. `final`, the default, returns only the spans of the latest attempt — the one that produced the invocation's outcome, or the one still in flight; `all` also returns the spans of the attempts before it, each marked `superseded`. Either way `attempts` in the response lists every attempt that ran.
+ * Attempts whose spans to return. `final` returns only the latest; `all` includes earlier spans marked `superseded`.
  *
  * @remarks
  */
@@ -37,31 +28,31 @@ export type Attempts = ClosedEnum<typeof Attempts>;
 
 export type GetTraceRequest = {
   /**
-   * The invocation's key — the value sent as its Idempotency-Key, or the one the server returned in that header when it was omitted.
+   * Invocation key sent or returned in the `Idempotency-Key` header.
    *
    * @remarks
    */
   invocationKey: string;
   /**
-   * Whether to include what each span was given and produced. `true`, the default, returns `input` and `output` and the fields that describe them. `false` returns the same spans without them — everything the span recorded about itself: `id`, `parent_id`, `type`, `name`, `status`, `started_at`, `ended_at` and `usage` — which is the cheap way to read an invocation's shape, and it lets `limit` go up to 500. `after` carries the mode it was made with, so page with the same `payloads` you started with and expect a `400` otherwise.
+   * Whether to include span inputs and outputs. Disabling payloads raises the maximum `limit` to 500. Use the same value on every page.
    *
    * @remarks
    */
   payloads?: boolean | undefined;
   /**
-   * Which attempts to return spans for. `final`, the default, returns only the spans of the latest attempt — the one that produced the invocation's outcome, or the one still in flight; `all` also returns the spans of the attempts before it, each marked `superseded`. Either way `attempts` in the response lists every attempt that ran.
+   * Attempts whose spans to return. `final` returns only the latest; `all` includes earlier spans marked `superseded`.
    *
    * @remarks
    */
   attempts?: Attempts | undefined;
   /**
-   * Opaque pagination cursor. Return only items positioned after it; pass a value obtained from a previous page to fetch the next one.
+   * Continue after this cursor. For list responses, pass the preceding page's `next_cursor`; for session messages, pass the preceding page's last message `cursor`.
    *
    * @remarks
    */
   after?: string | undefined;
   /**
-   * Maximum number of spans to return. With payloads at most 25, which is also the default; with `payloads=false` at most 500, and 500 by default, so one request usually returns a whole trace. A `limit` above the bound for the mode you asked for is a `400`. A page can be shorter, so page while `next_cursor` is present.
+   * Maximum spans to return. Defaults to 25 with payloads and 500 without; these are also the respective maximums.
    *
    * @remarks
    */

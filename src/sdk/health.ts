@@ -9,10 +9,7 @@ import { unwrapAsync } from "../types/fp.js";
 
 export class Health extends ClientSDK {
   /**
-   * Health check endpoint
-   *
-   * @remarks
-   * Returns 200 OK if the service is healthy
+   * Check service health
    */
   async health(
     options?: RequestOptions,

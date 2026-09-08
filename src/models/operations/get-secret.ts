@@ -4,16 +4,10 @@
 
 import * as z from "zod/v4-mini";
 
-export type GetSecretGlobals = {
-  /**
-   * The id of the organization the request acts on, which must be one the caller belongs to. Defaults to the organization the caller joined first. Ignored for API keys, which are bound to one organization.
-   *
-   * @remarks
-   */
-  xAlbusOrganization?: string | undefined;
-};
-
 export type GetSecretRequest = {
+  /**
+   * Name of the secret to return.
+   */
   name: string;
 };
 

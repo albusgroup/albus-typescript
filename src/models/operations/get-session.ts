@@ -4,22 +4,15 @@
 
 import * as z from "zod/v4-mini";
 
-export type GetSessionGlobals = {
+export type GetSessionRequest = {
   /**
-   * The id of the organization the request acts on, which must be one the caller belongs to. Defaults to the organization the caller joined first. Ignored for API keys, which are bound to one organization.
+   * Client-provided session identifier. Reuse it to continue the session.
    *
    * @remarks
    */
-  xAlbusOrganization?: string | undefined;
-};
-
-export type GetSessionRequest = {
-  /**
-   * Client-provided session identifier. Use the same value across requests to continue the same agent session.
-   */
   id: string;
   /**
-   * Opaque pagination cursor. Return only items positioned after it; pass a value obtained from a previous page to fetch the next one.
+   * Continue after this cursor. For list responses, pass the preceding page's `next_cursor`; for session messages, pass the preceding page's last message `cursor`.
    *
    * @remarks
    */

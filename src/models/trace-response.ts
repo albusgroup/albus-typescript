@@ -52,13 +52,11 @@ export type TraceResponse = {
    */
   spansExpired: boolean;
   /**
-   * When the invocation was accepted.
+   * An RFC 3339 timestamp with millisecond precision.
    */
   startedAt: Date;
   /**
-   * When the invocation's outcome was recorded. Absent while it runs.
-   *
-   * @remarks
+   * An RFC 3339 timestamp with millisecond precision.
    */
   endedAt?: Date | undefined;
   /**

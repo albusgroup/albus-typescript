@@ -61,6 +61,64 @@ publish a generated version with the guarded local scripts.
 
 `;
 
+// The SDK has one server, so the generated index selection goes; apiKey is a
+// string, so the generated per-request callback form goes; and an empty
+// apiKey means no apiKey, so the environment and the stored browser session
+// still apply. Each replacement is exact so a generator bump cannot drift
+// past it unnoticed.
+const generatedSourceEdits = {
+  "src/lib/config.ts": [
+    [
+      "  apiKey?: string | (() => Promise<string>) | undefined;\n",
+      "  apiKey?: string | undefined;\n",
+    ],
+    [
+      `  /**
+   * Allows overriding the default server used by the SDK
+   */
+  serverIdx?: number | undefined;
+`,
+      "",
+    ],
+    [
+      `  if (!serverURL) {
+    const serverIdx = options.serverIdx ?? 0;
+    if (serverIdx < 0 || serverIdx >= ServerList.length) {
+      throw new Error(\`Invalid server index \${serverIdx}\`);
+    }
+    serverURL = ServerList[serverIdx] || "";
+  }
+`,
+      `  if (!serverURL) {
+    serverURL = ServerList[0];
+  }
+`,
+    ],
+  ],
+  "src/lib/security.ts": [
+    [
+      "        value: security?.apiKey ?? env().ALBUS_API_KEY,\n",
+      "        value: security?.apiKey || env().ALBUS_API_KEY,\n",
+    ],
+  ],
+};
+
+function normalizeGeneratedSource() {
+  for (const [relativePath, edits] of Object.entries(generatedSourceEdits)) {
+    const path = join(repositoryRoot, relativePath);
+    let content = readFileSync(path, "utf8");
+    for (const [generated, wanted] of edits) {
+      if (!content.includes(generated)) {
+        throw new Error(
+          `expected generated text in ${relativePath}:\n${generated}`,
+        );
+      }
+      content = content.replace(generated, wanted);
+    }
+    writeFileSync(path, content);
+  }
+}
+
 function normalizeText(path) {
   const lines = readFileSync(path, "utf8")
     .split(/\r?\n/)
@@ -142,6 +200,7 @@ function main() {
   normalizeContributing();
   normalizeGitignore();
   normalizePackageJson();
+  normalizeGeneratedSource();
 
   for (const generatedDirectory of ["examples", ".devcontainer"]) {
     rmSync(join(repositoryRoot, generatedDirectory), {
