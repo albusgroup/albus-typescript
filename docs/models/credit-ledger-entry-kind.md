@@ -1,4 +1,4 @@
-# Kind
+# CreditLedgerEntryKind
 
 What moved the balance: a paid purchase, an operator grant, a usage charge, or a manual adjustment.
 
@@ -6,9 +6,9 @@ What moved the balance: a paid purchase, an operator grant, a usage charge, or a
 ## Example Usage
 
 ```typescript
-import { Kind } from "@albus-ts/sdk/models";
+import { CreditLedgerEntryKind } from "@albus-ts/sdk/models";
 
-let value: Kind = "purchase";
+let value: CreditLedgerEntryKind = "purchase";
 
 // Open enum: unrecognized values are captured as Unrecognized<string>
 ```

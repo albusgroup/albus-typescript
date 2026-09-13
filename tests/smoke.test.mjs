@@ -32,7 +32,7 @@ test("uses the production URL by default", async () => {
   const httpClient = new HTTPClient({
     fetcher: async (request) => {
       assert.equal(request.method, "GET");
-      assert.equal(request.url, "https://albus.sh/api/health");
+      assert.equal(request.url, "https://albus.sh/api/v1/health");
       return jsonResponse({ status: "ok" });
     },
   });
@@ -44,7 +44,7 @@ test("uses the production URL by default", async () => {
 test("sends an organization key as a bearer credential", async () => {
   const httpClient = new HTTPClient({
     fetcher: async (request) => {
-      assert.equal(request.url, "https://albus.sh/api/sessions");
+      assert.equal(request.url, "https://albus.sh/api/v1/sessions");
       assert.equal(
         request.headers.get("authorization"),
         "Bearer organization-key",
@@ -67,7 +67,7 @@ test("long-polls a run with wait_timeout_seconds", async () => {
       assert.equal(request.method, "POST");
       assert.equal(
         request.url,
-        "https://albus.sh/api/sessions/demo?wait_timeout_seconds=30",
+        "https://albus.sh/api/v1/sessions/demo?wait_timeout_seconds=30",
       );
       assert.equal(request.headers.get("idempotency-key"), "invocation-1");
       assert.deepEqual(await request.json(), {
@@ -112,7 +112,7 @@ test("defaults a run to a 30-minute wait", async () => {
     fetcher: async (request) => {
       assert.equal(
         request.url,
-        "https://albus.sh/api/sessions/demo?wait_timeout_seconds=1800",
+        "https://albus.sh/api/v1/sessions/demo?wait_timeout_seconds=1800",
       );
       return jsonResponse({ session: sessionBody("RUNNING") });
     },
@@ -139,7 +139,7 @@ test("uses zero for a fire-and-forget run", async () => {
     fetcher: async (request) => {
       assert.equal(
         request.url,
-        "https://albus.sh/api/sessions/demo?wait_timeout_seconds=0",
+        "https://albus.sh/api/v1/sessions/demo?wait_timeout_seconds=0",
       );
       return jsonResponse({ session: sessionBody("RUNNING") });
     },
@@ -166,7 +166,7 @@ test("uses zero for a fire-and-forget run", async () => {
 test("sends a user token and returns typed errors", async () => {
   const httpClient = new HTTPClient({
     fetcher: async (request) => {
-      assert.equal(request.url, "https://albus.sh/api/tokens");
+      assert.equal(request.url, "https://albus.sh/api/v1/tokens");
       assert.equal(request.headers.get("authorization"), "Bearer user-token");
       return jsonResponse({ message: "invalid user token" }, 401);
     },
@@ -246,7 +246,7 @@ function writeStoredSession(directory, entry) {
     join(directory, "credentials.json"),
     JSON.stringify({
       version: 1,
-      credentials: { "https://albus.sh/api": entry },
+      credentials: { "https://albus.sh/api/v1": entry },
     }),
   );
 }

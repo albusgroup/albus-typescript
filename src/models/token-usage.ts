@@ -16,6 +16,12 @@ export type TokenUsage = {
   inputTokens?: number | undefined;
   outputTokens?: number | undefined;
   totalTokens?: number | undefined;
+  /**
+   * Tokens the model spent reasoning before it answered, as reported by the provider. Absent when the provider reports none.
+   *
+   * @remarks
+   */
+  thinkingTokens?: number | undefined;
 };
 
 /** @internal */
@@ -25,12 +31,14 @@ export const TokenUsage$inboundSchema: z.ZodMiniType<TokenUsage, unknown> = z
       input_tokens: types.optional(types.number()),
       output_tokens: types.optional(types.number()),
       total_tokens: types.optional(types.number()),
+      thinking_tokens: types.optional(types.number()),
     }),
     z.transform((v) => {
       return remap$(v, {
         "input_tokens": "inputTokens",
         "output_tokens": "outputTokens",
         "total_tokens": "totalTokens",
+        "thinking_tokens": "thinkingTokens",
       });
     }),
   );

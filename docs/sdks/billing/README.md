@@ -9,6 +9,7 @@ Buy the prepaid credits agent sessions run on.
 * [createCheckout](#createcheckout) - Buy prepaid credits
 * [getCreditBalance](#getcreditbalance) - Read your credit balance
 * [listCreditLedger](#listcreditledger) - List your credit history
+* [getSpend](#getspend) - Get your spend breakdown
 
 ## createCheckout
 
@@ -225,6 +226,78 @@ run();
 ### Response
 
 **Promise\<[models.ListCreditLedgerResponse](../../models/list-credit-ledger-response.md)\>**
+
+### Errors
+
+| Error Type               | Status Code              | Content Type             |
+| ------------------------ | ------------------------ | ------------------------ |
+| errors.ErrBadRequest     | 400                      | application/json         |
+| errors.ErrUnauthorized   | 401                      | application/json         |
+| errors.AlbusDefaultError | 4XX, 5XX                 | \*/\*                    |
+
+## getSpend
+
+Returns what your usage cost, split by UTC day and by what was used: each model at each provider, and compute time. Each line carries the quantities it was charged for.
+
+
+### Example Usage
+
+<!-- UsageSnippet language="typescript" operationID="getSpend" method="get" path="/billing/spend" -->
+```typescript
+import { Albus } from "@albus-ts/sdk";
+
+const albus = new Albus({
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
+});
+
+async function run() {
+  const result = await albus.billing.getSpend();
+
+  console.log(result);
+}
+
+run();
+```
+
+### Standalone function
+
+The standalone function version of this method:
+
+```typescript
+import { AlbusCore } from "@albus-ts/sdk/core.js";
+import { billingGetSpend } from "@albus-ts/sdk/funcs/billing-get-spend.js";
+
+// Use `AlbusCore` for best tree-shaking performance.
+// You can create one instance of it to use across an application.
+const albus = new AlbusCore({
+  apiKey: process.env["ALBUS_API_KEY"] ?? "",
+});
+
+async function run() {
+  const res = await billingGetSpend(albus);
+  if (res.ok) {
+    const { value: result } = res;
+    console.log(result);
+  } else {
+    console.log("billingGetSpend failed:", res.error);
+  }
+}
+
+run();
+```
+
+### Parameters
+
+| Parameter                                                                                                                                                                      | Type                                                                                                                                                                           | Required                                                                                                                                                                       | Description                                                                                                                                                                    |
+| ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `request`                                                                                                                                                                      | [operations.GetSpendRequest](../../models/operations/get-spend-request.md)                                                                                                     | :heavy_check_mark:                                                                                                                                                             | The request object to use for the request.                                                                                                                                     |
+| `options`                                                                                                                                                                      | RequestOptions                                                                                                                                                                 | :heavy_minus_sign:                                                                                                                                                             | Used to set various options for making HTTP requests.                                                                                                                          |
+| `options.fetchOptions`                                                                                                                                                         | [RequestInit](https://developer.mozilla.org/en-US/docs/Web/API/Request/Request#options)                                                                                        | :heavy_minus_sign:                                                                                                                                                             | Options that are passed to the underlying HTTP request. This can be used to inject extra headers for examples. All `Request` options, except `method` and `body`, are allowed. |
+| `options.retries`                                                                                                                                                              | [RetryConfig](../../lib/utils/retryconfig.md)                                                                                                                                  | :heavy_minus_sign:                                                                                                                                                             | Enables retrying HTTP requests under certain failure conditions.                                                                                                               |
+
+### Response
+
+**Promise\<[models.SpendResponse](../../models/spend-response.md)\>**
 
 ### Errors
 

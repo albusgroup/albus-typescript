@@ -16,7 +16,7 @@ import { SDKValidationError } from "./errors/sdk-validation-error.js";
  *
  * @remarks
  */
-export const Kind = {
+export const CreditLedgerEntryKind = {
   Purchase: "purchase",
   Grant: "grant",
   UsageBurn: "usage_burn",
@@ -27,7 +27,7 @@ export const Kind = {
  *
  * @remarks
  */
-export type Kind = OpenEnum<typeof Kind>;
+export type CreditLedgerEntryKind = OpenEnum<typeof CreditLedgerEntryKind>;
 
 export type CreditLedgerEntry = {
   /**
@@ -35,7 +35,7 @@ export type CreditLedgerEntry = {
    *
    * @remarks
    */
-  kind: Kind;
+  kind: CreditLedgerEntryKind;
   /**
    * The signed decimal USD amount the entry moved the balance by: positive for money in, negative for usage charged.
    *
@@ -55,8 +55,10 @@ export type CreditLedgerEntry = {
 };
 
 /** @internal */
-export const Kind$inboundSchema: z.ZodMiniType<Kind, unknown> = openEnums
-  .inboundSchema(Kind);
+export const CreditLedgerEntryKind$inboundSchema: z.ZodMiniType<
+  CreditLedgerEntryKind,
+  unknown
+> = openEnums.inboundSchema(CreditLedgerEntryKind);
 
 /** @internal */
 export const CreditLedgerEntry$inboundSchema: z.ZodMiniType<
@@ -64,7 +66,7 @@ export const CreditLedgerEntry$inboundSchema: z.ZodMiniType<
   unknown
 > = z.pipe(
   z.object({
-    kind: Kind$inboundSchema,
+    kind: CreditLedgerEntryKind$inboundSchema,
     amount_usd: types.string(),
     reference: types.string(),
     created_at: types.date(),

@@ -13,6 +13,7 @@ export * from "./get-agent.js";
 export * from "./get-secret.js";
 export * from "./get-session-audit.js";
 export * from "./get-session.js";
+export * from "./get-spend.js";
 export * from "./get-token.js";
 export * from "./get-trace.js";
 export * from "./list-credit-ledger.js";

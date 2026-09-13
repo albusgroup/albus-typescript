@@ -28,7 +28,7 @@ Without `apiKey`, the client reads `ALBUS_API_KEY`; without either, on Node
 it signs requests with the login session that `albus login` stored under
 `~/.config/albus/` (honoring `ALBUS_CONFIG_DIR` and `XDG_CONFIG_HOME`),
 acting in the organization selected there. Production requests use
-`https://albus.sh/api` by default; pass `serverURL` to target another
+`https://albus.sh/api/v1` by default; pass `serverURL` to target another
 deployment.
 
 <!-- Start Summary [summary] -->
@@ -176,6 +176,7 @@ run();
 * [createCheckout](docs/sdks/billing/README.md#createcheckout) - Buy prepaid credits
 * [getCreditBalance](docs/sdks/billing/README.md#getcreditbalance) - Read your credit balance
 * [listCreditLedger](docs/sdks/billing/README.md#listcreditledger) - List your credit history
+* [getSpend](docs/sdks/billing/README.md#getspend) - Get your spend breakdown
 
 ### [Health](docs/sdks/health/README.md)
 
@@ -259,6 +260,7 @@ To read more about standalone functions, check [FUNCTIONS.md](./FUNCTIONS.md).
 - [`authWhoami`](docs/sdks/auth/README.md#whoami) - Get the authenticated caller
 - [`billingCreateCheckout`](docs/sdks/billing/README.md#createcheckout) - Buy prepaid credits
 - [`billingGetCreditBalance`](docs/sdks/billing/README.md#getcreditbalance) - Read your credit balance
+- [`billingGetSpend`](docs/sdks/billing/README.md#getspend) - Get your spend breakdown
 - [`billingListCreditLedger`](docs/sdks/billing/README.md#listcreditledger) - List your credit history
 - [`healthHealth`](docs/sdks/health/README.md#health) - Check service health
 - [`invitesCreateInvite`](docs/sdks/invites/README.md#createinvite) - Invite a user by email
@@ -424,17 +426,17 @@ run();
 
 
 **Inherit from [`AlbusError`](./src/models/errors/albus-error.ts)**:
-* [`ErrBadRequest`](./src/models/errors/err-bad-request.ts): Status code `400`. Applicable to 19 of 38 methods.*
-* [`ErrNotFound`](./src/models/errors/err-not-found.ts): Status code `404`. Applicable to 17 of 38 methods.*
-* [`ErrForbidden`](./src/models/errors/err-forbidden.ts): Forbidden - the caller is not an admin. Status code `403`. Applicable to 9 of 38 methods.*
-* [`ErrConflict`](./src/models/errors/err-conflict.ts): Status code `409`. Applicable to 5 of 38 methods.*
-* [`ErrUnavailable`](./src/models/errors/err-unavailable.ts): Status code `503`. Applicable to 2 of 38 methods.*
-* [`ErrInsufficientCredit`](./src/models/errors/err-insufficient-credit.ts): The organization has no credit balance remaining. Status code `402`. Applicable to 1 of 38 methods.*
-* [`ErrInvocationCanceled`](./src/models/errors/err-invocation-canceled.ts): The invocation was canceled instead of producing a response (only possible while waiting for a response, or when replaying a canceled invocation). Status code `410`. Applicable to 1 of 38 methods.*
-* [`ErrLocked`](./src/models/errors/err-locked.ts): Another invocation is currently running for this session. Status code `423`. Applicable to 1 of 38 methods.*
-* [`ErrInvocationFailed`](./src/models/errors/err-invocation-failed.ts): The invocation failed instead of producing a response (only possible while waiting for a response, or when replaying a failed invocation). The body carries the failure kind and detail. Status code `502`. Applicable to 1 of 38 methods.*
-* [`HealthResponseError`](./src/models/errors/health-response-error.ts): Service is healthy. Status code `503`. Applicable to 1 of 38 methods.*
-* [`ErrTimeout`](./src/models/errors/err-timeout.ts): Timed out waiting for the assistant response. Status code `504`. Applicable to 1 of 38 methods.*
+* [`ErrBadRequest`](./src/models/errors/err-bad-request.ts): Status code `400`. Applicable to 20 of 39 methods.*
+* [`ErrNotFound`](./src/models/errors/err-not-found.ts): Status code `404`. Applicable to 17 of 39 methods.*
+* [`ErrForbidden`](./src/models/errors/err-forbidden.ts): Forbidden - the caller is not an admin. Status code `403`. Applicable to 9 of 39 methods.*
+* [`ErrConflict`](./src/models/errors/err-conflict.ts): Status code `409`. Applicable to 5 of 39 methods.*
+* [`ErrUnavailable`](./src/models/errors/err-unavailable.ts): Status code `503`. Applicable to 2 of 39 methods.*
+* [`ErrInsufficientCredit`](./src/models/errors/err-insufficient-credit.ts): The organization has no credit balance remaining. Status code `402`. Applicable to 1 of 39 methods.*
+* [`ErrInvocationCanceled`](./src/models/errors/err-invocation-canceled.ts): The invocation was canceled instead of producing a response (only possible while waiting for a response, or when replaying a canceled invocation). Status code `410`. Applicable to 1 of 39 methods.*
+* [`ErrLocked`](./src/models/errors/err-locked.ts): Another invocation is currently running for this session. Status code `423`. Applicable to 1 of 39 methods.*
+* [`ErrInvocationFailed`](./src/models/errors/err-invocation-failed.ts): The invocation failed instead of producing a response (only possible while waiting for a response, or when replaying a failed invocation). The body carries the failure kind and detail. Status code `502`. Applicable to 1 of 39 methods.*
+* [`HealthResponseError`](./src/models/errors/health-response-error.ts): Service is healthy. Status code `503`. Applicable to 1 of 39 methods.*
+* [`ErrTimeout`](./src/models/errors/err-timeout.ts): Timed out waiting for the assistant response. Status code `504`. Applicable to 1 of 39 methods.*
 * [`ResponseValidationError`](./src/models/errors/response-validation-error.ts): Type mismatch between the data returned from the server and the structure expected by the SDK. See `error.rawValue` for the raw value and `error.pretty()` for a nicely formatted multi-line string.
 
 </details>
@@ -452,7 +454,7 @@ The default server can be overridden globally by passing a URL to the `serverURL
 import { Albus } from "@albus-ts/sdk";
 
 const albus = new Albus({
-  serverURL: "https://albus.sh/api",
+  serverURL: "https://albus.sh/api/v1",
   apiKey: process.env["ALBUS_API_KEY"] ?? "",
 });
 

@@ -4,6 +4,7 @@
 
 import { billingCreateCheckout } from "../funcs/billing-create-checkout.js";
 import { billingGetCreditBalance } from "../funcs/billing-get-credit-balance.js";
+import { billingGetSpend } from "../funcs/billing-get-spend.js";
 import { billingListCreditLedger } from "../funcs/billing-list-credit-ledger.js";
 import { ClientSDK, RequestOptions } from "../lib/sdks.js";
 import * as models from "../models/index.js";
@@ -54,6 +55,23 @@ export class Billing extends ClientSDK {
     options?: RequestOptions,
   ): Promise<models.ListCreditLedgerResponse> {
     return unwrapAsync(billingListCreditLedger(
+      this,
+      request,
+      options,
+    ));
+  }
+
+  /**
+   * Get your spend breakdown
+   *
+   * @remarks
+   * Returns what your usage cost, split by UTC day and by what was used: each model at each provider, and compute time. Each line carries the quantities it was charged for.
+   */
+  async getSpend(
+    request?: operations.GetSpendRequest | undefined,
+    options?: RequestOptions,
+  ): Promise<models.SpendResponse> {
+    return unwrapAsync(billingGetSpend(
       this,
       request,
       options,

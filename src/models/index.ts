@@ -54,6 +54,8 @@ export * from "./session-response.js";
 export * from "./session-state.js";
 export * from "./session.js";
 export * from "./set-organization-member-role-request.js";
+export * from "./spend-line.js";
+export * from "./spend-response.js";
 export * from "./terminal-tool.js";
 export * from "./token-usage.js";
 export * from "./token.js";
