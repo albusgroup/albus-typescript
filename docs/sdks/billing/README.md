@@ -237,7 +237,7 @@ run();
 
 ## getSpend
 
-Returns what your usage cost, split by UTC day and by what was used: each model at each provider, and compute time. Each line carries the quantities it was charged for.
+Returns what your usage cost, split by UTC day and by what was used: each model at each provider, and compute time. Model usage made with your own provider credential is listed separately and not charged to your credits. Each line carries the quantities it was rated from.
 
 
 ### Example Usage

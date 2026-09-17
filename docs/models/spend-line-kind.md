@@ -1,6 +1,6 @@
 # SpendLineKind
 
-What was used: a model, or the compute an invocation ran on.
+What was used: a model billed to your credits, a model called with your own provider credential, or the compute an invocation ran on.
 
 
 ## Example Usage
@@ -16,5 +16,5 @@ let value: SpendLineKind = "hardware";
 ## Values
 
 ```typescript
-"model" | "hardware" | Unrecognized<string>
+"model" | "model_byok" | "hardware" | Unrecognized<string>
 ```

@@ -429,7 +429,7 @@ run();
 * [`ErrBadRequest`](./src/models/errors/err-bad-request.ts): Status code `400`. Applicable to 20 of 39 methods.*
 * [`ErrNotFound`](./src/models/errors/err-not-found.ts): Status code `404`. Applicable to 17 of 39 methods.*
 * [`ErrForbidden`](./src/models/errors/err-forbidden.ts): Forbidden - the caller is not an admin. Status code `403`. Applicable to 9 of 39 methods.*
-* [`ErrConflict`](./src/models/errors/err-conflict.ts): Status code `409`. Applicable to 5 of 39 methods.*
+* [`ErrConflict`](./src/models/errors/err-conflict.ts): Status code `409`. Applicable to 6 of 39 methods.*
 * [`ErrUnavailable`](./src/models/errors/err-unavailable.ts): Status code `503`. Applicable to 2 of 39 methods.*
 * [`ErrInsufficientCredit`](./src/models/errors/err-insufficient-credit.ts): The organization has no credit balance remaining. Status code `402`. Applicable to 1 of 39 methods.*
 * [`ErrInvocationCanceled`](./src/models/errors/err-invocation-canceled.ts): The invocation was canceled instead of producing a response (only possible while waiting for a response, or when replaying a canceled invocation). Status code `410`. Applicable to 1 of 39 methods.*

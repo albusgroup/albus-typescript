@@ -24,7 +24,9 @@ export type SpendResponse = {
    */
   until: Date;
   /**
-   * The sum of every line, as a decimal USD string.
+   * The sum of every line charged to your credits, as a decimal USD string. Excludes model_byok lines.
+   *
+   * @remarks
    */
   totalUsd: string;
   /**

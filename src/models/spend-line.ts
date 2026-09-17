@@ -12,16 +12,17 @@ import * as types from "../types/primitives.js";
 import { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 /**
- * What was used: a model, or the compute an invocation ran on.
+ * What was used: a model billed to your credits, a model called with your own provider credential, or the compute an invocation ran on.
  *
  * @remarks
  */
 export const SpendLineKind = {
   Model: "model",
+  ModelByok: "model_byok",
   Hardware: "hardware",
 } as const;
 /**
- * What was used: a model, or the compute an invocation ran on.
+ * What was used: a model billed to your credits, a model called with your own provider credential, or the compute an invocation ran on.
  *
  * @remarks
  */
@@ -33,19 +34,21 @@ export type SpendLine = {
    */
   day: Date;
   /**
-   * What was used: a model, or the compute an invocation ran on.
+   * What was used: a model billed to your credits, a model called with your own provider credential, or the compute an invocation ran on.
    *
    * @remarks
    */
   kind: SpendLineKind;
   /**
-   * The provider that served the model. Present on model lines.
+   * The provider that served the model. Present on model and model_byok lines.
    *
    * @remarks
    */
   providerName?: string | undefined;
   /**
-   * The model that was called. Present on model lines.
+   * The model that was called. Present on model and model_byok lines.
+   *
+   * @remarks
    */
   modelName?: string | undefined;
   /**
@@ -55,7 +58,7 @@ export type SpendLine = {
    */
   sku?: string | undefined;
   /**
-   * What this line cost, as a decimal USD string. Zero when the usage was free.
+   * What this line cost, as a decimal USD string. Zero when the usage was free. On a model_byok line this is the usage valued at our model prices for reference; you paid the provider directly and no credits were charged.
    *
    * @remarks
    */

@@ -156,6 +156,7 @@ run();
 | ------------------------ | ------------------------ | ------------------------ |
 | errors.ErrBadRequest     | 400                      | application/json         |
 | errors.ErrUnauthorized   | 401                      | application/json         |
+| errors.ErrConflict       | 409                      | application/json         |
 | errors.AlbusDefaultError | 4XX, 5XX                 | \*/\*                    |
 
 ## getSecret

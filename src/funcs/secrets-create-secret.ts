@@ -39,6 +39,7 @@ export function secretsCreateSecret(
     models.Secret,
     | errors.ErrBadRequest
     | errors.ErrUnauthorized
+    | errors.ErrConflict
     | AlbusError
     | ResponseValidationError
     | ConnectionError
@@ -66,6 +67,7 @@ async function $do(
       models.Secret,
       | errors.ErrBadRequest
       | errors.ErrUnauthorized
+      | errors.ErrConflict
       | AlbusError
       | ResponseValidationError
       | ConnectionError
@@ -150,6 +152,7 @@ async function $do(
     models.Secret,
     | errors.ErrBadRequest
     | errors.ErrUnauthorized
+    | errors.ErrConflict
     | AlbusError
     | ResponseValidationError
     | ConnectionError
@@ -162,6 +165,7 @@ async function $do(
     M.json(200, models.Secret$inboundSchema),
     M.jsonErr(400, errors.ErrBadRequest$inboundSchema),
     M.jsonErr(401, errors.ErrUnauthorized$inboundSchema),
+    M.jsonErr(409, errors.ErrConflict$inboundSchema),
     M.fail("4XX"),
     M.fail("5XX"),
   )(response, req, { extraFields: responseFields });
