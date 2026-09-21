@@ -1,4 +1,4 @@
-# TerminalTool
+# ComputerTool
 
 Offers the model a persistent Linux sandbox to run commands in.
 
@@ -6,9 +6,9 @@ Offers the model a persistent Linux sandbox to run commands in.
 ## Example Usage
 
 ```typescript
-import { TerminalTool } from "@albus-ts/sdk/models";
+import { ComputerTool } from "@albus-ts/sdk/models";
 
-let value: TerminalTool = {};
+let value: ComputerTool = {};
 ```
 
 ## Fields

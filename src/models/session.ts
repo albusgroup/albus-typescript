@@ -43,6 +43,12 @@ export type Session = {
   agentRevision?: string | undefined;
   createdAt: Date;
   updatedAt: Date;
+  /**
+   * When the session was deleted. A deleted session keeps its audit log but accepts no new invocations. Omitted while the session is live.
+   *
+   * @remarks
+   */
+  deletedAt?: Date | undefined;
 };
 
 /** @internal */
@@ -56,6 +62,7 @@ export const Session$inboundSchema: z.ZodMiniType<Session, unknown> = z.pipe(
     agent_revision: types.optional(types.string()),
     created_at: types.date(),
     updated_at: types.date(),
+    deleted_at: types.optional(types.date()),
   }),
   z.transform((v) => {
     return remap$(v, {
@@ -65,6 +72,7 @@ export const Session$inboundSchema: z.ZodMiniType<Session, unknown> = z.pipe(
       "agent_revision": "agentRevision",
       "created_at": "createdAt",
       "updated_at": "updatedAt",
+      "deleted_at": "deletedAt",
     });
   }),
 );

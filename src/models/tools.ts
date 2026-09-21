@@ -7,13 +7,13 @@ import { remap as remap$ } from "../lib/primitives.js";
 import { safeParse } from "../lib/schemas.js";
 import { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
-import { SDKValidationError } from "./errors/sdk-validation-error.js";
 import {
-  TerminalTool,
-  TerminalTool$inboundSchema,
-  TerminalTool$Outbound,
-  TerminalTool$outboundSchema,
-} from "./terminal-tool.js";
+  ComputerTool,
+  ComputerTool$inboundSchema,
+  ComputerTool$Outbound,
+  ComputerTool$outboundSchema,
+} from "./computer-tool.js";
+import { SDKValidationError } from "./errors/sdk-validation-error.js";
 import {
   WebSearchTool,
   WebSearchTool$inboundSchema,
@@ -36,14 +36,14 @@ export type Tools = {
    *
    * @remarks
    */
-  terminal?: TerminalTool | undefined;
+  computer?: ComputerTool | undefined;
 };
 
 /** @internal */
 export const Tools$inboundSchema: z.ZodMiniType<Tools, unknown> = z.pipe(
   z.object({
     web_search: types.optional(WebSearchTool$inboundSchema),
-    terminal: types.optional(TerminalTool$inboundSchema),
+    computer: types.optional(ComputerTool$inboundSchema),
   }),
   z.transform((v) => {
     return remap$(v, {
@@ -54,7 +54,7 @@ export const Tools$inboundSchema: z.ZodMiniType<Tools, unknown> = z.pipe(
 /** @internal */
 export type Tools$Outbound = {
   web_search?: WebSearchTool$Outbound | undefined;
-  terminal?: TerminalTool$Outbound | undefined;
+  computer?: ComputerTool$Outbound | undefined;
 };
 
 /** @internal */
@@ -62,7 +62,7 @@ export const Tools$outboundSchema: z.ZodMiniType<Tools$Outbound, Tools> = z
   .pipe(
     z.object({
       webSearch: z.optional(WebSearchTool$outboundSchema),
-      terminal: z.optional(TerminalTool$outboundSchema),
+      computer: z.optional(ComputerTool$outboundSchema),
     }),
     z.transform((v) => {
       return remap$(v, {

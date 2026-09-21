@@ -67,6 +67,9 @@ export class Sessions extends ClientSDK {
 
   /**
    * Delete a session
+   *
+   * @remarks
+   * Removes the session's messages, invocations, and external resources, marks it deleted, and keeps its audit log readable.
    */
   async deleteSession(
     request: operations.DeleteSessionRequest,

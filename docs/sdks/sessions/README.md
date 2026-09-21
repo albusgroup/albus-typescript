@@ -264,7 +264,8 @@ run();
 
 ## deleteSession
 
-Delete a session
+Removes the session's messages, invocations, and external resources, marks it deleted, and keeps its audit log readable.
+
 
 ### Example Usage
 
@@ -335,6 +336,7 @@ run();
 | ------------------------ | ------------------------ | ------------------------ |
 | errors.ErrUnauthorized   | 401                      | application/json         |
 | errors.ErrNotFound       | 404                      | application/json         |
+| errors.ErrConflict       | 409                      | application/json         |
 | errors.AlbusDefaultError | 4XX, 5XX                 | \*/\*                    |
 
 ## cancelSession

@@ -20,7 +20,7 @@ export type ModelMeta = {
    */
   name: string;
   /**
-   * Provider serving this model (e.g. "gemini", or "open_weight" for open-weight models).
+   * Provider serving this model (e.g. "google_agent_studio", or "open_weight" for open-weight models).
    *
    * @remarks
    */

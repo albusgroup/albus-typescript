@@ -29,6 +29,9 @@ import { Result } from "../types/fp.js";
 
 /**
  * Delete a session
+ *
+ * @remarks
+ * Removes the session's messages, invocations, and external resources, marks it deleted, and keeps its audit log readable.
  */
 export function sessionsDeleteSession(
   client: AlbusCore,
@@ -39,6 +42,7 @@ export function sessionsDeleteSession(
     void,
     | errors.ErrUnauthorized
     | errors.ErrNotFound
+    | errors.ErrConflict
     | AlbusError
     | ResponseValidationError
     | ConnectionError
@@ -66,6 +70,7 @@ async function $do(
       void,
       | errors.ErrUnauthorized
       | errors.ErrNotFound
+      | errors.ErrConflict
       | AlbusError
       | ResponseValidationError
       | ConnectionError
@@ -155,6 +160,7 @@ async function $do(
     void,
     | errors.ErrUnauthorized
     | errors.ErrNotFound
+    | errors.ErrConflict
     | AlbusError
     | ResponseValidationError
     | ConnectionError
@@ -167,6 +173,7 @@ async function $do(
     M.nil(204, z.void()),
     M.jsonErr(401, errors.ErrUnauthorized$inboundSchema),
     M.jsonErr(404, errors.ErrNotFound$inboundSchema),
+    M.jsonErr(409, errors.ErrConflict$inboundSchema),
     M.fail("4XX"),
     M.fail("5XX"),
   )(response, req, { extraFields: responseFields });
