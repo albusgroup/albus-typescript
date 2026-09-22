@@ -22,6 +22,10 @@ export type Organization = {
    * When the organization was created.
    */
   createdAt: Date;
+  /**
+   * OpenID issuer of the identity tokens Albus presents to the organization's MCP servers; verifiers use it as the expected `iss` claim and to discover the signing keys.
+   */
+  issuer: string;
 };
 
 /** @internal */
@@ -31,6 +35,7 @@ export const Organization$inboundSchema: z.ZodMiniType<Organization, unknown> =
       id: types.string(),
       name: types.string(),
       created_at: types.date(),
+      issuer: types.string(),
     }),
     z.transform((v) => {
       return remap$(v, {

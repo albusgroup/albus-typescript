@@ -8,6 +8,12 @@ import { safeParse } from "../lib/schemas.js";
 import { Result as SafeParseResult } from "../types/fp.js";
 import * as types from "../types/primitives.js";
 import { SDKValidationError } from "./errors/sdk-validation-error.js";
+import {
+  MCPServerAuth,
+  MCPServerAuth$inboundSchema,
+  MCPServerAuth$Outbound,
+  MCPServerAuth$outboundSchema,
+} from "./mcp-server-auth.js";
 
 export type MCPServer = {
   /**
@@ -21,7 +27,7 @@ export type MCPServer = {
    */
   url: string;
   /**
-   * HTTP headers sent to the server. Values are secret references (e.g. "albus.sh/secrets/github-mcp"), not raw secret values.
+   * HTTP headers sent to the server, with secret values as secret references (e.g. "albus.sh/secrets/github-mcp"); this is also where to send an API key or other non-Bearer credential.
    *
    * @remarks
    */
@@ -32,6 +38,12 @@ export type MCPServer = {
    * @remarks
    */
   allowedTools?: Array<string> | undefined;
+  /**
+   * How Albus authenticates to the server. Omit for the default, AlbusIdentityJWTAuth, which needs no credential from you; see that schema for what the server must verify. Setting "headers.Authorization" instead sends that header verbatim.
+   *
+   * @remarks
+   */
+  auth?: MCPServerAuth | undefined;
 };
 
 /** @internal */
@@ -42,6 +54,7 @@ export const MCPServer$inboundSchema: z.ZodMiniType<MCPServer, unknown> = z
       url: types.string(),
       headers: types.optional(z.record(z.string(), types.string())),
       allowed_tools: types.optional(z.array(types.string())),
+      auth: types.optional(MCPServerAuth$inboundSchema),
     }),
     z.transform((v) => {
       return remap$(v, {
@@ -55,6 +68,7 @@ export type MCPServer$Outbound = {
   url: string;
   headers?: { [k: string]: string } | undefined;
   allowed_tools?: Array<string> | undefined;
+  auth?: MCPServerAuth$Outbound | undefined;
 };
 
 /** @internal */
@@ -67,6 +81,7 @@ export const MCPServer$outboundSchema: z.ZodMiniType<
     url: z.string(),
     headers: z.optional(z.record(z.string(), z.string())),
     allowedTools: z.optional(z.array(z.string())),
+    auth: z.optional(MCPServerAuth$outboundSchema),
   }),
   z.transform((v) => {
     return remap$(v, {

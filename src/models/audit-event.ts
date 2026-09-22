@@ -12,7 +12,7 @@ import * as types from "../types/primitives.js";
 import { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 /**
- * The kind of event (e.g. "agent_invocation" for the request that started the invocation, "agent_step" for one turn, how it ended, and how long it took, "model_call" for a model call and the tool calls it requested, "tool_call" for an executed tool call and its output). Events recorded earlier use "llm_call", "tool_result", "run_failed" and "run_succeeded" for four of those kinds.
+ * The kind of event (e.g. "agent_invocation" for the request that started the invocation, "agent_step" for one turn, how it ended, and how long it took, "model_call" for a model call and the tool calls it requested, "tool_call" for an executed tool call and its output). "mcp_auth_rejected" records that the named MCP server rejected the credential the agent presented. Events recorded earlier use "llm_call", "tool_result", "run_failed" and "run_succeeded" for four of those kinds.
  *
  * @remarks
  */
@@ -21,6 +21,7 @@ export const AuditEventType = {
   AgentStep: "agent_step",
   ModelCall: "model_call",
   ToolCall: "tool_call",
+  McpAuthRejected: "mcp_auth_rejected",
   HarnessExit: "harness_exit",
   InvocationFailed: "invocation_failed",
   InvocationSucceeded: "invocation_succeeded",
@@ -30,7 +31,7 @@ export const AuditEventType = {
   RunSucceeded: "run_succeeded",
 } as const;
 /**
- * The kind of event (e.g. "agent_invocation" for the request that started the invocation, "agent_step" for one turn, how it ended, and how long it took, "model_call" for a model call and the tool calls it requested, "tool_call" for an executed tool call and its output). Events recorded earlier use "llm_call", "tool_result", "run_failed" and "run_succeeded" for four of those kinds.
+ * The kind of event (e.g. "agent_invocation" for the request that started the invocation, "agent_step" for one turn, how it ended, and how long it took, "model_call" for a model call and the tool calls it requested, "tool_call" for an executed tool call and its output). "mcp_auth_rejected" records that the named MCP server rejected the credential the agent presented. Events recorded earlier use "llm_call", "tool_result", "run_failed" and "run_succeeded" for four of those kinds.
  *
  * @remarks
  */
@@ -56,7 +57,7 @@ export type AuditEvent = {
    */
   agentRevision?: string | undefined;
   /**
-   * The kind of event (e.g. "agent_invocation" for the request that started the invocation, "agent_step" for one turn, how it ended, and how long it took, "model_call" for a model call and the tool calls it requested, "tool_call" for an executed tool call and its output). Events recorded earlier use "llm_call", "tool_result", "run_failed" and "run_succeeded" for four of those kinds.
+   * The kind of event (e.g. "agent_invocation" for the request that started the invocation, "agent_step" for one turn, how it ended, and how long it took, "model_call" for a model call and the tool calls it requested, "tool_call" for an executed tool call and its output). "mcp_auth_rejected" records that the named MCP server rejected the credential the agent presented. Events recorded earlier use "llm_call", "tool_result", "run_failed" and "run_succeeded" for four of those kinds.
    *
    * @remarks
    */

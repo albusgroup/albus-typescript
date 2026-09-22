@@ -11,7 +11,7 @@ let value: ListAuditEventsResponse = {
       id: "<id>",
       sessionId: "<id>",
       invocationKey: "<value>",
-      type: "invocation_failed",
+      type: "harness_exit",
       payload: {
         "key": "<value>",
       },

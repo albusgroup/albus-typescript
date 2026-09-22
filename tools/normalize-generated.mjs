@@ -1,6 +1,7 @@
 import {
   cpSync,
   existsSync,
+  readdirSync,
   readFileSync,
   rmSync,
   writeFileSync,
@@ -103,6 +104,51 @@ const generatedSourceEdits = {
   ],
 };
 
+// A discriminated union parses an unrecognized variant into
+// `{ [discriminator]: "UNKNOWN", raw, isUnknown }` so a read from a newer
+// server keeps working, but the generated outbound schema knows only the
+// recognized variants and rejects that value. Passing the raw payload through
+// instead means a value the SDK read reaches the API exactly as the server
+// sent it, never as the wrapper.
+const openUnionInboundPattern =
+  /^> = discriminatedUnion\("([^"]+)", \{$/mu;
+const openUnionOutboundPattern =
+  /^(export const (\w+)\$outboundSchema: z\.ZodMiniType<\n  \w+\$Outbound,\n  \w+\n> = z\.union\(\[\n(?:  \w+\$outboundSchema,\n)+)(\]\);)$/mu;
+
+function normalizeOpenUnions() {
+  const modelsDirectory = join(repositoryRoot, "src/models");
+  for (const entry of readdirSync(modelsDirectory)) {
+    if (!entry.endsWith(".ts")) continue;
+    const path = join(modelsDirectory, entry);
+    const content = readFileSync(path, "utf8");
+    if (!content.includes("= discriminatedUnion(")) continue;
+    if (content.includes("discriminatedUnionTypes.isUnknown")) continue;
+
+    const discriminator = content.match(openUnionInboundPattern)?.[1];
+    if (!discriminator) {
+      throw new Error(`expected a discriminatedUnion discriminator in ${entry}`);
+    }
+    if (!openUnionOutboundPattern.test(content)) {
+      throw new Error(`expected a z.union outbound schema in ${entry}`);
+    }
+
+    writeFileSync(
+      path,
+      content.replace(
+        openUnionOutboundPattern,
+        (_, head, name, tail) =>
+          `${head}  z.pipe(
+    z.custom<discriminatedUnionTypes.Unknown<${JSON.stringify(discriminator)}>>(
+      discriminatedUnionTypes.isUnknown,
+    ),
+    z.transform((value) => value.raw as ${name}$Outbound),
+  ),
+${tail}`,
+      ),
+    );
+  }
+}
+
 function normalizeGeneratedSource() {
   for (const [relativePath, edits] of Object.entries(generatedSourceEdits)) {
     const path = join(repositoryRoot, relativePath);
@@ -201,6 +247,7 @@ function main() {
   normalizeGitignore();
   normalizePackageJson();
   normalizeGeneratedSource();
+  normalizeOpenUnions();
 
   for (const generatedDirectory of ["examples", ".devcontainer"]) {
     rmSync(join(repositoryRoot, generatedDirectory), {

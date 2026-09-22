@@ -7,6 +7,10 @@ import test from "node:test";
 import { Albus, HTTPClient } from "../esm/index.js";
 import { resetEnv } from "../esm/lib/env.js";
 import { ErrUnauthorized } from "../esm/models/errors/index.js";
+import {
+  mcpServerFromJSON,
+  mcpServerToJSON,
+} from "../esm/models/mcp-server.js";
 
 const tmpdir = join(osTmpdir(), "albus-sdk-test-");
 
@@ -128,6 +132,83 @@ test("defaults a run to a 30-minute wait", async () => {
       userPrompt: "hello",
       agentName: "support-triage",
       agent: { model: { name: "gemini-2.5-pro" } },
+    },
+  });
+
+  assert.equal(response.result.session.state, "RUNNING");
+});
+
+test("sends each MCP server auth variant by type and omits an unset one", async () => {
+  const httpClient = new HTTPClient({
+    fetcher: async (request) => {
+      const body = await request.json();
+      assert.deepEqual(body.agent.mcp_servers, [
+        { name: "plain", url: "https://mcp.example/plain" },
+        {
+          name: "identity",
+          url: "https://mcp.example/identity",
+          auth: { type: "albus_identity_jwt" },
+        },
+        {
+          name: "idp",
+          url: "https://mcp.example/idp",
+          auth: {
+            type: "oauth2_client_credentials",
+            token_url: "https://idp.example/oauth/token",
+            client_id: "albus",
+            client_secret: "albus.sh/secrets/idp-client-secret",
+            audience: "https://mcp.example",
+            scopes: ["tools:read"],
+          },
+        },
+        {
+          name: "static",
+          url: "https://mcp.example/static",
+          auth: { type: "bearer", token: "albus.sh/secrets/mcp-token" },
+        },
+      ]);
+      assert.equal("auth" in body.agent.mcp_servers[0], false);
+      return jsonResponse({ session: sessionBody("RUNNING") });
+    },
+  });
+  const albus = new Albus({
+    httpClient,
+    apiKey: "organization-key",
+  });
+
+  const response = await albus.sessions.runSession({
+    id: "demo",
+    body: {
+      userPrompt: "hello",
+      agentName: "support-triage",
+      agent: {
+        model: { name: "gemini-2.5-pro" },
+        mcpServers: [
+          { name: "plain", url: "https://mcp.example/plain" },
+          {
+            name: "identity",
+            url: "https://mcp.example/identity",
+            auth: { type: "albus_identity_jwt" },
+          },
+          {
+            name: "idp",
+            url: "https://mcp.example/idp",
+            auth: {
+              type: "oauth2_client_credentials",
+              tokenUrl: "https://idp.example/oauth/token",
+              clientId: "albus",
+              clientSecret: "albus.sh/secrets/idp-client-secret",
+              audience: "https://mcp.example",
+              scopes: ["tools:read"],
+            },
+          },
+          {
+            name: "static",
+            url: "https://mcp.example/static",
+            auth: { type: "bearer", token: "albus.sh/secrets/mcp-token" },
+          },
+        ],
+      },
     },
   });
 
@@ -361,4 +442,32 @@ test("a missing or malformed credentials file means no credential", async () => 
       assert.equal(probe.seen.authorization, null);
     },
   );
+});
+
+test("an unknown MCP server auth variant round-trips as the payload it was read as", () => {
+  const server = {
+    name: "crm",
+    url: "https://mcp.example.com/api/mcp",
+    auth: { type: "mtls", cert: "albus.sh/secrets/crm-cert" },
+  };
+
+  const parsed = mcpServerFromJSON(JSON.stringify(server));
+  assert.ok(parsed.ok);
+  assert.equal(parsed.value.auth.type, "UNKNOWN");
+  assert.equal(parsed.value.auth.isUnknown, true);
+  assert.deepEqual(parsed.value.auth.raw, server.auth);
+
+  assert.deepEqual(JSON.parse(mcpServerToJSON(parsed.value)), server);
+});
+
+test("a known MCP server auth variant serializes as itself", () => {
+  const server = {
+    name: "crm",
+    url: "https://mcp.example.com/api/mcp",
+    auth: { type: "bearer", token: "albus.sh/secrets/crm-token" },
+  };
+
+  const parsed = mcpServerFromJSON(JSON.stringify(server));
+  assert.ok(parsed.ok);
+  assert.deepEqual(JSON.parse(mcpServerToJSON(parsed.value)), server);
 });
