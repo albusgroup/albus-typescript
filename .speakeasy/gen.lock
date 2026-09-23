@@ -4,13 +4,13 @@ management:
   docVersion: 1.0.0
   speakeasyVersion: 1.791.0
   generationVersion: 2.924.0
-  releaseVersion: 0.17.0
+  releaseVersion: 0.17.1
   repoURL: https://github.com/albusgroup/albus-typescript
   installationURL: https://github.com/albusgroup/albus-typescript
 persistentEdits:
-  generation_id: 2869ebc3-3eb3-43b8-95c9-fa767cc9f447
-  pristine_commit_hash: 54b26e927f7fd8f8b9b3fb9f0223e197acf31eee
-  pristine_tree_hash: c668afb9acee5071eef5fadac2b44b6c6a83e3a9
+  generation_id: e3cb704a-0e41-4e3e-b64e-6fdb181dc664
+  pristine_commit_hash: a59af2598ff6ca24fc1a379746b9c9edaadc71be
+  pristine_tree_hash: 73f9d94b811e236cbc1832882d3a47688c61e2b3
 features:
   typescript:
     additionalDependencies: 0.1.0
@@ -265,8 +265,8 @@ trackedFiles:
     pristine_git_object: ce031df7e3d3027c9cf0fc31a2abb4f699453220
   docs/models/mcp-server.md:
     id: 9dcbeaba18ad
-    last_write_checksum: sha1:c2246c386f46a596ce89d0fc5313fb763b7ead57
-    pristine_git_object: 5be87bbce583233d15fdf478c57c7496f49198a8
+    last_write_checksum: sha1:2c1bc121384fcef49ee1c954077cbf1c1789ef88
+    pristine_git_object: 79b7fa405707aca04805f83ea0a3faa315dab745
   docs/models/memory-config.md:
     id: fe4458f9ced9
     last_write_checksum: sha1:3a41026a283412cbe92d93362afe233d547d425b
@@ -605,12 +605,12 @@ trackedFiles:
     pristine_git_object: 2e3fed869cc32e2acfae29aecca411b6351f351b
   jsr.json:
     id: 7f6ab7767282
-    last_write_checksum: sha1:79c8a2af904ed7cf47c2c11041c3905d41fed14b
-    pristine_git_object: 7c3584033d044ae57319e6ffe6ec99e0fcda925f
+    last_write_checksum: sha1:158d46eb9062f481362ff34bb65effe477d5a1a6
+    pristine_git_object: a9a25cdbf2217eb2371744f8eaf849daacd57168
   package.json:
     id: 7030d0b2f71b
-    last_write_checksum: sha1:a5aafb88494147b2e104f0a22c484fde1d2dbe23
-    pristine_git_object: 1ef0daafbe5209551195ad0dfbc2f831b9d0ebf2
+    last_write_checksum: sha1:c4267077cf9640dd61632a86f19dd2c513557616
+    pristine_git_object: db7b873ef62012ec2017837eb1ee5ef232637ae7
   src/core.ts:
     id: f431fdbcd144
     last_write_checksum: sha1:5550b787a3b13b658cec1f8b17f6f633ba218412
@@ -793,8 +793,8 @@ trackedFiles:
     pristine_git_object: 44be0eae8246521b230e8e711a88eff738fc015d
   src/lib/config.ts:
     id: 320761608fb3
-    last_write_checksum: sha1:ac24f5f1d69c7ff1e888540b93bd4319dbcd7515
-    pristine_git_object: 29f28a1386e7ae7bf4a10ab6f7596d4ddeae4751
+    last_write_checksum: sha1:98d4c2713882518812a4380ec6468d10ec8a4b7f
+    pristine_git_object: 6016f657a9c09da8875a647b502b60cabf4cc2c9
   src/lib/encodings.ts:
     id: 3bd8ead98afd
     last_write_checksum: sha1:7533dcb79b22b8c84ac7b90aec94317d12bad5f8
@@ -1061,8 +1061,8 @@ trackedFiles:
     pristine_git_object: 96c701de3abe79f624cce99a8a597cfff3852d89
   src/models/mcp-server.ts:
     id: 528b7e10ddbd
-    last_write_checksum: sha1:03819231b387a9a45a4f99527cfd6e952aea8b7f
-    pristine_git_object: 7c86924e939b6fc92d7e2a26c225b430debc072b
+    last_write_checksum: sha1:6592a10dfa82dd230b4b6d829e997c13dcd4b99c
+    pristine_git_object: 66b50c5975ec98acde43bc3f82a36116885f87d4
   src/models/memory-config.ts:
     id: 63991dcba425
     last_write_checksum: sha1:448bd9f3a13e4e0ff2b13b76d8cd6e229e46fe81
