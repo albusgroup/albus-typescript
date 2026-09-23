@@ -10,7 +10,7 @@ import { SDKValidationError } from "./errors/sdk-validation-error.js";
 
 export type Provider = {
   /**
-   * Provider name (e.g. "openai", "google_agent_studio").
+   * Provider name (e.g. "openai", "google_ai_studio").
    */
   name: string;
   /**
